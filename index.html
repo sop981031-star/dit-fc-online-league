@@ -316,6 +316,23 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 .v118-home-details summary{cursor:pointer;color:#e3c584;font-weight:700;padding:5px}
 @media(max-width:700px){body{padding-bottom:85px}.tabs{position:fixed!important;bottom:0;left:0;right:0;z-index:58;margin:0!important;padding:7px 5px max(8px,env(safe-area-inset-bottom));display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid #48617a;background:#091b2e;box-shadow:0 -10px 35px #0009;gap:3px}.tabs .tab{min-width:0!important;padding:12px 1px!important;font-size:11px!important;white-space:nowrap}.v118-roster{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v118-player-card{padding:12px}.v118-player-card>strong{font-size:15px}.v118-player-meta{font-size:10px}.v118-account-menu{position:fixed;top:72px;right:10px;max-height:70vh}.v118-match-detail{padding:12px 5px}.v118-match-score b{font-size:22px}.v118-match-team strong{font-size:11px}}
 @media(max-width:350px){.tabs .tab{font-size:9px!important}.v118-roster{grid-template-columns:1fr}}
+
+/* v11.8.1 HOTFIX — Mobile fixed navigation height / touch interception.
+   With top:auto in a fixed-position grid, its static top (~header)
+   combined with bottom:0 made the bar fill almost the entire viewport. */
+@media (max-width:700px) {
+  .tabs {
+    top:auto!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(84px + env(safe-area-inset-bottom, 0px))!important;
+    align-content:center!important;
+    grid-auto-rows:minmax(45px,auto)!important;
+    touch-action:manipulation;
+  }
+  .tabs .tab { touch-action:manipulation; }
+  .wrap { padding-bottom:calc(105px + env(safe-area-inset-bottom, 0px))!important; }
+}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
