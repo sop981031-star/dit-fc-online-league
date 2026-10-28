@@ -254,6 +254,7 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 @media(max-width:600px){.v114-overview{padding:14px}.v114-fixture{gap:8px;padding:11px 9px}.v114-fixture-arrow{font-size:10px}.v114-fixture-main strong{font-size:12px}}
 
 /* v11.5 PARTICIPANT ACCESS — independent UI, existing league logic unchanged */
+#v115ChangeOpen[hidden]{display:none!important}
 .v115-login-btn{border-color:#89754d!important;color:#f2d9a3!important;background:#1f3045!important}
 .v115-manage-btn{border-color:#537b9e!important;color:#d4e9ff!important;background:#193550!important}
 .v115-manage-btn[hidden]{display:none!important}
@@ -275,7 +276,7 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 .v115-warning{margin-top:12px;font-size:11px;line-height:1.7;color:#9bb3c9}
 @media(max-width:760px){.v115-modal{padding:15px}.v115-fields{grid-template-columns:1fr}.v115-login-btn,.v115-manage-btn{padding:8px 7px!important;font-size:11px!important}}
 </style></head><body>
-<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 공식 리그 포털</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><button class="btn v113-trigger" id="signatureOpen" type="button">★ 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></header>
+<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 공식 리그 포털</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><button class="btn v113-trigger" id="signatureOpen" type="button">★ 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="stats"><div class="stat"><label>전체 경기</label><strong id="total">45</strong><small>정규 리그</small></div><div class="stat"><label>진행 경기</label><strong id="played">0 / 45</strong><small id="progress">진행률 0%</small></div><div class="stat"><label>득점</label><strong id="goals">0</strong><small>리그 전체 득점</small></div><div class="stat"><label>선두</label><strong id="leader" style="font-size:20px">—</strong><small id="leaderPts">0점</small></div></div>
 <nav class="tabs"><button class="tab active" data-tab="home">리그 홈</button><button class="tab" data-tab="standings">리그 순위</button><button class="tab" data-tab="fixtures">전체 경기 & RESULTS</button><button class="tab" data-tab="tournament">토너먼트</button><button class="tab" data-tab="scorers">득점 순위</button><button class="tab" data-tab="rules">리그 규정</button></nav>
@@ -325,13 +326,18 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
  <form id="v115LoginForm"><div class="v115-fields" style="grid-template-columns:1fr"><div><label for="v115Username">아이디</label><input id="v115Username" autocomplete="username" required maxlength="32" pattern="[a-zA-Z0-9._-]{3,32}"></div><div><label for="v115Password">비밀번호</label><input id="v115Password" type="password" autocomplete="current-password" required></div></div><div class="v115-actions"><button class="btn primary" id="v115LoginSubmit" type="submit">로그인</button></div><p id="v115LoginStatus" class="v115-message" role="status"></p></form>
  </div>
 </div>
+<div class="v115-overlay" id="v115ChangeOverlay" role="dialog" aria-modal="true" aria-labelledby="v115ChangeTitle">
+ <div class="v115-modal" style="max-width:440px"><div class="v115-top"><div><div class="eyebrow">DIT · ACCOUNT SECURITY</div><h2 id="v115ChangeTitle">내 비밀번호 변경</h2></div><button class="btn" id="v115ChangeClose" type="button">닫기 ✕</button></div>
+ <p class="note">현재 비밀번호를 확인한 후 새 비밀번호를 저장합니다. 새 비밀번호는 최소 6자 이상 입력해 주세요.</p>
+ <form id="v115ChangeForm"><div class="v115-fields" style="grid-template-columns:1fr"><div><label for="v115OldPassword">현재 비밀번호</label><input id="v115OldPassword" type="password" autocomplete="current-password" required></div><div><label for="v115NewPassword">새 비밀번호</label><input id="v115NewPassword" type="password" autocomplete="new-password" minlength="6" maxlength="72" required></div><div><label for="v115NewPasswordAgain">새 비밀번호 확인</label><input id="v115NewPasswordAgain" type="password" autocomplete="new-password" minlength="6" maxlength="72" required></div></div><div class="v115-actions"><button class="btn primary" type="submit" id="v115ChangeSubmit">비밀번호 저장</button></div><p id="v115ChangeStatus" class="v115-message" role="status"></p></form>
+ </div></div>
 <div class="v115-overlay" id="v115ManageOverlay" role="dialog" aria-modal="true" aria-labelledby="v115ManageTitle">
  <div class="v115-modal"><div class="v115-top"><div><div class="eyebrow">DIT · ACCOUNT CONTROL</div><h2 id="v115ManageTitle">참가자 계정 발급</h2></div><button class="btn" id="v115ManageClose" type="button">닫기 ✕</button></div>
- <p class="note">운영진 전용 메뉴입니다. 참가자를 선택하고 로그인 아이디를 지정하면 임시 비밀번호가 생성됩니다. 이미 발급된 계정은 비밀번호를 다시 발급할 수 있습니다.</p>
+ <p class="note">운영진 전용 메뉴입니다. 참가자를 선택하고 로그인 아이디를 지정하면 임시 비밀번호가 생성됩니다. 이미 발급된 계정은 비밀번호를 재설정하거나 폐기 후 다시 발급할 수 있습니다. 초기 비밀번호는 123456입니다.</p>
  <div class="v115-fields"><div><label for="v115Player">리그 참가자</label><select id="v115Player"><option value="">참가자를 선택해 주세요.</option></select></div><div><label for="v115NewUsername">아이디 (영문·숫자 3~32자)</label><input id="v115NewUsername" autocomplete="off" placeholder="예: psw03" maxlength="32"></div></div>
  <div class="v115-actions"><button class="btn primary" type="button" id="v115Create">선택한 참가자 계정 발급</button><button class="btn" type="button" id="v115Refresh">목록 새로고침</button></div>
  <div id="v115Issued" class="v115-issued" hidden></div><p id="v115ManageStatus" class="v115-message" role="status"></p>
- <div class="ph" style="margin-top:16px"><h3>발급된 계정</h3><span class="pill">비밀번호는 재발급 시에만 표시됩니다.</span></div><div id="v115MemberList" class="v115-list"></div>
+ <div class="ph" style="margin-top:16px"><h3>발급된 계정</h3><span class="pill">초기 비밀번호는 123456이며 로그인 후 변경할 수 있습니다.</span></div><div id="v115MemberList" class="v115-list"></div>
  <p class="v115-warning">참가자는 자신의 계정으로 로그인해도 경기 점수·구단 설정·토너먼트를 수정할 수 없습니다. 댓글 기능은 다음 업데이트에서 연결될 예정입니다.</p>
  </div>
 </div>
@@ -685,6 +691,7 @@ async function v115WhoAmI(){
 function v115DrawHeader(){
  const isAdmin=!!state.admin;
  v115el('memberManageOpen').hidden=!isAdmin;
+ v115el('v115ChangeOpen').hidden=!v115Member;
  v115el('memberToggle').textContent=v115Member?`${v115Member.player_name} · 로그아웃`:'참가자 로그인';
 }
 async function v115Invoke(func,body){
@@ -700,12 +707,12 @@ async function v115List(){
  try{
   const data=await v115Invoke('member-manage',{action:'list'});
   const members=data?.members||[];
-  box.innerHTML=members.length?members.map(m=>`<div class="v115-member"><div><strong>${esc(m.player_name)}</strong><small>아이디: ${esc(m.username)}</small></div><button class="btn v115-reset" type="button" data-uid="${esc(m.username)}">비밀번호 재발급</button></div>`).join(''):'<p class="note">발급된 참가자 계정이 없습니다.</p>';
+  box.innerHTML=members.length?members.map(m=>`<div class="v115-member"><div><strong>${esc(m.player_name)}</strong><small>아이디: ${esc(m.username)}</small></div><div class="v115-actions" style="margin-top:0"><button class="btn v115-reset" type="button" data-uid="${esc(m.username)}">123456으로 초기화</button><button class="btn v115-retire" type="button" data-retire="${esc(m.username)}" style="border-color:#995a5a;color:#ffc6c6">계정 폐기</button></div></div>`).join(''):'<p class="note">발급된 참가자 계정이 없습니다.</p>';
   v115el('v115Player').innerHTML='<option value="">참가자를 선택해 주세요.</option>'+DATA.teams.map(n=>`<option value="${esc(n)}" ${members.some(m=>m.player_name===n)?'disabled':''}>${esc(n)}${members.some(m=>m.player_name===n)?' (발급됨)':''}</option>`).join('');
  }catch(e){box.textContent='계정을 조회할 수 없습니다. Edge Function 및 SQL 설정을 확인해 주세요.';v115Status('v115ManageStatus',e.message);}
 }
 function v115ShowIssued(username,password){
- const box=v115el('v115Issued');box.hidden=false;box.innerHTML=`<strong>발급 정보 — 지금 복사해 전달해 주세요.</strong><small style="display:block;margin-top:8px">아이디</small><code>${esc(username)}</code><small style="display:block">임시 비밀번호 (이 창을 닫으면 다시 확인할 수 없습니다)</small><code>${esc(password)}</code><button type="button" class="btn primary" id="v115CopyCredentials">발급 정보 복사</button>`;
+ const box=v115el('v115Issued');box.hidden=false;box.innerHTML=`<strong>발급 정보 — 지금 복사해 전달해 주세요.</strong><small style="display:block;margin-top:8px">아이디</small><code>${esc(username)}</code><small style="display:block">초기 비밀번호 (로그인 후 변경 권장)</small><code>${esc(password)}</code><button type="button" class="btn primary" id="v115CopyCredentials">발급 정보 복사</button>`;
  v115el('v115CopyCredentials').onclick=()=>{const value=`DIT FC ONLINE LEAGUE 참가자 계정\n아이디: ${username}\n임시 비밀번호: ${password}`;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>v115Status('v115ManageStatus','발급 정보를 복사했습니다.')).catch(()=>v115Status('v115ManageStatus','클립보드 복사가 제한되어 직접 복사해 주세요.'));else v115Status('v115ManageStatus','아이디와 비밀번호를 직접 복사해 주세요.');};
 }
 function v115Init(){
@@ -715,7 +722,21 @@ function v115Init(){
  };
  v115el('v115LoginClose').onclick=()=>v115Show('v115LoginOverlay',false);
  v115el('v115ManageClose').onclick=()=>v115Show('v115ManageOverlay',false);
- ['v115LoginOverlay','v115ManageOverlay'].forEach(id=>v115el(id).onclick=e=>{if(e.target===v115el(id))v115Show(id,false);});
+ v115el('v115ChangeClose').onclick=()=>v115Show('v115ChangeOverlay',false);
+ v115el('v115ChangeOpen').onclick=()=>{v115Status('v115ChangeStatus','');v115el('v115ChangeForm').reset();v115Show('v115ChangeOverlay',true);};
+ v115el('v115ChangeForm').onsubmit=async e=>{
+  e.preventDefault();if(!v115Member||!cloudClient)return;
+  const oldPassword=v115el('v115OldPassword').value,newPassword=v115el('v115NewPassword').value,again=v115el('v115NewPasswordAgain').value,btn=v115el('v115ChangeSubmit');
+  if(newPassword.length<6||newPassword.length>72||newPassword!==again){v115Status('v115ChangeStatus','새 비밀번호가 일치하는지 확인해 주세요. (6~72자)');return;}
+  if(oldPassword===newPassword){v115Status('v115ChangeStatus','현재 비밀번호와 다른 비밀번호를 입력해 주세요.');return;}
+  btn.disabled=true;v115Status('v115ChangeStatus','현재 비밀번호를 확인하고 있습니다…');
+  try{
+   await v115Invoke('member-login',{username:v115Member.username,password:oldPassword});
+   const {error}=await cloudClient.auth.updateUser({password:newPassword});if(error)throw error;
+   v115el('v115ChangeForm').reset();v115Status('v115ChangeStatus','비밀번호가 변경되었습니다. 다음 로그인부터 새 비밀번호를 이용해 주세요.');
+  }catch(err){v115Status('v115ChangeStatus','변경에 실패했습니다. 현재 비밀번호 또는 새 비밀번호 정책을 확인해 주세요.');console.warn('password update:',err.message);}finally{btn.disabled=false;}
+ };
+ ['v115LoginOverlay','v115ManageOverlay','v115ChangeOverlay'].forEach(id=>v115el(id).onclick=e=>{if(e.target===v115el(id))v115Show(id,false);});
  v115el('v115LoginForm').onsubmit=async e=>{
   e.preventDefault();const username=v115el('v115Username').value.trim().toLowerCase(),password=v115el('v115Password').value,btn=v115el('v115LoginSubmit');
   btn.disabled=true;v115Status('v115LoginStatus','로그인 확인 중입니다…');
@@ -737,13 +758,21 @@ function v115Init(){
   if(!state.admin)return;const player_name=v115el('v115Player').value,username=v115el('v115NewUsername').value.trim().toLowerCase();
   if(!DATA.teams.includes(player_name)||!/^[a-z0-9._-]{3,32}$/.test(username)){v115Status('v115ManageStatus','참가자와 올바른 아이디를 입력해 주세요.');return;}
   const btn=v115el('v115Create');btn.disabled=true;v115Status('v115ManageStatus','계정을 발급하고 있습니다…');
-  try{const r=await v115Invoke('member-manage',{action:'create',player_name,username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','계정을 발급했습니다. 임시 비밀번호는 안전하게 전달해 주세요.');v115el('v115NewUsername').value='';await v115List();}
+  try{const r=await v115Invoke('member-manage',{action:'create',player_name,username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','계정을 발급했습니다. 초기 비밀번호 123456을 전달해 주세요. 로그인 후 변경을 권장합니다.');v115el('v115NewUsername').value='';await v115List();}
   catch(err){v115Status('v115ManageStatus','계정 발급 실패: '+err.message);}finally{btn.disabled=false;}
  };
  v115el('v115MemberList').onclick=async e=>{
-  const btn=e.target.closest('[data-uid]');if(!btn||!state.admin)return;
-  const username=btn.dataset.uid;if(!confirm(`${username} 계정의 비밀번호를 재발급하시겠습니까? 기존 비밀번호는 더 이상 사용할 수 없습니다.`))return;
-  btn.disabled=true;try{const r=await v115Invoke('member-manage',{action:'reset',username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','새 비밀번호가 발급되었습니다. 참가자에게 전달해 주세요.');}catch(err){v115Status('v115ManageStatus','비밀번호 재발급 실패: '+err.message);}finally{btn.disabled=false;}
+  const btn=e.target.closest('[data-uid],[data-retire]');if(!btn||!state.admin)return;
+  if(btn.dataset.retire){
+   const username=btn.dataset.retire;
+   if(!confirm(`${username} 계정을 폐기하시겠습니까? 기존 로그인은 차단되고, 같은 참가자에게 새 아이디를 발급할 수 있습니다. 기존 댓글은 보존됩니다.`))return;
+   btn.disabled=true;v115Status('v115ManageStatus','계정을 폐기하고 있습니다…');
+   try{await v115Invoke('member-manage',{action:'retire',username});v115el('v115Issued').hidden=true;v115Status('v115ManageStatus',`${username} 계정이 폐기되었습니다. 원하는 아이디로 다시 발급할 수 있습니다.`);await v115List();}
+   catch(err){v115Status('v115ManageStatus','계정 폐기 실패: '+err.message);}finally{btn.disabled=false;}
+   return;
+  }
+  const username=btn.dataset.uid;if(!confirm(`${username} 계정의 비밀번호를 123456으로 초기화하시겠습니까? 기존 비밀번호는 더 이상 사용할 수 없습니다.`))return;
+  btn.disabled=true;try{const r=await v115Invoke('member-manage',{action:'reset',username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','비밀번호가 123456으로 초기화되었습니다. 참가자에게 알려 주세요.');}catch(err){v115Status('v115ManageStatus','비밀번호 재발급 실패: '+err.message);}finally{btn.disabled=false;}
  };
  if(cloudClient){cloudClient.auth.onAuthStateChange(()=>{setTimeout(v115WhoAmI,0);});v115WhoAmI();}
 }
