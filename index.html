@@ -252,8 +252,30 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 .v114-fixture:hover,.v114-fixture:focus-visible{background:#1c3b5e;border-color:#d8b675;outline:none}.v114-fixture .branding-badge{flex:none}.v114-fixture-main{flex:1;min-width:0}.v114-fixture-main strong{display:block;font-size:13px}.v114-fixture-main small{display:block;font-size:10px;margin-top:4px;color:#9fb6ce}.v114-fixture-arrow{font-size:11px;color:#e5c487;white-space:nowrap}.v114-complete{padding:22px 14px;text-align:center;color:#e5c583;background:#1b342c;border:1px solid #3f7358;border-radius:12px;font-weight:800}
 .v114-target{border-color:#e4bc70!important;box-shadow:0 0 0 2px #e4bc7080,0 0 26px #e4bc7040!important}
 @media(max-width:600px){.v114-overview{padding:14px}.v114-fixture{gap:8px;padding:11px 9px}.v114-fixture-arrow{font-size:10px}.v114-fixture-main strong{font-size:12px}}
+
+/* v11.5 PARTICIPANT ACCESS — independent UI, existing league logic unchanged */
+.v115-login-btn{border-color:#89754d!important;color:#f2d9a3!important;background:#1f3045!important}
+.v115-manage-btn{border-color:#537b9e!important;color:#d4e9ff!important;background:#193550!important}
+.v115-manage-btn[hidden]{display:none!important}
+.v115-overlay{position:fixed;inset:0;z-index:90;background:#020810e8;display:none;align-items:center;justify-content:center;padding:15px}
+.v115-overlay.open{display:flex}
+.v115-modal{width:min(640px,100%);max-height:90vh;overflow:auto;background:linear-gradient(150deg,#152e4b,#081726);border:1px solid #476080;border-radius:21px;padding:23px;box-shadow:0 25px 95px #000b}
+.v115-modal h2{font-size:23px;margin:5px 0 8px;color:#f6e0ab}
+.v115-top{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.v115-fields{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}
+.v115-fields label{display:block;color:#b5cce3;font-size:11px;margin-bottom:5px}
+.v115-fields input,.v115-fields select{width:100%;height:42px;color:#fff;background:#07192b;border:1px solid #436281;border-radius:10px;padding:10px}
+.v115-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.v115-message{margin-top:13px;min-height:20px;color:#eccb90;font-size:12px;line-height:1.7}
+.v115-list{display:grid;gap:7px;margin-top:13px}
+.v115-member{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 13px;background:#0d2137;border:1px solid #304b6a;border-radius:11px}
+.v115-member strong{font-size:13px}.v115-member small{display:block;color:#a2bad4;margin-top:5px}
+.v115-issued{margin:13px 0;padding:15px;background:#172d38;border:1px solid #a4bc85;border-radius:13px}
+.v115-issued code{display:block;font-size:15px;font-weight:850;margin:5px 0 12px;color:#e7dcaa;overflow-wrap:anywhere}
+.v115-warning{margin-top:12px;font-size:11px;line-height:1.7;color:#9bb3c9}
+@media(max-width:760px){.v115-modal{padding:15px}.v115-fields{grid-template-columns:1fr}.v115-login-btn,.v115-manage-btn{padding:8px 7px!important;font-size:11px!important}}
 </style></head><body>
-<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 공식 리그 포털</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><button class="btn v113-trigger" id="signatureOpen" type="button">★ 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></header>
+<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 공식 리그 포털</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><button class="btn v113-trigger" id="signatureOpen" type="button">★ 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="stats"><div class="stat"><label>전체 경기</label><strong id="total">45</strong><small>정규 리그</small></div><div class="stat"><label>진행 경기</label><strong id="played">0 / 45</strong><small id="progress">진행률 0%</small></div><div class="stat"><label>득점</label><strong id="goals">0</strong><small>리그 전체 득점</small></div><div class="stat"><label>선두</label><strong id="leader" style="font-size:20px">—</strong><small id="leaderPts">0점</small></div></div>
 <nav class="tabs"><button class="tab active" data-tab="home">리그 홈</button><button class="tab" data-tab="standings">리그 순위</button><button class="tab" data-tab="fixtures">전체 경기 & RESULTS</button><button class="tab" data-tab="tournament">토너먼트</button><button class="tab" data-tab="scorers">득점 순위</button><button class="tab" data-tab="rules">리그 규정</button></nav>
@@ -296,6 +318,23 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
  <div class="v113-row"><div><label for="signaturePosition">포지션</label><select class="field" id="signaturePosition"><option>ST</option><option>CF</option><option>LW</option><option>RW</option><option>CAM</option><option>CM</option><option>CDM</option><option>LB</option><option>RB</option><option>CB</option><option>GK</option></select></div><div><label for="signatureEnhance">강화 등급</label><select class="field" id="signatureEnhance"><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option><option value="7">+7</option><option value="8">+8</option><option value="9">+9</option><option value="10">+10</option><option value="11">+11</option><option value="12">+12</option><option value="13">+13</option></select></div></div>
  </div><div><div class="v113-preview" id="signaturePreview">FC 온라인 선수를 선택하면 카드가 표시됩니다.</div><button class="btn primary v113-save" id="signatureSave" type="button">주력 선수 저장</button><p class="v113-status" role="status" id="signatureStatus"></p></div></div>
  </div></div>
+
+<div class="v115-overlay" id="v115LoginOverlay" role="dialog" aria-modal="true" aria-labelledby="v115LoginTitle">
+ <div class="v115-modal" style="max-width:425px"><div class="v115-top"><div><div class="eyebrow">DIT · MEMBER ACCESS</div><h2 id="v115LoginTitle">참가자 로그인</h2></div><button class="btn" id="v115LoginClose" type="button">닫기 ✕</button></div>
+ <p class="note">운영진에게 발급받은 아이디와 비밀번호로 로그인해 주세요. 이메일 인증은 필요하지 않습니다.</p>
+ <form id="v115LoginForm"><div class="v115-fields" style="grid-template-columns:1fr"><div><label for="v115Username">아이디</label><input id="v115Username" autocomplete="username" required maxlength="32" pattern="[a-zA-Z0-9._-]{3,32}"></div><div><label for="v115Password">비밀번호</label><input id="v115Password" type="password" autocomplete="current-password" required></div></div><div class="v115-actions"><button class="btn primary" id="v115LoginSubmit" type="submit">로그인</button></div><p id="v115LoginStatus" class="v115-message" role="status"></p></form>
+ </div>
+</div>
+<div class="v115-overlay" id="v115ManageOverlay" role="dialog" aria-modal="true" aria-labelledby="v115ManageTitle">
+ <div class="v115-modal"><div class="v115-top"><div><div class="eyebrow">DIT · ACCOUNT CONTROL</div><h2 id="v115ManageTitle">참가자 계정 발급</h2></div><button class="btn" id="v115ManageClose" type="button">닫기 ✕</button></div>
+ <p class="note">운영진 전용 메뉴입니다. 참가자를 선택하고 로그인 아이디를 지정하면 임시 비밀번호가 생성됩니다. 이미 발급된 계정은 비밀번호를 다시 발급할 수 있습니다.</p>
+ <div class="v115-fields"><div><label for="v115Player">리그 참가자</label><select id="v115Player"><option value="">참가자를 선택해 주세요.</option></select></div><div><label for="v115NewUsername">아이디 (영문·숫자 3~32자)</label><input id="v115NewUsername" autocomplete="off" placeholder="예: psw03" maxlength="32"></div></div>
+ <div class="v115-actions"><button class="btn primary" type="button" id="v115Create">선택한 참가자 계정 발급</button><button class="btn" type="button" id="v115Refresh">목록 새로고침</button></div>
+ <div id="v115Issued" class="v115-issued" hidden></div><p id="v115ManageStatus" class="v115-message" role="status"></p>
+ <div class="ph" style="margin-top:16px"><h3>발급된 계정</h3><span class="pill">비밀번호는 재발급 시에만 표시됩니다.</span></div><div id="v115MemberList" class="v115-list"></div>
+ <p class="v115-warning">참가자는 자신의 계정으로 로그인해도 경기 점수·구단 설정·토너먼트를 수정할 수 없습니다. 댓글 기능은 다음 업데이트에서 연결될 예정입니다.</p>
+ </div>
+</div>
 <div class="toast" id="toast">저장 완료</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./config.js"></script>
@@ -539,7 +578,7 @@ function renderProfile(name){
     <div class="v6-profile-block"><h3>정규리그 경기 기록</h3><div class="v6-history">${history}</div></div>`;
   document.getElementById('profileOverlay').style.display='flex';
 }
-function render(){let t=table(),played=state.matches.filter(done),goals=played.reduce((s,m)=>s+m.sa+m.sb,0);document.getElementById('total').textContent=state.matches.length;document.getElementById('played').textContent=played.length+' / '+state.matches.length;document.getElementById('progress').textContent=Math.round(played.length/state.matches.length*100)+'% 완료';document.getElementById('goals').textContent=goals;document.getElementById('leader').textContent=t[0]?.mp?t[0].name:'—';document.getElementById('leaderPts').textContent=(t[0]?.pts||0)+' 점';document.getElementById('homeTable').innerHTML=tabHTML(t.slice(0,8));renderLiveDashboard();document.getElementById('fullTable').innerHTML=tabHTML(t);document.getElementById('recent').innerHTML=played.length?[...played].sort((a,b)=>{let ta=completedDate(a)||'',tb=completedDate(b)||'';if(ta!==tb)return tb.localeCompare(ta);let ua=Date.parse(a.resultUpdatedAt||'')||0,ub=Date.parse(b.resultUpdatedAt||'')||0;return ub-ua||b.num-a.num}).slice(0,5).map(m=>fixture(m)).join(''):'<div class="empty">완료된 경기가 없습니다.</div>';document.getElementById('upcoming').innerHTML=state.matches.filter(m=>!done(m)).slice(0,4).map(m=>fixture(m)).join('')||'<div class="empty">모든 경기가 완료됐습니다.</div>';document.getElementById('qualification').innerHTML=t.slice(0,8).map((x,i)=>`<div class="gteam"><span>${i+1}. ${nameWithCrest(x.name)}</span><span class="${i<4?'zone':'zone uel'}">${i<4?'챔스':'유로파'}</span></div>`).join('');renderFixtures();renderTournament();renderScorers();let locked=!!state.brackets.locked;document.getElementById('tournamentStatus').textContent=locked?'대진 확정 · 토너먼트 진행 중':'대진 미리보기 · 미확정';document.getElementById('lockTournament').disabled=locked||played.length!==state.matches.length||!state.admin;document.getElementById('lockTournament').textContent=locked?'토너먼트 대진 확정됨':played.length!==state.matches.length?`리그 종료 대기 (${played.length}/45)`:state.admin?'최종 순위 확정 및 토너먼트 시작':'관리자 로그인 필요';document.getElementById('rulesList').innerHTML=DATA.rules.map(r=>`<div class="rule">${esc(r)}</div>`).join('');document.getElementById('adminStatus').textContent=state.admin?'ADMIN MODE':'일반 모드';document.getElementById('adminToggle').textContent=state.admin?'관리자 잠금':'관리자 로그인';document.getElementById('clubManageOpen').hidden=!state.admin;if(!state.admin)document.getElementById('clubOverlay').classList.remove('open');renderV8Spotlight();}
+function render(){let t=table(),played=state.matches.filter(done),goals=played.reduce((s,m)=>s+m.sa+m.sb,0);document.getElementById('total').textContent=state.matches.length;document.getElementById('played').textContent=played.length+' / '+state.matches.length;document.getElementById('progress').textContent=Math.round(played.length/state.matches.length*100)+'% 완료';document.getElementById('goals').textContent=goals;document.getElementById('leader').textContent=t[0]?.mp?t[0].name:'—';document.getElementById('leaderPts').textContent=(t[0]?.pts||0)+' 점';document.getElementById('homeTable').innerHTML=tabHTML(t.slice(0,8));renderLiveDashboard();document.getElementById('fullTable').innerHTML=tabHTML(t);document.getElementById('recent').innerHTML=played.length?[...played].sort((a,b)=>{let ta=completedDate(a)||'',tb=completedDate(b)||'';if(ta!==tb)return tb.localeCompare(ta);let ua=Date.parse(a.resultUpdatedAt||'')||0,ub=Date.parse(b.resultUpdatedAt||'')||0;return ub-ua||b.num-a.num}).slice(0,5).map(m=>fixture(m)).join(''):'<div class="empty">완료된 경기가 없습니다.</div>';document.getElementById('upcoming').innerHTML=state.matches.filter(m=>!done(m)).slice(0,4).map(m=>fixture(m)).join('')||'<div class="empty">모든 경기가 완료됐습니다.</div>';document.getElementById('qualification').innerHTML=t.slice(0,8).map((x,i)=>`<div class="gteam"><span>${i+1}. ${nameWithCrest(x.name)}</span><span class="${i<4?'zone':'zone uel'}">${i<4?'챔스':'유로파'}</span></div>`).join('');renderFixtures();renderTournament();renderScorers();let locked=!!state.brackets.locked;document.getElementById('tournamentStatus').textContent=locked?'대진 확정 · 토너먼트 진행 중':'대진 미리보기 · 미확정';document.getElementById('lockTournament').disabled=locked||played.length!==state.matches.length||!state.admin;document.getElementById('lockTournament').textContent=locked?'토너먼트 대진 확정됨':played.length!==state.matches.length?`리그 종료 대기 (${played.length}/45)`:state.admin?'최종 순위 확정 및 토너먼트 시작':'관리자 로그인 필요';document.getElementById('rulesList').innerHTML=DATA.rules.map(r=>`<div class="rule">${esc(r)}</div>`).join('');document.getElementById('adminStatus').textContent=state.admin?'ADMIN MODE':'일반 모드';document.getElementById('adminToggle').textContent=state.admin?'관리자 잠금':'관리자 로그인';if(typeof v115DrawHeader==='function')v115DrawHeader();document.getElementById('clubManageOpen').hidden=!state.admin;if(!state.admin)document.getElementById('clubOverlay').classList.remove('open');renderV8Spotlight();}
 function activate(id){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id))}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>activate(b.dataset.tab));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>activate(b.dataset.go));const playerFilter=document.getElementById('matchPlayerFilter');DATA.teams.forEach(n=>playerFilter.add(new Option(n,n)));playerFilter.addEventListener('change',renderFixtures);document.getElementById('searchTeam').addEventListener('input',renderFixtures);document.querySelectorAll('[data-match-view]').forEach(b=>b.addEventListener('click',()=>{matchView=b.dataset.matchView;renderFixtures()}));
 const adminLoginOverlay=document.getElementById('adminLoginOverlay');
@@ -548,7 +587,8 @@ document.getElementById('adminLoginClose').onclick=closeAdminLogin;
 adminLoginOverlay.addEventListener('click',e=>{if(e.target===adminLoginOverlay)closeAdminLogin()});
 document.getElementById('adminToggle').onclick=async()=>{
  if(!cloudClient){alert('아직 온라인 DB가 연결되지 않았어. config.js 설정을 확인해줘.');return}
- if(currentUser){await cloudClient.auth.signOut();state.admin=false;render();return}
+ if(currentUser&&state.admin){await cloudClient.auth.signOut();state.admin=false;render();return}
+ if(currentUser&&!state.admin){await cloudClient.auth.signOut();v115Member=null;v115DrawHeader();}
  adminLoginOverlay.style.display='flex';setTimeout(()=>document.getElementById('adminUsername').focus(),0)
 };
 document.getElementById('adminLoginForm').addEventListener('submit',async e=>{
@@ -625,6 +665,89 @@ function signatureInit(){const owner=sigEl('signatureOwner');owner.innerHTML='<o
 signatureInit();
 // Independent read-only listener. No auth event or league-state read/write modifications.
 if(cloudClient){signatureRefresh();cloudClient.channel('dit-signature-public').on('postgres_changes',{event:'*',schema:'public',table:SIGNATURE_TABLE},()=>signatureRefresh()).subscribe();}
+
+
+// v11.5 PARTICIPANT ACCOUNT MANAGEMENT (isolated from league_state)
+let v115Member=null;
+const v115el=id=>document.getElementById(id);
+function v115Show(id,open){v115el(id).classList.toggle('open',open);if(open&&id==='v115LoginOverlay')v115el('v115Username').focus();}
+function v115Status(id,content){v115el(id).textContent=content||'';}
+async function v115WhoAmI(){
+ if(!cloudClient){v115Member=null;v115DrawHeader();return;}
+ try{
+  const {data}=await cloudClient.auth.getUser(),user=data?.user;
+  if(!user){v115Member=null;v115DrawHeader();return;}
+  const {data:member,error}=await cloudClient.from('league_members').select('player_name,username').eq('auth_user_id',user.id).maybeSingle();
+  v115Member=!error&&member?member:null;
+ }catch(e){console.warn('Member status:',e);v115Member=null;}
+ v115DrawHeader();
+}
+function v115DrawHeader(){
+ const isAdmin=!!state.admin;
+ v115el('memberManageOpen').hidden=!isAdmin;
+ v115el('memberToggle').textContent=v115Member?`${v115Member.player_name} · 로그아웃`:'참가자 로그인';
+}
+async function v115Invoke(func,body){
+ if(!cloudClient)throw new Error('온라인 연결 상태를 확인해 주세요.');
+ const {data,error}=await cloudClient.functions.invoke(func,{body});
+ if(error){let message=error.message;try{const response=error.context;if(response?.json){const result=await response.json();message=result?.error||message;}}catch(_){}throw new Error(message||'요청에 실패했습니다.');}
+ if(data?.error)throw new Error(data.error);
+ return data;
+}
+async function v115List(){
+ if(!state.admin)return;
+ const box=v115el('v115MemberList');box.textContent='발급된 계정을 조회하고 있습니다…';
+ try{
+  const data=await v115Invoke('member-manage',{action:'list'});
+  const members=data?.members||[];
+  box.innerHTML=members.length?members.map(m=>`<div class="v115-member"><div><strong>${esc(m.player_name)}</strong><small>아이디: ${esc(m.username)}</small></div><button class="btn v115-reset" type="button" data-uid="${esc(m.username)}">비밀번호 재발급</button></div>`).join(''):'<p class="note">발급된 참가자 계정이 없습니다.</p>';
+  v115el('v115Player').innerHTML='<option value="">참가자를 선택해 주세요.</option>'+DATA.teams.map(n=>`<option value="${esc(n)}" ${members.some(m=>m.player_name===n)?'disabled':''}>${esc(n)}${members.some(m=>m.player_name===n)?' (발급됨)':''}</option>`).join('');
+ }catch(e){box.textContent='계정을 조회할 수 없습니다. Edge Function 및 SQL 설정을 확인해 주세요.';v115Status('v115ManageStatus',e.message);}
+}
+function v115ShowIssued(username,password){
+ const box=v115el('v115Issued');box.hidden=false;box.innerHTML=`<strong>발급 정보 — 지금 복사해 전달해 주세요.</strong><small style="display:block;margin-top:8px">아이디</small><code>${esc(username)}</code><small style="display:block">임시 비밀번호 (이 창을 닫으면 다시 확인할 수 없습니다)</small><code>${esc(password)}</code><button type="button" class="btn primary" id="v115CopyCredentials">발급 정보 복사</button>`;
+ v115el('v115CopyCredentials').onclick=()=>{const value=`DIT FC ONLINE LEAGUE 참가자 계정\n아이디: ${username}\n임시 비밀번호: ${password}`;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>v115Status('v115ManageStatus','발급 정보를 복사했습니다.')).catch(()=>v115Status('v115ManageStatus','클립보드 복사가 제한되어 직접 복사해 주세요.'));else v115Status('v115ManageStatus','아이디와 비밀번호를 직접 복사해 주세요.');};
+}
+function v115Init(){
+ v115el('memberToggle').onclick=async()=>{
+  if(v115Member){if(!confirm('참가자 계정에서 로그아웃하시겠습니까?'))return;await cloudClient.auth.signOut();v115Member=null;v115DrawHeader();return;}
+  v115Status('v115LoginStatus','');v115Show('v115LoginOverlay',true);
+ };
+ v115el('v115LoginClose').onclick=()=>v115Show('v115LoginOverlay',false);
+ v115el('v115ManageClose').onclick=()=>v115Show('v115ManageOverlay',false);
+ ['v115LoginOverlay','v115ManageOverlay'].forEach(id=>v115el(id).onclick=e=>{if(e.target===v115el(id))v115Show(id,false);});
+ v115el('v115LoginForm').onsubmit=async e=>{
+  e.preventDefault();const username=v115el('v115Username').value.trim().toLowerCase(),password=v115el('v115Password').value,btn=v115el('v115LoginSubmit');
+  btn.disabled=true;v115Status('v115LoginStatus','로그인 확인 중입니다…');
+  try{
+   // If an operator is signed in, clear that session before starting a member session.
+   if(currentUser)await cloudClient.auth.signOut();
+   const tokens=await v115Invoke('member-login',{username,password});
+   if(!tokens?.access_token||!tokens?.refresh_token)throw new Error('로그인 응답이 올바르지 않습니다.');
+   const {error}=await cloudClient.auth.setSession({access_token:tokens.access_token,refresh_token:tokens.refresh_token});if(error)throw error;
+   await v115WhoAmI();if(!v115Member)throw new Error('참가자 계정 정보를 확인하지 못했습니다.');
+   v115el('v115Password').value='';v115Show('v115LoginOverlay',false);v115DrawHeader();
+  }catch(err){v115Status('v115LoginStatus','로그인에 실패했습니다. 아이디와 비밀번호를 확인해 주세요.');console.warn('member login:',err.message);}
+  finally{btn.disabled=false;}
+ };
+ v115el('memberManageOpen').onclick=async()=>{if(!state.admin)return;v115el('v115Issued').hidden=true;v115Status('v115ManageStatus','');v115Show('v115ManageOverlay',true);await v115List();};
+ v115el('v115ManageOpen')?.addEventListener('click',()=>{});
+ v115el('v115Refresh').onclick=v115List;
+ v115el('v115Create').onclick=async()=>{
+  if(!state.admin)return;const player_name=v115el('v115Player').value,username=v115el('v115NewUsername').value.trim().toLowerCase();
+  if(!DATA.teams.includes(player_name)||!/^[a-z0-9._-]{3,32}$/.test(username)){v115Status('v115ManageStatus','참가자와 올바른 아이디를 입력해 주세요.');return;}
+  const btn=v115el('v115Create');btn.disabled=true;v115Status('v115ManageStatus','계정을 발급하고 있습니다…');
+  try{const r=await v115Invoke('member-manage',{action:'create',player_name,username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','계정을 발급했습니다. 임시 비밀번호는 안전하게 전달해 주세요.');v115el('v115NewUsername').value='';await v115List();}
+  catch(err){v115Status('v115ManageStatus','계정 발급 실패: '+err.message);}finally{btn.disabled=false;}
+ };
+ v115el('v115MemberList').onclick=async e=>{
+  const btn=e.target.closest('[data-uid]');if(!btn||!state.admin)return;
+  const username=btn.dataset.uid;if(!confirm(`${username} 계정의 비밀번호를 재발급하시겠습니까? 기존 비밀번호는 더 이상 사용할 수 없습니다.`))return;
+  btn.disabled=true;try{const r=await v115Invoke('member-manage',{action:'reset',username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','새 비밀번호가 발급되었습니다. 참가자에게 전달해 주세요.');}catch(err){v115Status('v115ManageStatus','비밀번호 재발급 실패: '+err.message);}finally{btn.disabled=false;}
+ };
+ if(cloudClient){cloudClient.auth.onAuthStateChange(()=>{setTimeout(v115WhoAmI,0);});v115WhoAmI();}
+}
+v115Init();
 
 initCloud();
 </script></body></html>
