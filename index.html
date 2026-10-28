@@ -275,6 +275,18 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 .v115-issued code{display:block;font-size:15px;font-weight:850;margin:5px 0 12px;color:#e7dcaa;overflow-wrap:anywhere}
 .v115-warning{margin-top:12px;font-size:11px;line-height:1.7;color:#9bb3c9}
 @media(max-width:760px){.v115-modal{padding:15px}.v115-fields{grid-template-columns:1fr}.v115-login-btn,.v115-manage-btn{padding:8px 7px!important;font-size:11px!important}}
+
+/* v11.6 MATCH COMMENTS - isolated from league_state */
+.v116-actions{grid-column:1/-1;display:flex;justify-content:flex-end;margin-top:1px}
+.v116-comment-btn{background:#152f47;border:1px solid #395a73;color:#d8e6f6;padding:7px 12px;border-radius:8px;font-size:11px}
+.v116-comment-btn:hover{border-color:#d6b575;color:#ffe2a9}
+.v116-comment-btn strong{color:#e6c586;margin-left:4px}
+.v116-overlay{position:fixed;inset:0;background:#02070de8;z-index:75;display:none;align-items:center;justify-content:center;padding:14px}
+.v116-overlay.open{display:flex}.v116-box{background:linear-gradient(150deg,#142e49,#0c1c2d);border:1px solid #46617c;border-radius:18px;padding:20px;width:min(640px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 80px #000a}
+.v116-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.v116-kicker{font-size:10px;letter-spacing:1.6px;color:#e8c78e;font-weight:800}.v116-title{font-size:19px;margin:7px 0 5px}.v116-sub{font-size:12px;color:#a5bed8}
+.v116-list{display:grid;gap:9px;max-height:43vh;overflow:auto;margin:18px 0;padding-right:3px}.v116-item{background:#0c2034;border:1px solid #2b4561;border-radius:12px;padding:12px}.v116-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.v116-author{font-weight:800;color:#edcf99}.v116-time{font-size:10px;color:#89a5bd}.v116-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:13px;margin:10px 0}.v116-item-actions{display:flex;gap:6px;justify-content:flex-end}
+.v116-item-actions button{padding:5px 9px;font-size:11px}.v116-compose{padding:13px;border-radius:12px;background:#10283e;border:1px solid #355571}.v116-compose label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}.v116-compose textarea{width:100%;min-height:90px;resize:vertical;max-height:180px;background:#081929;color:#eff5ff;border:1px solid #42607a;border-radius:9px;padding:10px 11px;font:inherit;line-height:1.6}.v116-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.v116-status{font-size:11px;color:#e9c48a;line-height:1.6;min-height:15px}.v116-empty{padding:18px;color:#9bb4ce;text-align:center}
+@media(max-width:620px){.v116-box{padding:14px}.v116-actions{padding-right:2px}.v116-list{max-height:39vh}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 공식 리그 포털</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><button class="btn v113-trigger" id="signatureOpen" type="button">★ 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
@@ -310,10 +322,10 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 </div>
 
 <div id="signatureOverlay" class="v113-shade" role="dialog" aria-modal="true" aria-labelledby="signatureTitle">
- <div class="v113-dialog"><div class="v113-header"><div><div class="eyebrow">FC ONLINE · SIGNATURE PLAYER</div><h2 id="signatureTitle">주력 선수 등록</h2></div><button class="btn" type="button" id="signatureClose">닫기 ✕</button></div>
- <p class="note">참가자 본인이 원하는 주력 선수 1명을 자유롭게 등록할 수 있습니다. 이메일 인증이나 등록 코드는 필요하지 않습니다. 다른 참가자의 설정을 존중해 주세요.</p>
+ <div class="v113-dialog"><div class="v113-header"><div><div class="eyebrow">FC ONLINE · SIGNATURE PLAYER</div><h2 id="signatureTitle">내 주력 선수 설정</h2></div><button class="btn" type="button" id="signatureClose">닫기 ✕</button></div>
+ <p class="note">주력 선수는 참가자 계정으로 로그인한 본인만 등록·수정할 수 있습니다. FC 온라인 공식 선수 DB에서 검색해 주세요.</p>
  <div class="v113-editor"><div>
- <label for="signatureOwner">리그 참가자</label><select class="field" id="signatureOwner"><option value="">참가자를 선택해주세요.</option></select>
+ <label for="signatureOwner">등록 참가자 (로그인 계정에 자동 연결)</label><select class="field" id="signatureOwner" disabled><option value="">로그인 후 이용해 주세요.</option></select><p class="note" id="signatureLoginHint">선수 카드를 등록하려면 참가자 계정으로 로그인해 주세요.</p>
  <label for="signatureSearch">FC 온라인 공식 선수 DB 검색</label><input class="field" id="signatureSearch" placeholder="선수 이름을 검색해주세요. (예: 손흥민)" autocomplete="off"/>
  <div class="v113-options" id="signatureOptions"></div><p class="note" id="signatureCatalogMessage">공식 선수 DB를 연결하는 중입니다.</p>
  <div class="v113-row"><div><label for="signaturePosition">포지션</label><select class="field" id="signaturePosition"><option>ST</option><option>CF</option><option>LW</option><option>RW</option><option>CAM</option><option>CM</option><option>CDM</option><option>LB</option><option>RB</option><option>CB</option><option>GK</option></select></div><div><label for="signatureEnhance">강화 등급</label><select class="field" id="signatureEnhance"><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option><option value="7">+7</option><option value="8">+8</option><option value="9">+9</option><option value="10">+10</option><option value="11">+11</option><option value="12">+12</option><option value="13">+13</option></select></div></div>
@@ -342,6 +354,15 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
  </div>
 </div>
 <div class="toast" id="toast">저장 완료</div>
+
+<div id="v116Overlay" class="v116-overlay" role="dialog" aria-modal="true" aria-labelledby="v116Title" aria-hidden="true">
+ <div class="v116-box">
+  <div class="v116-head"><div><div class="v116-kicker">DIT FC · MATCH TALK</div><h2 id="v116Title" class="v116-title">경기 댓글</h2><div class="v116-sub" id="v116MatchInfo"></div></div><button id="v116Close" type="button" aria-label="댓글 창 닫기">✕ 닫기</button></div>
+  <div id="v116List" class="v116-list" aria-live="polite"></div>
+  <div class="v116-compose"><label for="v116Body">댓글 작성</label><textarea id="v116Body" maxlength="500" placeholder="경기와 관련된 댓글을 남겨주세요. (최대 500자)"></textarea><div class="v116-footer"><span id="v116Counter" class="v116-sub">0 / 500자</span><button type="button" class="btn primary" id="v116Submit">댓글 등록</button></div><div class="v116-status" id="v116Status" role="status"></div></div>
+ </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./config.js"></script>
 <script>
@@ -459,7 +480,7 @@ function nameWithCrest(name,reverse=false){return `<span class="team-ident ${rev
 
 function table(){let o={};DATA.teams.forEach(n=>o[n]={name:n,mp:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});state.matches.forEach(m=>{if(!done(m)||!o[m.a]||!o[m.b])return;let a=o[m.a],b=o[m.b];a.mp++;b.mp++;a.gf+=m.sa;a.ga+=m.sb;b.gf+=m.sb;b.ga+=m.sa;if(m.sa>m.sb){a.w++;a.pts+=3;b.l++}else if(m.sa<m.sb){b.w++;b.pts+=3;a.l++}else{a.d++;b.d++;a.pts++;b.pts++}});return Object.values(o).map(t=>({...t,gd:t.gf-t.ga})).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf||a.name.localeCompare(b.name,'ko'))}
 function tabHTML(a){return `<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>선수</th><th>P</th><th>W</th><th>D</th><th>L</th><th>골득실</th><th>승점</th><th>진출 대회</th></tr></thead><tbody>${a.map((t,i)=>`<tr><td class="rank">${i+1}</td><td class="team">${nameWithCrest(t.name)}</td><td>${t.mp}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td><td>${t.gd>0?'+':''}${t.gd}</td><td class="pts">${t.pts}</td><td>${i<4?'<span class="zone">UCL</span>':i<8?'<span class="zone uel">UEL</span>':'—'}</td></tr>`).join('')}</tbody></table></div>`}
-function fixture(m,editable=false){let s=done(m)?`${m.sa} : ${m.sb}`:'– : –';return `<div class="fixture"><div class="rnd"><span class="v10-match-id">MATCH<small>#${String(m.num).padStart(3,"0")}</small></span></div><div class="teamA">${nameWithCrest(m.a,true)}</div><div class="score">${editable&&state.admin?`<input class="scoreinput" data-match="${m.num}" data-side="sa" type="number" min="0" max="99" value="${m.sa??''}" placeholder="–"> : <input class="scoreinput" data-match="${m.num}" data-side="sb" type="number" min="0" max="99" value="${m.sb??''}" placeholder="–">`:s}</div><div class="teamB">${nameWithCrest(m.b)}</div></div>`}
+function fixture(m,editable=false){let s=done(m)?`${m.sa} : ${m.sb}`:'– : –';return `<div class="fixture"><div class="rnd"><span class="v10-match-id">MATCH<small>#${String(m.num).padStart(3,"0")}</small></span></div><div class="teamA">${nameWithCrest(m.a,true)}</div><div class="score">${editable&&state.admin?`<input class="scoreinput" data-match="${m.num}" data-side="sa" type="number" min="0" max="99" value="${m.sa??''}" placeholder="–"> : <input class="scoreinput" data-match="${m.num}" data-side="sb" type="number" min="0" max="99" value="${m.sb??''}" placeholder="–">`:s}</div><div class="teamB">${nameWithCrest(m.b)}</div>${done(m)?`<div class="v116-actions"><button type="button" class="v116-comment-btn" data-v116-match="${m.num}">💬 경기 댓글 <strong data-v116-count="${m.num}">${v116Counts[m.num]??0}</strong></button></div>`:''}</div>`}
 function bindScoreInputs(){document.querySelectorAll('.scoreinput[data-match]').forEach(el=>el.addEventListener('change',e=>{let m=state.matches.find(x=>x.num===+e.target.dataset.match);if(!m)return;let v=e.target.value.trim();m[e.target.dataset.side]=v===''?null:Math.max(0,Math.min(99,parseInt(v)||0));m.resultUpdatedAt=new Date().toISOString();persist()}))}
 let matchView='pending';
 function isISODate(d){return typeof d==='string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d+'T12:00:00')) && new Date(d+'T12:00:00').toISOString().slice(0,10)===d}
@@ -665,8 +686,58 @@ async function signatureRefresh(){if(!cloudClient)return;const {data,error}=awai
 async function signatureLoadCatalog(){if(signatureCatalog)return;try{const [a,b]=await Promise.all([fetch('https://open.api.nexon.com/static/fconline/meta/spid.json'),fetch('https://open.api.nexon.com/static/fconline/meta/seasonid.json')]);if(!a.ok||!b.ok)throw Error('FC 온라인 DB 응답 오류');const [ps,ss]=await Promise.all([a.json(),b.json()]);signatureCatalog=ps;signatureSeasons=Object.fromEntries(ss.map(s=>[String(s.seasonId),s.className]));sigEl('signatureCatalogMessage').textContent='FC 온라인 공식 선수 목록이 연결되었습니다.';}catch(e){sigEl('signatureCatalogMessage').textContent='선수 목록을 불러오지 못했습니다. 연결 상태를 확인해주세요.';console.warn(e);}}
 function signatureDrawPreview(){const box=sigEl('signaturePreview'),owner=sigEl('signatureOwner').value;if(!owner){box.textContent='리그 참가자를 먼저 선택해주세요.';return;}if(!signatureSelection){box.textContent='선수 검색 결과에서 시즌 카드를 선택해주세요.';return;}const p=signatureSelection;box.innerHTML=`<img src="${esc(signatureImage(p.id))}" alt="" onerror="this.onerror=null;this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${Number(p.id)}.png';this.onerror=()=>this.style.display='none'"><strong>${esc(p.name)}</strong><small>${esc(signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE')}</small>`;}
 function signatureSearch(){const q=sigEl('signatureSearch').value.trim().toLowerCase(),box=sigEl('signatureOptions');if(!signatureCatalog||q.length<2){box.innerHTML='';return;}const matches=signatureCatalog.filter(p=>String(p.name).toLowerCase().includes(q)).slice(0,35);box.innerHTML=matches.map(p=>`<button type="button" class="v113-choice" data-sigid="${Number(p.id)}"><b>${esc(p.name)}</b><small>${esc(signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE')}</small></button>`).join('')||'<span class="note">검색 결과가 없습니다.</span>';}
-function signatureInit(){const owner=sigEl('signatureOwner');owner.innerHTML='<option value="">참가자를 선택해주세요.</option>'+DATA.teams.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');sigEl('signatureOpen').onclick=async()=>{sigEl('signatureOverlay').classList.add('open');sigEl('signatureStatus').textContent='';signatureSelection=null;owner.value='';sigEl('signatureSearch').value='';sigEl('signatureOptions').innerHTML='';signatureDrawPreview();await Promise.all([signatureRefresh(),signatureLoadCatalog()]);};sigEl('signatureClose').onclick=()=>sigEl('signatureOverlay').classList.remove('open');sigEl('signatureOverlay').onclick=e=>{if(e.target===sigEl('signatureOverlay'))sigEl('signatureOverlay').classList.remove('open');};owner.onchange=()=>{const prev=signatureRecords[owner.value];signatureSelection=prev?{id:Number(prev.spid),name:prev.display_name}:null;sigEl('signaturePosition').value=prev?.position||'ST';sigEl('signatureEnhance').value=String(prev?.enhance||1);sigEl('signatureSearch').value=prev?.display_name||'';sigEl('signatureOptions').innerHTML='';signatureDrawPreview();};sigEl('signatureSearch').oninput=signatureSearch;sigEl('signatureOptions').onclick=e=>{const b=e.target.closest('[data-sigid]');if(!b||!signatureCatalog)return;const p=signatureCatalog.find(x=>Number(x.id)===Number(b.dataset.sigid));if(!p)return;signatureSelection={id:Number(p.id),name:p.name};sigEl('signatureSearch').value=p.name;sigEl('signatureOptions').innerHTML='';signatureDrawPreview();};
- sigEl('signatureSave').onclick=async()=>{const name=owner.value,btn=sigEl('signatureSave'),status=sigEl('signatureStatus');if(!name)return status.textContent='참가자를 선택해주세요.';if(!signatureSelection)return status.textContent='FC 온라인 선수를 먼저 선택해주세요.';if(!cloudClient)return status.textContent='Supabase 연결을 확인해주세요.';btn.disabled=true;try{const p=signatureSelection,payload={player_name:name,spid:p.id,display_name:p.name,season:signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE',position:sigEl('signaturePosition').value,enhance:Number(sigEl('signatureEnhance').value),updated_at:new Date().toISOString()};const {error}=await cloudClient.from(SIGNATURE_TABLE).upsert(payload,{onConflict:'player_name'});if(error)throw error;signatureRecords[name]=payload;status.textContent=`${name} 참가자의 주력 선수가 저장되었습니다.`;if(sigEl('profileOverlay').style.display==='flex'&&sigEl('profileName').textContent===name)renderProfile(name);}catch(e){status.textContent='저장하지 못했습니다. 테이블 권한 및 연결을 확인해주세요. '+e.message;}finally{btn.disabled=false;}};
+function signatureAuthorizedName(){
+ return v115Member && DATA.teams.includes(v115Member.player_name) ? v115Member.player_name : '';
+}
+function signatureSyncAuth(){
+ const name=signatureAuthorizedName(),owner=sigEl('signatureOwner'),save=sigEl('signatureSave'),hint=sigEl('signatureLoginHint');
+ if(!owner||!save||!hint)return;
+ owner.innerHTML=name?`<option value="${esc(name)}">${esc(name)}</option>`:'<option value="">참가자 로그인이 필요합니다.</option>';
+ owner.value=name||'';owner.disabled=true;save.disabled=!name;
+ hint.textContent=name?`${name} 참가자 본인의 주력 선수만 변경할 수 있습니다.`:'참가자 계정으로 로그인하면 본인의 주력 선수를 등록하거나 변경할 수 있습니다.';
+ if(!name){signatureSelection=null;sigEl('signatureSearch').value='';sigEl('signatureOptions').innerHTML='';}
+ const prev=signatureRecords[name];
+ signatureSelection=prev?{id:Number(prev.spid),name:prev.display_name}:null;
+ sigEl('signaturePosition').value=prev?.position||'ST';
+ sigEl('signatureEnhance').value=String(prev?.enhance||1);
+ sigEl('signatureSearch').value=prev?.display_name||'';
+ signatureDrawPreview();
+}
+function signatureInit(){
+ const owner=sigEl('signatureOwner');
+ sigEl('signatureOpen').onclick=async()=>{
+  sigEl('signatureOverlay').classList.add('open');sigEl('signatureStatus').textContent='';
+  signatureSelection=null;sigEl('signatureSearch').value='';sigEl('signatureOptions').innerHTML='';
+  await signatureRefresh();signatureSyncAuth();await signatureLoadCatalog();
+ };
+ sigEl('signatureClose').onclick=()=>sigEl('signatureOverlay').classList.remove('open');
+ sigEl('signatureOverlay').onclick=e=>{if(e.target===sigEl('signatureOverlay'))sigEl('signatureOverlay').classList.remove('open');};
+ sigEl('signatureSearch').oninput=signatureSearch;
+ sigEl('signatureOptions').onclick=e=>{
+  const b=e.target.closest('[data-sigid]');if(!b||!signatureCatalog)return;
+  const p=signatureCatalog.find(x=>Number(x.id)===Number(b.dataset.sigid));if(!p)return;
+  signatureSelection={id:Number(p.id),name:p.name};sigEl('signatureSearch').value=p.name;sigEl('signatureOptions').innerHTML='';signatureDrawPreview();
+ };
+ sigEl('signatureSave').onclick=async()=>{
+  const name=signatureAuthorizedName(),btn=sigEl('signatureSave'),status=sigEl('signatureStatus');
+  if(!name)return status.textContent='주력 선수 등록은 참가자 로그인 후 이용할 수 있습니다.';
+  if(owner.value!==name)return status.textContent='본인 프로필만 수정할 수 있습니다.';
+  if(!signatureSelection)return status.textContent='FC 온라인 선수를 먼저 선택해 주세요.';
+  if(!cloudClient)return status.textContent='Supabase 연결을 확인해 주세요.';
+  btn.disabled=true;
+  try{
+   const {data:{user},error:authError}=await cloudClient.auth.getUser();
+   if(authError||!user)throw new Error('로그인 상태를 확인해 주세요.');
+   const {data:member,error:memberError}=await cloudClient.from('league_members').select('player_name').eq('auth_user_id',user.id).eq('enabled',true).maybeSingle();
+   if(memberError||member?.player_name!==name)throw new Error('본인 계정 인증을 확인해 주세요.');
+   const p=signatureSelection,payload={player_name:name,spid:p.id,display_name:p.name,season:signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE',position:sigEl('signaturePosition').value,enhance:Number(sigEl('signatureEnhance').value),updated_at:new Date().toISOString()};
+   const {error}=await cloudClient.from(SIGNATURE_TABLE).upsert(payload,{onConflict:'player_name'});
+   if(error)throw error;
+   signatureRecords[name]=payload;status.textContent='본인의 주력 선수가 저장되었습니다.';
+   if(sigEl('profileOverlay').style.display==='flex'&&sigEl('profileName').textContent===name)renderProfile(name);
+  }catch(e){status.textContent='저장하지 못했습니다. 본인 계정 및 접근 권한을 확인해 주세요. '+(e.message||'');}
+  finally{btn.disabled=!signatureAuthorizedName();}
+ };
 }
 signatureInit();
 // Independent read-only listener. No auth event or league-state read/write modifications.
@@ -693,6 +764,7 @@ function v115DrawHeader(){
  v115el('memberManageOpen').hidden=!isAdmin;
  v115el('v115ChangeOpen').hidden=!v115Member;
  v115el('memberToggle').textContent=v115Member?`${v115Member.player_name} · 로그아웃`:'참가자 로그인';
+ signatureSyncAuth();
 }
 async function v115Invoke(func,body){
  if(!cloudClient)throw new Error('온라인 연결 상태를 확인해 주세요.');
@@ -777,6 +849,84 @@ function v115Init(){
  if(cloudClient){cloudClient.auth.onAuthStateChange(()=>{setTimeout(v115WhoAmI,0);});v115WhoAmI();}
 }
 v115Init();
+
+
+// v11.7 - Separate match-comments module. No writes to league_state or localStorage.
+const V116_TABLE='league_match_comments';
+const v116Counts=Object.create(null);
+let v116ActiveMatch=null,v116Rows=[],v116Editing=null,v116Loading=false;
+const v116El=id=>document.getElementById(id);
+const v116When=d=>{try{return new Date(d).toLocaleString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(_){return '';}};
+function v116CountsDraw(){document.querySelectorAll('[data-v116-count]').forEach(n=>{n.textContent=String(v116Counts[Number(n.dataset.v116Count)]||0);});}
+async function v116LoadCounts(){
+ if(!cloudClient)return;
+ const {data,error}=await cloudClient.from(V116_TABLE).select('match_num');
+ if(error){console.warn('Comment counts:',error.message);return;}
+ Object.keys(v116Counts).forEach(k=>delete v116Counts[k]);
+ (data||[]).forEach(r=>{v116Counts[r.match_num]=(v116Counts[r.match_num]||0)+1;});
+ v116CountsDraw();
+}
+function v116CanWrite(){return !!(v115Member || (state.admin&&currentUser));}
+function v116CanEdit(row){return !!currentUser && (row.author_uid===currentUser.id || !!state.admin);}
+function v116Draw(){
+ const list=v116El('v116List');
+ if(!v116Rows.length){list.innerHTML='<div class="v116-empty">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>';}
+ else list.innerHTML=v116Rows.map(r=>`<article class="v116-item"><div class="v116-item-top"><span class="v116-author">${esc(r.author_name)}</span><span class="v116-time">${v116When(r.created_at)}${r.updated_at!==r.created_at?' · 수정됨':''}</span></div><div class="v116-body">${esc(r.body)}</div>${v116CanEdit(r)?`<div class="v116-item-actions"><button type="button" data-v116-edit="${r.id}">수정</button><button type="button" data-v116-delete="${r.id}">삭제</button></div>`:''}</article>`).join('');
+ const can=v116CanWrite();v116El('v116Body').disabled=!can;v116El('v116Submit').disabled=!can||v116Loading;
+ v116El('v116Body').placeholder=can?'경기와 관련된 댓글을 남겨주세요. (최대 500자)':'댓글을 작성하려면 참가자 또는 관리자 계정으로 로그인해 주세요.';
+ if(!can)v116El('v116Status').textContent='댓글은 누구나 볼 수 있으며, 작성은 로그인 후 가능합니다.';
+ else if(!v116Editing)v116El('v116Status').textContent='';
+ v116El('v116Submit').textContent=v116Editing?'수정 완료':'댓글 등록';
+}
+async function v116LoadMatch(){
+ if(!cloudClient){v116El('v116List').textContent='온라인 연결 상태를 확인해 주세요.';return;}
+ const target=v116ActiveMatch;
+ v116El('v116List').textContent='댓글을 불러오고 있습니다…';
+ const {data,error}=await cloudClient.from(V116_TABLE).select('id,match_num,author_uid,author_name,body,created_at,updated_at').eq('match_num',target).order('created_at',{ascending:true}).limit(200);
+ if(v116ActiveMatch!==target)return;
+ if(error){v116El('v116List').textContent='댓글을 불러오지 못했습니다. 댓글 테이블 및 접근 정책을 확인해 주세요.';console.warn(error);return;}
+ v116Rows=data||[];v116Draw();
+}
+async function v116Open(num){
+ const m=state.matches.find(x=>x.num===num);if(!m||!done(m))return;
+ v116ActiveMatch=num;v116Editing=null;v116Rows=[];v116El('v116Body').value='';v116El('v116Counter').textContent='0 / 500자';
+ v116El('v116Title').textContent='MATCH #'+String(num).padStart(3,'0')+' · 댓글';
+ v116El('v116MatchInfo').textContent=m.a+'  '+m.sa+' : '+m.sb+'  '+m.b;
+ v116El('v116Overlay').classList.add('open');v116El('v116Overlay').setAttribute('aria-hidden','false');
+ await v116LoadMatch();
+}
+function v116Close(){v116ActiveMatch=null;v116Editing=null;v116El('v116Overlay').classList.remove('open');v116El('v116Overlay').setAttribute('aria-hidden','true');}
+async function v116Save(){
+ const body=v116El('v116Body').value.trim();
+ if(!v116CanWrite()){v116El('v116Status').textContent='로그인 후 작성해 주세요.';return;}
+ if(body.length<1||body.length>500){v116El('v116Status').textContent='댓글은 1~500자로 입력해 주세요.';return;}
+ if(v116Loading)return;
+ v116Loading=true;v116El('v116Submit').disabled=true;
+ const match=v116ActiveMatch,editing=v116Editing;
+ try{
+  const {data:{user},error:authErr}=await cloudClient.auth.getUser();if(authErr||!user)throw new Error('로그인 상태를 확인해 주세요.');
+  let q=editing?cloudClient.from(V116_TABLE).update({body}).eq('id',editing).select('id'):cloudClient.from(V116_TABLE).insert({match_num:match,author_uid:user.id,body}).select('id');
+  const {data,error}=await q;if(error)throw error;if(!data?.length)throw new Error('저장 권한을 확인해 주세요.');
+  v116Editing=null;v116El('v116Body').value='';v116El('v116Counter').textContent='0 / 500자';
+  await Promise.all([v116LoadMatch(),v116LoadCounts()]);
+ }catch(err){v116El('v116Status').textContent='댓글 저장에 실패했습니다. '+(err.message||'접근 권한을 확인해 주세요.');}
+ finally{v116Loading=false;v116El('v116Submit').disabled=!v116CanWrite();}
+}
+function v116Init(){
+ document.addEventListener('click',async e=>{
+  const open=e.target.closest('[data-v116-match]');if(open){await v116Open(Number(open.dataset.v116Match));return;}
+  const edit=e.target.closest('[data-v116-edit]');if(edit){const r=v116Rows.find(x=>x.id===edit.dataset.v116Edit);if(!r||!v116CanEdit(r))return;v116Editing=r.id;v116El('v116Body').value=r.body;v116El('v116Counter').textContent=r.body.length+' / 500자';v116El('v116Submit').textContent='수정 완료';v116El('v116Body').focus();return;}
+  const del=e.target.closest('[data-v116-delete]');if(del){const r=v116Rows.find(x=>x.id===del.dataset.v116Delete);if(!r||!v116CanEdit(r)||!confirm('이 댓글을 삭제하시겠습니까?'))return;del.disabled=true;const {data,error}=await cloudClient.from(V116_TABLE).delete().eq('id',r.id).select('id');if(error||!data?.length){v116El('v116Status').textContent='댓글을 삭제하지 못했습니다. 권한을 확인해 주세요.';del.disabled=false;return;}await Promise.all([v116LoadMatch(),v116LoadCounts()]);}
+ });
+ v116El('v116Close').onclick=v116Close;
+ v116El('v116Overlay').onclick=e=>{if(e.target===v116El('v116Overlay'))v116Close();};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&v116ActiveMatch!==null)v116Close();});
+ v116El('v116Body').oninput=e=>v116El('v116Counter').textContent=e.target.value.length+' / 500자';
+ v116El('v116Submit').onclick=v116Save;
+ window.addEventListener('focus',()=>{if(v116ActiveMatch!==null)v116LoadMatch();v116LoadCounts();});
+ if(cloudClient)v116LoadCounts();
+}
+v116Init();
 
 initCloud();
 </script></body></html>
