@@ -589,6 +589,41 @@ body.v123-cup-active .v123-cup-hero {
   body.v123-cup-active .stat { background: rgba(6,21,40,.96) !important; }
 }
 
+
+/* V12.3 — CUP OPERATIONS. Scoped visual additions; no existing theme removed. */
+.v123-feature{margin:18px 0;border:1px solid #a78956;border-radius:20px;padding:20px;background:linear-gradient(140deg,rgba(8,29,54,.94),rgba(8,18,37,.91));box-shadow:0 18px 40px #0006;color:#eff5ff}
+.v123-feature h3{margin:5px 0 8px;font-size:20px;color:#f4d595}.v123-feature p{margin:0;color:#bdcee2;font-size:12px;line-height:1.7}
+.v123-progress-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.v123-progress-card{background:#081f3dc9;border:1px solid #42627e;border-radius:12px;padding:13px}
+.v123-progress-card span{font-size:11px;color:#b9cbe2;display:block}.v123-progress-card strong{font-size:24px;color:#fff;display:block;margin-top:5px;font-variant-numeric:tabular-nums}
+.v123-progress-card .bar{display:block;height:7px;overflow:hidden;border-radius:10px;background:#29425e;margin-top:9px}
+.v123-progress-card .bar i{display:block;height:100%;background:linear-gradient(90deg,#a99060,#ffe3a6);border-radius:10px}
+.v123-overall{margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:#f4d595;font-size:13px;gap:8px}
+.v123-center-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.v123-gamecard{width:100%;text-align:left;cursor:pointer;color:#f1f5fb;background:linear-gradient(145deg,#163354ee,#0a1b35ee);border:1px solid #547092;border-radius:14px;padding:14px;display:block;font:inherit;transition:transform .15s,border-color .15s}
+.v123-gamecard:hover,.v123-gamecard:focus-visible{border-color:#e8c585;transform:translateY(-2px);outline:2px solid transparent}
+.v123-gamecard small{display:block;color:#c7d8ed;font-size:10px;letter-spacing:.7px;margin-bottom:9px}
+.v123-gamecard .teams{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:13px;font-weight:700}
+.v123-gamecard .teams span{min-width:0;overflow-wrap:anywhere}.v123-gamecard .teams b{flex-shrink:0;color:#ffdc93;font-size:18px}
+.v123-gamecard .result{margin-top:10px;color:#9bb7d2;font-size:11px}
+.v123-honors-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:14px}
+.v123-honors-card{padding:17px 13px;border-radius:13px;background:linear-gradient(150deg,#17365bdf,#0b203cd9);border:1px solid #496582;text-align:center}
+.v123-honors-card .emoji{font-size:27px;display:block}.v123-honors-card small{display:block;color:#bed1e8;margin:7px 0}.v123-honors-card strong{color:#f8dc9c;font-size:19px}.v123-honors-card p{font-size:11px;margin:6px 0 0}
+.v123-honors-foot{margin-top:12px;font-size:11px;color:#afc4dc;line-height:1.7}
+.v123-modal{display:none;position:fixed;inset:0;background:#000b;z-index:10000;align-items:center;justify-content:center;padding:16px}
+.v123-modal.open{display:flex}.v123-dialog{width:min(620px,100%);max-height:90vh;overflow:auto;background:linear-gradient(150deg,#102d4b,#07192e);border:1px solid #b69863;box-shadow:0 25px 70px #000d;border-radius:19px;padding:22px;color:#f3f7ff}
+.v123-dialog .top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.v123-dialog h2{font-size:22px;margin:6px 0;color:#f6db9c}
+.v123-dialog .summary{background:#091f3c;border:1px solid #476583;border-radius:12px;padding:18px;margin:15px 0;text-align:center;font-size:18px;font-weight:700;line-height:2}
+.v123-dialog .summary b{color:#f7d894;font-size:25px}
+.v123-dialog .detail{padding:12px 0;color:#c5d6e9;line-height:1.65;font-size:13px;border-bottom:1px solid #36506c}
+.v123-comment{margin:10px 0;padding:11px;border-radius:10px;border:1px solid #375573;background:#0b2541;font-size:12px;line-height:1.6}
+.v123-comment b{color:#f5d899}.v123-comment small{color:#a9bfd5;float:right}.v123-comment p{margin:7px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.v123-comment-form{margin-top:13px}.v123-comment-form textarea{display:block;width:100%;box-sizing:border-box;min-height:77px;margin:7px 0;background:#07192d;border:1px solid #52718c;border-radius:10px;color:white;padding:11px;font:inherit}
+.v123-modal-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.v123-modal-buttons button{cursor:pointer;border-radius:9px;padding:9px 12px;border:1px solid #bba276;background:#183453;color:#fff;font:inherit}
+.v123-modal-note{color:#acc1d5;font-size:11px;line-height:1.6;margin-top:10px}
+@media(max-width:650px){.v123-feature{padding:14px;margin:14px 0}.v123-progress-stats{gap:6px}.v123-progress-card{padding:10px 7px}.v123-progress-card span{font-size:10px}.v123-progress-card strong{font-size:19px}.v123-center-list,.v123-honors-grid{grid-template-columns:1fr}.v123-gamecard .teams{font-size:12px}}
+
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
@@ -625,7 +660,21 @@ body.v123-cup-active .v123-cup-hero {
   <div id="v119MatchList" class="v1211-daily">날짜를 선택하면 시간대별 참가자 목록이 표시됩니다.</div>
  </div>
 </div></section>
-<section id="tournament" class="section"><div class="v123-tournament-intro" id="v123CupTournamentIntro"><div><small>SEASON 03 · KNOCKOUT STAGE</small><strong>DIT CUP TOURNAMENT</strong><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><button type="button" id="v123ViewPoster">포스터 보기 ↗</button></div><div class="section-titlebar"><div><small>SEASON 03 · KNOCKOUT STAGE</small><h2>컵대회 센터</h2><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><div class="section-icon">🏆</div></div><div class="panel"><div class="ph"><h3>토너먼트 센터</h3><span class="pill">관리자 관리</span></div><p class="note">정규리그 진행 중에는 현재 순위 기준으로 대진 미리보기가 자동 갱신됩니다. 45경기 종료 후 관리자가 최종 순위를 확정하면 대진이 고정됩니다. 토너먼트 시작 후에는 리그 점수를 수정해도 대진이 바뀌지 않습니다.</p><div class="ph" style="justify-content:flex-start;flex-wrap:wrap"><span class="pill" id="tournamentStatus">대진 미리보기 · 미확정</span><button class="btn primary" id="lockTournament">최종 순위 확정 및 토너먼트 시작</button></div>  <div class="v122-ops" id="v122Ops" aria-live="polite">
+<section id="tournament" class="section"><div class="v123-tournament-intro" id="v123CupTournamentIntro"><div><small>SEASON 03 · KNOCKOUT STAGE</small><strong>DIT CUP TOURNAMENT</strong><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><button type="button" id="v123ViewPoster">포스터 보기 ↗</button></div><div class="section-titlebar"><div><small>SEASON 03 · KNOCKOUT STAGE</small><h2>컵대회 센터</h2><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><div class="section-icon">🏆</div></div><div class="v123-feature" id="v123CupOps" aria-label="시즌 3 컵대회 매치센터 및 진행률">
+ <small>DIT FC · SEASON 03 · CUP OPERATIONS</small><h3>🏆 CUP MATCH CENTER</h3>
+ <p>확정된 대진을 바탕으로 전체 컵대회 7경기의 결과와 진출 상황을 확인합니다. 카드를 누르면 해당 경기의 정규리그 상대 전적과 상세 정보를 볼 수 있습니다.</p>
+ <div class="v123-progress-stats" id="v123ProgressStats" aria-live="polite"></div>
+ <div class="v123-overall"><strong id="v123ProgressCaption">컵대회 준비 중</strong><span id="v123ProgressPct">0%</span></div>
+ <div class="v123-center-list" id="v123CupMatchList"></div>
+ <p style="margin-top:13px">경기 점수 입력과 승자 확정은 아래 기존 대진표에서 관리자만 수행할 수 있습니다. 동점 경기의 승자는 관리자 선택으로 확정합니다.</p>
+</div>
+<div class="v123-feature" id="v123Honors" aria-label="시즌 3 명예의 전당">
+ <small>SEASON 03 · OFFICIAL HONORS</small><h3>👑 시즌 3 명예의 전당</h3>
+ <p>정규리그 우승자는 45경기 완료 시 표시하고, 컵대회 우승자는 결승 점수와 승자가 모두 확정된 경우에만 표시합니다.</p>
+ <div class="v123-honors-grid" id="v123HonorsGrid"></div>
+ <div class="v123-honors-foot" id="v123HonorsFoot"></div>
+</div>
+<div class="panel"><div class="ph"><h3>토너먼트 센터</h3><span class="pill">관리자 관리</span></div><p class="note">정규리그 진행 중에는 현재 순위 기준으로 대진 미리보기가 자동 갱신됩니다. 45경기 종료 후 관리자가 최종 순위를 확정하면 대진이 고정됩니다. 토너먼트 시작 후에는 리그 점수를 수정해도 대진이 바뀌지 않습니다.</p><div class="ph" style="justify-content:flex-start;flex-wrap:wrap"><span class="pill" id="tournamentStatus">대진 미리보기 · 미확정</span><button class="btn primary" id="lockTournament">최종 순위 확정 및 토너먼트 시작</button></div>  <div class="v122-ops" id="v122Ops" aria-live="polite">
     <div class="v122-heading"><div><div class="v122-label">SEASON 03 · OPERATIONS</div><h3>정규리그 종료 · 컵대회 진행 현황</h3></div><span class="pill" id="v122StageBadge">확인 중</span></div>
     <div class="v122-grid"><div class="v122-metric"><b id="v122Played">—</b><small>완료 경기</small></div><div class="v122-metric"><b id="v122Remaining">—</b><small>미완료 경기</small></div><div class="v122-metric"><b id="v122Percent">—</b><small>진행률</small></div></div>
     <div class="v122-track"><span id="v122ProgressBar" style="width:0%"></span></div>
@@ -704,6 +753,12 @@ body.v123-cup-active .v123-cup-hero {
 </div>
 
 <div class="v120-modal" id="v120AdminModal" hidden role="dialog" aria-modal="true" aria-labelledby="v120AdminTitle"><div class="v120-modalbox"><div class="v119-heading"><h2 id="v120AdminTitle">시즌 3 기간 관리</h2><button type="button" class="btn" id="v120AdminClose">닫기 ✕</button></div><p class="v119-muted">공식 시즌 기간만 변경합니다. 경기 결과, 댓글, 참가자 계정은 수정하지 않습니다. 시즌 종료 및 결산 기능은 다음 단계에서 개발합니다.</p><label class="v120-label" for="v120StartDate">시작일</label><input class="field" type="date" id="v120StartDate"><label class="v120-label" for="v120EndDate">종료 예정일</label><input class="field" type="date" id="v120EndDate"><div class="v119-status" id="v120AdminStatus" role="status"></div><button type="button" class="btn primary" id="v120SavePeriod">기간 변경 저장</button></div></div>
+<div class="v123-modal" id="v123CupMatchOverlay" role="dialog" aria-modal="true" aria-labelledby="v123CupMatchTitle" aria-hidden="true"><div class="v123-dialog">
+<div class="top"><div><small>SEASON 03 · CUP MATCH CENTER</small><h2 id="v123CupMatchTitle">경기 정보</h2></div><button type="button" class="btn" id="v123CupClose">닫기 ✕</button></div>
+<div class="summary" id="v123CupMatchSummary"></div><div class="detail" id="v123CupMatchContext"></div>
+<div class="detail"><strong>💬 컵대회 경기 댓글</strong><div id="v123CupComments" style="margin-top:10px">불러오는 중…</div>
+<div class="v123-comment-form"><textarea id="v123CupCommentBody" maxlength="500" aria-label="컵대회 댓글" placeholder="로그인 후 경기 댓글을 입력할 수 있습니다 (최대 500자)"></textarea><div class="v123-modal-buttons"><button type="button" id="v123CupCommentSubmit">댓글 등록</button></div><div class="v123-modal-note" id="v123CupCommentStatus">컵대회 댓글은 선택 설치 기능입니다. 별도 SQL 적용 전에도 경기 상세 화면은 사용할 수 있습니다.</div></div></div>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./config.js"></script>
 <script>
@@ -1480,7 +1535,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
 (function v122Init(){
  const get=id=>document.getElementById(id);
  const safe=x=>esc(String(x??''));
- const finalWinner=g=>g&&g.winner&&g.winner!=='TBD'&&[g.a,g.b].includes(g.winner) && Number.isFinite(Number(g.sa)) && Number.isFinite(Number(g.sb)) && g.sa!==null && g.sb!==null && Number(g.sa)!==Number(g.sb);
+ const finalWinner=g=>g&&g.winner&&g.winner!=='TBD'&&[g.a,g.b].includes(g.winner) && Number.isFinite(Number(g.sa)) && Number.isFinite(Number(g.sb)) && g.sa!==null && g.sb!==null && (Number(g.sa)===Number(g.sb)||g.winner===(Number(g.sa)>Number(g.sb)?g.a:g.b));
  function update(){
   if(!get('v122Ops'))return;
   const matches=state.matches||[];const completed=matches.filter(done);const pending=matches.filter(m=>!done(m));const locked=!!state.brackets?.locked;
@@ -1508,7 +1563,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
   const u=locked?cupU:{sf1:{a:t[0]?.name,b:t[3]?.name},sf2:{a:t[1]?.name,b:t[2]?.name}};
   const e=locked?cupE:{sf1:{a:t[4]?.name,b:t[7]?.name},sf2:{a:t[5]?.name,b:t[6]?.name}};
   get('v122SeedPreview').innerHTML=mk('CHAMPIONS LEAGUE · 1–4위',[[u.sf1?.a,u.sf1?.b],[u.sf2?.a,u.sf2?.b]])+mk('EUROPA LEAGUE · 5–8위',[[e.sf1?.a,e.sf1?.b],[e.sf2?.a,e.sf2?.b]]);
-  get('v122Notice').textContent=!locked?'시즌 3의 모든 리그 경기가 완료된 뒤, 운영진이 기존의 ‘최종 순위 확정 및 토너먼트 시작’ 버튼을 눌러 대진을 고정할 수 있습니다.':superDone?'컵대회 결과 입력이 완료되었습니다. 시즌 전체 종료 및 아카이브 확정은 V12.3에서 제공할 예정입니다.':'대진이 고정되었습니다. 아래 컵대회에서 준결승·결승·슈퍼컵의 점수와 승자를 순서대로 입력해 주세요.';
+  get('v122Notice').textContent=!locked?'시즌 3의 모든 리그 경기가 완료된 뒤, 운영진이 기존의 ‘최종 순위 확정 및 토너먼트 시작’ 버튼을 눌러 대진을 고정할 수 있습니다.':superDone?'컵대회 결과 입력이 완료되었습니다. 시즌 3 명예의 전당에서 최종 결과를 확인할 수 있습니다. 영구 아카이브는 이후 버전에서 제공될 예정입니다.':'대진이 고정되었습니다. 아래 컵대회에서 준결승·결승·슈퍼컵의 점수와 승자를 순서대로 입력해 주세요.';
   get('v122OpsOpen').hidden=!state.admin;
  }
  get('v122OpsOpen').addEventListener('click',()=>{activate('tournament');get('v122Ops').scrollIntoView({behavior:'smooth',block:'start'});get('v118AccountMenu').hidden=true;});
@@ -1547,4 +1602,147 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  if(typeof prev==='function')window.render=function(){prev();update();};
  update();
 })();
+
+/* V12.3 — Separate UI + defensive admin cup transitions.
+   No new league_state fields; never writes on page load. Existing auth and bracket seeding preserved. */
+(function v123CupOperations(){
+ 'use strict';
+ const el=id=>document.getElementById(id);
+ const safe=x=>esc(String(x??''));
+ const kinds={ucl:'챔피언스리그',uel:'유로파리그',supercup:'슈퍼컵'};
+ const keys=[['ucl','sf1'],['ucl','sf2'],['ucl','final'],['uel','sf1'],['uel','sf2'],['uel','final'],['supercup','final']];
+ const label=id=>id==='sf1'?'준결승 1경기':id==='sf2'?'준결승 2경기':'결승';
+ const actual=(n)=>typeof n==='number'&&Number.isInteger(n)&&n>=0&&n<=99;
+ const pairReady=g=>!!g&&g.a&&g.b&&g.a!=='TBD'&&g.b!=='TBD'&&g.a!==g.b;
+ const scoresReady=g=>pairReady(g)&&actual(g.sa)&&actual(g.sb);
+ const hasWinner=g=>scoresReady(g)&&[g.a,g.b].includes(g.winner)&&
+    (g.sa===g.sb||g.winner===(g.sa>g.sb?g.a:g.b));
+ function game(k,id){return k==='supercup'?state.brackets?.supercup:state.brackets?.[k]?.[id];}
+ function resetResult(g){if(!g)return;g.sa=null;g.sb=null;g.winner='';}
+ function normalizeWinner(g){if(!g)return;
+   if(!scoresReady(g)){g.winner='';return;}
+   if(g.sa!==g.sb){g.winner=g.sa>g.sb?g.a:g.b;return;}
+   if(g.winner!==g.a&&g.winner!==g.b)g.winner='';
+ }
+ function setPair(g,a,b){if(!g)return;const aa=a||'TBD',bb=b||'TBD';
+   if(g.a!==aa||g.b!==bb){g.a=aa;g.b=bb;resetResult(g);}
+ }
+ function reconcile(){
+   const br=state.brackets||{};
+   for(const k of ['ucl','uel']){
+     const b=br[k];if(!b)continue;
+     for(const id of ['sf1','sf2'])normalizeWinner(b[id]);
+     if(b.final){setPair(b.final,hasWinner(b.sf1)?b.sf1.winner:'TBD',hasWinner(b.sf2)?b.sf2.winner:'TBD');normalizeWinner(b.final);}
+   }
+   if(br.supercup){setPair(br.supercup,hasWinner(br.ucl?.final)?br.ucl.final.winner:'TBD',hasWinner(br.uel?.final)?br.uel.final.winner:'TBD');normalizeWinner(br.supercup);}
+ }
+ const regularResult=(a,b)=>state.matches.find(m=>done(m)&&((m.a===a&&m.b===b)||(m.a===b&&m.b===a)));
+ function renderProgress(){
+  const locked=!!state.brackets?.locked;
+  const parts=[['ucl','챔피언스리그',3],['uel','유로파리그',3],['supercup','슈퍼컵',1]];
+  let completed=0;
+  el('v123ProgressStats').innerHTML=parts.map(([k,n,total])=>{
+    const ids=k==='supercup'?['final']:['sf1','sf2','final'];
+    const cnt=locked?ids.filter(id=>hasWinner(game(k,id))).length:0;completed+=cnt;
+    return `<div class="v123-progress-card"><span>${safe(n)}</span><strong>${cnt} / ${total}</strong><span class="bar"><i style="width:${cnt/total*100}%"></i></span></div>`;
+  }).join('');
+  el('v123ProgressPct').textContent=Math.round(completed/7*100)+'%';
+  el('v123ProgressCaption').textContent=!locked?'정규리그 대진 확정 대기':completed===7?'전체 7경기 종료 · 시즌 3 컵대회 완료':'컵대회 '+completed+' / 7경기 완료';
+ }
+ function renderMatchCenter(){
+  const locked=!!state.brackets?.locked;
+  el('v123CupMatchList').innerHTML=keys.map(([k,id])=>{
+   const g=game(k,id)||{},ready=locked&&pairReady(g),complete=locked&&hasWinner(g);
+   const name=kinds[k];const title=k==='supercup'?'슈퍼컵 최종전':label(id);
+   return `<button type="button" class="v123-gamecard" data-v123-cup="${k}:${id}" aria-label="${safe(name+' '+title)} 상세 보기"><small>${safe(name)} · ${safe(title)}</small><div class="teams"><span>${safe(g.a||'TBD')}</span><b>${scoresReady(g)?g.sa+' : '+g.sb:'VS'}</b><span>${safe(g.b||'TBD')}</span></div><div class="result">${complete?'✅ 승자 '+safe(g.winner):ready?'⏳ 경기 결과 대기':'🔒 진출 선수 확정 대기'}</div></button>`;
+  }).join('');
+ }
+ function honors(){
+  const rows=table(),leagueDone=state.matches.length===45&&state.matches.every(done);
+  const league=leagueDone?rows[0]?.name:'';
+  const selected=[['🏅','정규리그 우승',league,leagueDone?rows[0]?.pts+'점 · '+rows[0]?.w+'승 '+rows[0]?.d+'무 '+rows[0]?.l+'패':'정규리그 종료 후 공개'],
+    ['🏆','챔피언스리그 우승',hasWinner(game('ucl','final'))?game('ucl','final').winner:'','결승 결과 확정 후 공개'],
+    ['🏆','유로파리그 우승',hasWinner(game('uel','final'))?game('uel','final').winner:'','결승 결과 확정 후 공개'],
+    ['👑','슈퍼컵 우승',hasWinner(game('supercup','final'))?game('supercup','final').winner:'','슈퍼컵 결과 확정 후 공개']];
+  el('v123HonorsGrid').innerHTML=selected.map(([icon,title,winner,note])=>`<div class="v123-honors-card"><span class="emoji">${icon}</span><small>${safe(title)}</small><strong>${winner?safe(winner):'미정'}</strong><p>${winner&&title==='정규리그 우승'?safe(note):winner?'우승 확정':safe(note)}</p></div>`).join('');
+  const cupDone=hasWinner(game('ucl','final'))&&hasWinner(game('uel','final'))&&hasWinner(game('supercup','final'));
+  el('v123HonorsFoot').textContent=cupDone?'시즌 3 모든 컵대회 결과가 등록되었습니다. 이 화면은 현재 저장된 결과를 실시간으로 보여줍니다.':'정규리그 기록은 유지됩니다. 컵대회 명예의 전당은 확정 결과에 따라 자동 공개되며, 아직 별도의 영구 아카이브로 저장하지 않습니다.';
+ }
+ function refresh(){if(!el('v123CupOps'))return;renderProgress();renderMatchCenter();honors();}
+ // Capture-phase handler runs before legacy score widgets; only acts on administrator bracket edits.
+ document.addEventListener('change',e=>{
+  const target=e.target;
+  if(!target.matches?.('.scoreinput[data-bracket],.winnerSelect[data-bracket]'))return;
+  e.stopImmediatePropagation();e.stopPropagation();
+  if(!state.admin){alert('운영진 계정으로 로그인한 뒤 수정할 수 있습니다.');render();return;}
+  if(!state.brackets?.locked){alert('정규리그 종료 후 대진을 확정해야 합니다.');render();return;}
+  const k=target.dataset.bracket,id=target.dataset.game;
+  if(!['ucl','uel','supercup'].includes(k)||!['sf1','sf2','final'].includes(id)){render();return;}
+  const g=game(k,id);if(!g||!pairReady(g)){alert('이전 라운드 승자가 확정되지 않았습니다.');render();return;}
+  if(target.classList.contains('scoreinput')){
+    const field=target.dataset.side;if(!['sa','sb'].includes(field)){render();return;}
+    const value=target.value.trim(),n=value===''?null:Number(value);
+    if(n!==null&&!actual(n)){alert('스코어는 0~99의 정수만 입력해 주세요.');render();return;}
+    const current=g[field];if(current===n)return;
+    // If a winner changes, reconcile() resets downstream results and never touches original seeding.
+    g[field]=n;
+    if(scoresReady(g)&&g.sa===g.sb)g.winner=''; // tie requires explicit admin confirmation after score edit
+    normalizeWinner(g);
+  }else{
+    const requested=target.value;
+    if(requested&&!scoresReady(g)){alert('두 선수의 경기 점수를 먼저 입력해 주세요.');render();return;}
+    if(requested&&requested!==g.a&&requested!==g.b){render();return;}
+    if(requested&&g.sa!==g.sb&&requested!==(g.sa>g.sb?g.a:g.b)){
+      alert('동점이 아닌 경기는 스코어에 따라 승자가 자동 지정됩니다.');render();return;
+    }
+    g.winner=requested;
+  }
+  reconcile();persist();
+ },true);
+ // Cup comments live in separate table. If SQL is absent, the match centre still works normally.
+ const CMT='league_cup_match_comments';let activeKey='',cmtInstalled=true;
+ const canWrite=()=>!!cloudClient&&!!currentUser&&(!!v115Member||!!state.admin);
+ function close(){el('v123CupMatchOverlay').classList.remove('open');el('v123CupMatchOverlay').setAttribute('aria-hidden','true');activeKey='';}
+ async function loadComments(){const host=el('v123CupComments');if(!activeKey)return;
+  if(!cloudClient){host.textContent='온라인 연결을 확인해 주세요.';return;}
+  const current=activeKey;host.textContent='댓글 조회 중…';
+  const {data,error}=await cloudClient.from(CMT).select('id,cup_game_key,author_uid,author_name,body,created_at').eq('cup_game_key',current).order('created_at',{ascending:true}).limit(100);
+  if(activeKey!==current)return;
+  if(error){cmtInstalled=false;host.textContent='컵대회 댓글 기능이 아직 설정되지 않았습니다 (선택 SQL 설치 후 사용 가능).';el('v123CupCommentStatus').textContent='SQL 설치 전에는 댓글을 저장할 수 없습니다. 기존 정규리그 댓글은 영향받지 않습니다.';return;}
+  cmtInstalled=true;host.innerHTML=(data||[]).length?(data||[]).map(r=>`<article class="v123-comment"><b>${safe(r.author_name)}</b><small>${safe((r.created_at||'').slice(0,10))}</small><p>${safe(r.body)}</p></article>`).join(''):'<div class="v123-modal-note">아직 댓글이 없습니다.</div>';
+  el('v123CupCommentStatus').textContent=canWrite()?'로그인된 참가자 및 운영진만 댓글을 작성할 수 있습니다.':'댓글 작성은 참가자 또는 운영진 로그인 후 가능합니다.';
+ }
+ function open(k,id){const g=game(k,id)||{};const name=kinds[k],title=k==='supercup'?'슈퍼컵 최종전':label(id);
+  activeKey=k+':'+id;el('v123CupMatchTitle').textContent=name+' · '+title;
+  el('v123CupMatchSummary').innerHTML=`${safe(g.a||'TBD')} <b>${scoresReady(g)?g.sa+' : '+g.sb:'VS'}</b> ${safe(g.b||'TBD')}`;
+  const prev=regularResult(g.a,g.b);
+  const h2h=prev?'정규리그 맞대결: '+safe(prev.a)+' '+prev.sa+' : '+prev.sb+' '+safe(prev.b):'정규리그 맞대결 기록 없음 / 진출자 미정';
+  const t=table(),a=t.find(x=>x.name===g.a),b=t.find(x=>x.name===g.b);
+  const details=[h2h,a?'정규리그 '+safe(a.name)+' '+(t.indexOf(a)+1)+'위 · '+a.pts+'점':'',b?'정규리그 '+safe(b.name)+' '+(t.indexOf(b)+1)+'위 · '+b.pts+'점':'',hasWinner(g)?'🏆 승자: '+safe(g.winner):'승자 미확정'].filter(Boolean);
+  el('v123CupMatchContext').innerHTML=details.map(x=>'<div>'+x+'</div>').join('');
+  el('v123CupMatchOverlay').classList.add('open');el('v123CupMatchOverlay').setAttribute('aria-hidden','false');
+  el('v123CupCommentBody').value='';el('v123CupCommentBody').disabled=!canWrite();el('v123CupCommentSubmit').disabled=!canWrite();loadComments();
+ }
+ document.addEventListener('click',e=>{const card=e.target.closest('[data-v123-cup]');if(card){const [k,id]=(card.dataset.v123Cup||'').split(':');if(kinds[k]&&['sf1','sf2','final'].includes(id))open(k,id);}});
+ el('v123CupClose').addEventListener('click',close);
+ el('v123CupMatchOverlay').addEventListener('click',e=>{if(e.target===el('v123CupMatchOverlay'))close();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('v123CupMatchOverlay').classList.contains('open'))close();});
+ el('v123CupCommentSubmit').addEventListener('click',async()=>{
+  if(!canWrite()||!cmtInstalled){el('v123CupCommentStatus').textContent='로그인 또는 댓글용 SQL 설정을 확인해 주세요.';return;}
+  const text=el('v123CupCommentBody').value.trim();if(!text||text.length>500){el('v123CupCommentStatus').textContent='댓글은 1~500자로 입력해 주세요.';return;}
+  const key=activeKey;if(!key)return;
+  el('v123CupCommentSubmit').disabled=true;
+  const {data:{user},error:ae}=await cloudClient.auth.getUser();
+  if(ae||!user){el('v123CupCommentStatus').textContent='로그인 세션을 확인해 주세요.';el('v123CupCommentSubmit').disabled=false;return;}
+  const name=v115Member?.player_name||(state.admin?'운영진':'참가자');
+  const {error}=await cloudClient.from(CMT).insert({cup_game_key:key,author_uid:user.id,author_name:name,body:text});
+  if(error){el('v123CupCommentStatus').textContent='댓글 저장 실패: '+error.message;}
+  else{el('v123CupCommentBody').value='';await loadComments();}
+  el('v123CupCommentSubmit').disabled=!canWrite();
+ });
+ const original=window.render;
+ if(typeof original==='function')window.render=function(){original();refresh();};
+ refresh();
+})();
+
 </script></body></html>
