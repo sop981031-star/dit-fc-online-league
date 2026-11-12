@@ -408,12 +408,50 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
 .v122-actions button{font-size:12px}
 .v122-muted{font-size:11px;color:#a9bdd2;line-height:1.6}
 @media(max-width:560px){.v122-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.v122-metric{padding:9px}.v122-metric b{font-size:18px}.v122-seeds{grid-template-columns:1fr}.v122-ops{padding:13px}.v122-actions>*{flex:1}}
+
+/* V12.2.3 CUP MODE: Read-only, visual only; original league features and mobile nav untouched. */
+.v123-cup-hero{display:none;position:relative;margin:0 0 23px;border-radius:21px;overflow:hidden;border:1px solid #8f794f;background:linear-gradient(123deg,#0b1f41 0%,#09172a 53%,#392013 100%);box-shadow:0 18px 43px #0008,inset 0 2px #ffda8a44}
+body.v123-cup-active .v123-cup-hero{display:grid;grid-template-columns:minmax(190px,.76fr) minmax(0,1.35fr)}
+body.v123-cup-active main.wrap>.hero,body.v123-cup-active main.wrap>.v8-spotlight{display:none}
+.v123-cup-art{position:relative;min-height:370px;background:#081529;overflow:hidden}
+.v123-cup-art img{display:block;width:100%;height:100%;max-height:560px;object-fit:cover;object-position:center center}
+.v123-cup-art:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 70%,#08182a70),linear-gradient(0deg,#06172a78,transparent 18%)}
+.v123-cup-body{padding:clamp(20px,3vw,37px);min-width:0;display:flex;flex-direction:column;justify-content:center;gap:14px;background:radial-gradient(circle at right bottom,#db7c3325,transparent 50%)}
+.v123-kicker{font-size:10px;letter-spacing:2.4px;font-weight:900;color:#e9c891}
+.v123-cup-body h2{font-size:clamp(28px,3.5vw,52px);margin:2px 0 0;line-height:1.08;color:#ffe4a4;letter-spacing:-.5px}
+.v123-cup-desc{font-size:12px;color:#b7cee5;line-height:1.8;margin:0}
+.v123-chipbar{display:flex;gap:7px;flex-wrap:wrap}.v123-chip{padding:8px 11px;border-radius:999px;background:#1b3555;border:1px solid #395d84;color:#d9eafb;font-size:11px;font-weight:750}.v123-chip.gold{color:#f6dca2;background:#3b311f;border-color:#a7874c}
+.v123-cup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v123-cup-card{padding:13px;background:#0a1b31cc;border:1px solid #3d6388;border-radius:12px;min-width:0}
+.v123-cup-card.uel{border-color:#98603f;background:#251b23a6}
+.v123-cup-card h3{margin:0 0 9px;font-size:13px;color:#c4dcfa}.v123-cup-card.uel h3{color:#ffd1a4}
+.v123-pair{border-top:1px solid #ffffff1b;padding:9px 0;display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:11px;color:#d9e7f6;min-width:0}
+.v123-pair strong{display:block;min-width:0;overflow-wrap:anywhere;font-weight:750}.v123-pair i{font-size:9px;color:#dfbf79;font-style:normal;flex-shrink:0}
+.v123-cta{align-self:start;cursor:pointer;background:linear-gradient(120deg,#f6d799,#bc8d4e);border:1px solid #fae5b7;color:#142136;border-radius:11px;padding:13px 19px;font-weight:950;font-size:13px;box-shadow:0 6px 20px #0006}
+.v123-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}.v123-cup-foot{font-size:10px;line-height:1.6;color:#94abc4}
+.v123-tournament-intro{display:none;position:relative;border:1px solid #6b6b6b;border-radius:17px;padding:22px 28px;margin:0 0 20px;min-height:178px;overflow:hidden;background:linear-gradient(100deg,#061833f5,#061833a8 63%,#371a11aa),url('./assets/cup/s3-cup-poster.webp') center 44%/cover}
+body.v123-cup-active .v123-tournament-intro{display:flex;align-items:center;gap:17px;justify-content:space-between}
+.v123-tournament-intro strong{display:block;font-size:clamp(22px,3vw,34px);color:#ffe1a0;text-shadow:0 2px 20px #001b3c}
+.v123-tournament-intro small{font-size:11px;letter-spacing:1.5px;color:#c9dffe}
+.v123-tournament-intro p{margin:10px 0 0;color:#dae8f6;font-size:12px}
+.v123-tournament-intro button{flex-shrink:0;background:#f2d297;color:#0b243d;border:none;border-radius:10px;padding:12px 15px;cursor:pointer;font-weight:900}
+@media(max-width:900px){body.v123-cup-active .v123-cup-hero{grid-template-columns:minmax(170px,.85fr) minmax(0,1.2fr)}.v123-cup-grid{grid-template-columns:1fr}.v123-cup-art img{max-height:none}}
+@media(max-width:620px){body.v123-cup-active .v123-cup-hero{display:block}.v123-cup-art{min-height:0;max-height:none;display:flex;justify-content:center;background:linear-gradient(90deg,#051534,#201720)}.v123-cup-art img{width:100%;height:auto;max-height:540px;object-fit:contain}.v123-cup-art:after{background:linear-gradient(0deg,#071629cf,transparent 13%)}.v123-cup-body{padding:19px 15px 22px}.v123-cup-grid{grid-template-columns:1fr 1fr;gap:7px}.v123-cup-card{padding:10px}.v123-cup-card h3{font-size:12px}.v123-pair{font-size:10px}.v123-tournament-intro{padding:15px;min-height:145px}.v123-tournament-intro button{font-size:11px;padding:9px}}
+@media(max-width:375px){.v123-cup-grid{grid-template-columns:1fr}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="stats"><div class="stat"><label>전체 경기</label><strong id="total">45</strong><small>정규 리그</small></div><div class="stat"><label>진행 경기</label><strong id="played">0 / 45</strong><small id="progress">진행률 0%</small></div><div class="stat"><label>득점</label><strong id="goals">0</strong><small>리그 전체 득점</small></div><div class="stat"><label>선두</label><strong id="leader" style="font-size:20px">—</strong><small id="leaderPts">0점</small></div></div>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON 03 · MATCH CENTER</span></div>
-<section id="home" class="section active"><div class="panel"><div class="ph"><h3>LIVE TITLE RACE</h3><span class="pill">실시간 순위 경쟁</span></div><div id="liveDashboard"></div></div><div class="layout"><div class="panel"><div class="ph"><h3>리그 순위표</h3><button class="btn" data-go="standings">전체 순위 ↗</button></div><div id="homeTable" class="tablewrap"></div></div><div class="panel"><div class="ph"><h3>최근 경기 결과</h3><span class="pill">최신</span></div><div id="recent"></div></div><div class="panel"><div class="ph"><h3>UPCOMING 전체 경기</h3><span class="pill">다음 경기</span></div><div id="upcoming"></div></div><details class="panel v118-home-details"><summary>대회 진출 현황 · 펼쳐 보기</summary><div id="qualification"></div><p class="note">리그 1~4위는 챔피언스리그, 5~8위는 유로파리그에 진출합니다.</p></details></div></section>
+<section id="home" class="section active"><div class="v123-cup-hero" id="v123CupHero" aria-label="시즌 3 컵대회 안내">
+<div class="v123-cup-art"><img src="./assets/cup/s3-cup-poster.webp" alt="DIT FC ONLINE LEAGUE · DIT CUP TOURNAMENT 시즌 3 홍보 포스터" fetchpriority="high"></div>
+<div class="v123-cup-body"><div class="v123-kicker">SEASON 03 · THE FINAL CHAPTER</div><h2>DIT CUP<br>TOURNAMENT</h2>
+<p class="v123-cup-desc">정규리그는 끝났습니다. 이제 챔피언스리그와 유로파리그, 그리고 슈퍼컵을 향한 마지막 승부가 시작됩니다.</p>
+<div class="v123-chipbar"><span class="v123-chip gold" id="v123Stage">정규리그 종료 · 컵대회 시작</span><span class="v123-chip" id="v123Champion">정규리그 우승 확정</span></div>
+<div class="v123-cup-grid" id="v123BracketPreview" aria-label="확정 컵대회 대진"></div>
+<button type="button" class="v123-cta" id="v123GoCup">🏆 컵대회 대진표 확인 →</button>
+<div class="v123-cup-foot">최종 순위 및 대진은 사이트에 저장된 실제 기록을 기준으로 표시됩니다. 정규리그 경기·결과·기존 관리 기능은 변경되지 않습니다.</div>
+</div></div><div class="panel"><div class="ph"><h3>LIVE TITLE RACE</h3><span class="pill">실시간 순위 경쟁</span></div><div id="liveDashboard"></div></div><div class="layout"><div class="panel"><div class="ph"><h3>리그 순위표</h3><button class="btn" data-go="standings">전체 순위 ↗</button></div><div id="homeTable" class="tablewrap"></div></div><div class="panel"><div class="ph"><h3>최근 경기 결과</h3><span class="pill">최신</span></div><div id="recent"></div></div><div class="panel"><div class="ph"><h3>UPCOMING 전체 경기</h3><span class="pill">다음 경기</span></div><div id="upcoming"></div></div><details class="panel v118-home-details"><summary>대회 진출 현황 · 펼쳐 보기</summary><div id="qualification"></div><p class="note">리그 1~4위는 챔피언스리그, 5~8위는 유로파리그에 진출합니다.</p></details></div></section>
 <section id="standings" class="section"><div class="section-titlebar"><div><small>SEASON 03 · LEAGUE TABLE</small><h2>리그 순위</h2><p>승점과 골득실로 결정되는 실시간 순위 경쟁</p></div><div class="section-icon">🏅</div></div><div class="v118-subnav" role="group" aria-label="순위 화면 선택"><button type="button" class="v118-sub-btn selected" data-v118-standing="league">리그 순위</button><button type="button" class="v118-sub-btn" data-v118-standing="scorers">득점왕</button></div><div id="v118LeaguePane" class="v118-standings-pane"><div class="panel"><div class="ph"><h3>리그 순위</h3><span class="pill">승점 → 골득실 → 다득점</span></div><div id="fullTable" class="tablewrap"></div><p class="note">승리 3점 · 무승부 1점 · 패배 0점. 동률 시 승점, 골득실, 다득점 순으로 순위를 결정합니다.</p></div></div><div id="v118ScorersPane" class="v118-standings-pane" hidden><div class="section-titlebar"><div><small>SEASON 03 · GOLDEN BOOT</small><h2>득점왕 레이스</h2><p>리그 참가자별 누적 득점</p></div><div class="section-icon">👟</div></div><div class="panel"><div class="ph"><h3>득점 순위</h3><span class="pill">선수 득점</span></div><div id="scorerAdmin" class="adminOnly"></div><div id="scorerList"></div><p class="note">득점왕은 게임 내 축구 선수가 아닌 리그 참가자 기준으로 집계됩니다. 완료된 각 경기의 스코어를 바탕으로 자동 계산되며, 별도 득점 입력은 필요하지 않습니다.</p></div></div>
 </section>
 <section id="fixtures" class="section"><div class="section-titlebar"><div><small>SEASON 03 · MATCH CENTER</small><h2>경기 일정 &amp; 결과</h2><p>정규리그 45경기 · 실시간 스코어</p></div><div class="section-icon">⚽</div></div><div class="v119-switch" role="group" aria-label="경기 메뉴 선택"><button type="button" class="selected" data-v119-view="results" aria-pressed="true">⚽ 경기 결과</button><button type="button" data-v119-view="schedule" aria-pressed="false">🗓️ 가능 시간표</button></div><div id="v119ResultsPane"><div class="panel"><div class="ph"><h3>전체 경기 & RESULTS</h3><span class="pill" id="fixtureCount">총 45경기</span></div><div class="v10-match-tabs" role="group" aria-label="경기 상태 필터"><button type="button" class="v10-match-tab active" data-match-view="pending" aria-pressed="true">미완료 경기 <span id="pendingCount">0</span></button><button type="button" class="v10-match-tab" data-match-view="played" aria-pressed="false">완료 경기 <span id="doneCount">0</span></button></div><div class="v10-filter-row"><select id="matchPlayerFilter" class="field" aria-label="선수별 필터"><option value="all">전체 선수</option></select><input id="searchTeam" class="field" placeholder="선수 검색" aria-label="선수 검색"><span class="v10-filter-label" id="matchViewLabel">미완료 경기</span></div><div id="fixtureList"></div><p class="note">점수는 두 참가자 사이에 표시되며, 관리자 로그인 후에만 수정할 수 있어.</p><div class="lock" style="margin-top:12px"><button class="btn" id="export">백업 내보내기</button><button class="btn" id="importBtn">백업 불러오기</button><input type="file" id="importFile" accept=".json" hidden><button class="btn" id="reset">경기 결과 초기화</button></div></div></div><div id="v119SchedulePane" hidden>
@@ -436,7 +474,7 @@ body::after{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;bac
   <div id="v119MatchList" class="v1211-daily">날짜를 선택하면 시간대별 참가자 목록이 표시됩니다.</div>
  </div>
 </div></section>
-<section id="tournament" class="section"><div class="section-titlebar"><div><small>SEASON 03 · KNOCKOUT STAGE</small><h2>컵대회 센터</h2><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><div class="section-icon">🏆</div></div><div class="panel"><div class="ph"><h3>토너먼트 센터</h3><span class="pill">관리자 관리</span></div><p class="note">정규리그 진행 중에는 현재 순위 기준으로 대진 미리보기가 자동 갱신됩니다. 45경기 종료 후 관리자가 최종 순위를 확정하면 대진이 고정됩니다. 토너먼트 시작 후에는 리그 점수를 수정해도 대진이 바뀌지 않습니다.</p><div class="ph" style="justify-content:flex-start;flex-wrap:wrap"><span class="pill" id="tournamentStatus">대진 미리보기 · 미확정</span><button class="btn primary" id="lockTournament">최종 순위 확정 및 토너먼트 시작</button></div>  <div class="v122-ops" id="v122Ops" aria-live="polite">
+<section id="tournament" class="section"><div class="v123-tournament-intro" id="v123CupTournamentIntro"><div><small>SEASON 03 · KNOCKOUT STAGE</small><strong>DIT CUP TOURNAMENT</strong><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><button type="button" id="v123ViewPoster">포스터 보기 ↗</button></div><div class="section-titlebar"><div><small>SEASON 03 · KNOCKOUT STAGE</small><h2>컵대회 센터</h2><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><div class="section-icon">🏆</div></div><div class="panel"><div class="ph"><h3>토너먼트 센터</h3><span class="pill">관리자 관리</span></div><p class="note">정규리그 진행 중에는 현재 순위 기준으로 대진 미리보기가 자동 갱신됩니다. 45경기 종료 후 관리자가 최종 순위를 확정하면 대진이 고정됩니다. 토너먼트 시작 후에는 리그 점수를 수정해도 대진이 바뀌지 않습니다.</p><div class="ph" style="justify-content:flex-start;flex-wrap:wrap"><span class="pill" id="tournamentStatus">대진 미리보기 · 미확정</span><button class="btn primary" id="lockTournament">최종 순위 확정 및 토너먼트 시작</button></div>  <div class="v122-ops" id="v122Ops" aria-live="polite">
     <div class="v122-heading"><div><div class="v122-label">SEASON 03 · OPERATIONS</div><h3>정규리그 종료 · 컵대회 진행 현황</h3></div><span class="pill" id="v122StageBadge">확인 중</span></div>
     <div class="v122-grid"><div class="v122-metric"><b id="v122Played">—</b><small>완료 경기</small></div><div class="v122-metric"><b id="v122Remaining">—</b><small>미완료 경기</small></div><div class="v122-metric"><b id="v122Percent">—</b><small>진행률</small></div></div>
     <div class="v122-track"><span id="v122ProgressBar" style="width:0%"></span></div>
@@ -1327,6 +1365,35 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  get('v122JumpCup').addEventListener('click',()=>get('ucl')?.scrollIntoView({behavior:'smooth',block:'start'}));
  const original=window.render;
  if(typeof original==='function')window.render=function(){original();update();};
+ update();
+})();
+
+/* V12.2.3 CUP MODE: UI-only adapter. Never calls persist()/writes league_state. */
+(function v123CupMode(){
+ const el=id=>document.getElementById(id);
+ const safe=x=>esc(String(x??''));
+ function phase(){return !!(state.brackets?.locked && Array.isArray(state.matches) && state.matches.length===45 && state.matches.every(done));}
+ function update(){
+  const active=phase();document.body.classList.toggle('v123-cup-active',active);
+  if(!active)return;
+  const rows=table();
+  el('v123Champion').textContent=rows[0]?'정규리그 우승 · '+rows[0].name+' / '+rows[0].pts+'점':'정규리그 우승 확정';
+  const br=state.brackets||{};
+  function pair(g){return `<div class="v123-pair"><strong>${safe(g?.a||'미정')}</strong><i>VS</i><strong>${safe(g?.b||'미정')}</strong></div>`;}
+  el('v123BracketPreview').innerHTML=['ucl','uel'].map(k=>{
+   const b=br[k]||{},name=k==='ucl'?'✦ CHAMPIONS LEAGUE':'🏆 EUROPA LEAGUE';
+   return `<div class="v123-cup-card ${k==='uel'?'uel':''}"><h3>${name}</h3>${pair(b.sf1)}${pair(b.sf2)}</div>`;
+  }).join('');
+  const complete=g=>g&&g.winner&&g.winner!=='TBD';
+  const uc=complete(br.ucl?.final),ue=complete(br.uel?.final),sc=complete(br.supercup);
+  el('v123Stage').textContent=sc?'슈퍼컵 종료 · 시즌 결산':uc&&ue?'슈퍼컵 대기 / 진행':'컵대회 진행 중';
+ }
+ el('v123GoCup')?.addEventListener('click',()=>activate('tournament'));
+ el('v123ViewPoster')?.addEventListener('click',()=>{
+  const link=document.createElement('a');link.href='./assets/cup/s3-cup-poster.webp';link.target='_blank';link.rel='noopener noreferrer';link.click();
+ });
+ const prev=window.render;
+ if(typeof prev==='function')window.render=function(){prev();update();};
  update();
 })();
 </script></body></html>
