@@ -1013,7 +1013,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
 <button class="btn v115-manage-btn" hidden="" id="memberManageOpen" type="button">계정 발급</button><button class="btn" hidden="" id="v120AdminOpen" type="button">📅 시즌 기간 관리</button><button class="btn" hidden="" id="v122OpsOpen" type="button">🏆 리그 종료·컵대회 관리</button>
 </div></details>
 <details class="v12823-menu-group"><summary>📅 시즌 · 기록 관리 <span aria-hidden="true">⌄</span></summary><div class="v12823-menu-items">
-<button class="btn" hidden id="v1290Open" type="button">🔗 넥슨 감독 연동</button><button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
+<button class="btn" hidden id="v1290Open" type="button">🔗 넥슨 감독 연동</button><button class="btn" hidden id="v1291Open" type="button">🔎 넥슨 매치 검색</button><button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
 </div></details>
 </div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">OFFICIAL LEAGUE PORTAL · MULTI-SEASON</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
@@ -2959,6 +2959,96 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  cloudClient?.auth?.onAuthStateChange?.(()=>setTimeout(sync,0));
  document.addEventListener('click',e=>{if(e.target.id==='v118AccountTrigger')setTimeout(sync,0);});
  sync();
+})();
+</script>
+
+<style>
+/* V12.9.1 — scoped match search UI (no legacy layout or save logic changes) */
+#v1291Modal[hidden]{display:none!important}
+#v1291Modal{position:fixed;inset:0;z-index:460;display:grid;place-items:center;overflow-y:auto;padding:14px;background:rgba(0,8,20,.88)}
+.v1291-dialog{width:min(760px,100%);max-height:92dvh;overflow-y:auto;padding:22px;border:1px solid #bb9c62;border-radius:16px;background:#101f33;color:#edf3ff;box-shadow:0 22px 60px #000a}
+.v1291-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v1291-head h2{margin:4px 0;color:#f2d390}
+.v1291-desc{font-size:12px;line-height:1.65;color:#bed0e4}
+.v1291-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.v1291-grid label{display:grid;gap:7px;font-size:12px;color:#cbd9ed}
+.v1291-grid select{width:100%;min-width:0;padding:11px;background:#08192b;border:1px solid #486481;border-radius:8px;color:white}
+.v1291-note{margin:12px 0;background:#0b2b44;padding:12px;border:1px solid #294e68;border-radius:8px;font-size:12px;white-space:pre-line}
+.v1291-list{display:grid;gap:10px}.v1291-item{border:1px solid #3c5670;background:#0b223a;border-radius:11px;padding:13px}
+.v1291-item strong{color:#f5d99a}.v1291-score{font-size:22px;font-weight:900;color:#fff;margin:7px 0}.v1291-meta{font-size:12px;color:#bdccdb;line-height:1.6;overflow-wrap:anywhere}
+.v1291-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+@media(max-width:600px){.v1291-dialog{padding:15px}.v1291-grid{grid-template-columns:1fr}}
+</style>
+<div id="v1291Modal" hidden role="dialog" aria-modal="true" aria-labelledby="v1291Title">
+ <div class="v1291-dialog">
+  <div class="v1291-head"><div><small>ADMIN · NEXON MATCH FINDER</small><h2 id="v1291Title">스페셜 매치 기록 검색</h2></div><button id="v1291Close" class="btn" type="button">닫기 ✕</button></div>
+  <p class="v1291-desc">연동된 감독 두 명의 최근 <b>스페셜 매치(클래식 1:1 · 코드 40)</b>에서 같은 매치 ID를 찾습니다. 이 화면은 <b>조회 전용</b>이며 점수, 순위, 시즌 3·4 데이터는 저장하거나 변경하지 않습니다.</p>
+  <div class="v1291-grid"><label>DIT 참가자 A<select id="v1291A"><option value="">참가자 선택</option></select></label><label>DIT 참가자 B<select id="v1291B"><option value="">참가자 선택</option></select></label></div>
+  <div class="v1291-actions"><button class="btn" id="v1291Search" type="button">🔎 두 참가자 매치 조회</button><button class="btn" id="v1291Accounts" type="button">연동 계정 다시 불러오기</button></div>
+  <div id="v1291Message" class="v1291-note" role="status">감독 계정 2개가 연결되어 있어야 검색할 수 있습니다.</div>
+  <div id="v1291Results" class="v1291-list"></div>
+  <p class="v1291-desc">※ 넥슨 데이터는 반영 지연이 있을 수 있습니다. 경기 후보를 찾아도 리그 경기로 확정하거나 결과를 반영하지 않습니다. 결과 저장은 추후 별도 버전에서 관리자 확인 후 구현합니다.</p>
+ </div>
+</div>
+<script>
+/* V12.9.1 — read-only match finder, using V12.9.0 authenticated function */
+(function v1291MatchFinder(){
+ 'use strict';
+ const $=id=>document.getElementById(id),trigger=$('v1291Open'),modal=$('v1291Modal'),msg=$('v1291Message'),results=$('v1291Results');
+ if(!trigger||!modal)return;
+ const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const admin=()=>typeof state!=='undefined'&&state.admin===true&&typeof currentUser!=='undefined'&&!!currentUser&&!!cloudClient;
+ let busy=false;
+ function setBusy(v){busy=v;['v1291Search','v1291Accounts'].forEach(id=>$(id).disabled=v);}
+ function note(s){msg.textContent=s;}
+ async function invoke(body){
+   if(!admin())throw Error('운영진 로그인이 필요합니다.');
+   const {data,error}=await cloudClient.functions.invoke('nexon-account-link',{body});
+   if(error){let detail='';try{if(error.context?.json){detail=(await error.context.json())?.error||'';}}catch(_){}throw Error(detail||error.message||'함수 통신 실패');}
+   if(!data?.ok)throw Error(data?.error||'조회 실패');return data;
+ }
+ async function accounts(){
+   if(busy)return;setBusy(true);note('연동된 감독 목록을 불러오는 중…');
+   try{
+     const x=await invoke({action:'list'}),rows=x.rows||[];
+     const picks=rows.map(r=>r.player_name).filter(Boolean);
+     for(const id of ['v1291A','v1291B']){
+       const select=$(id),previous=select.value;
+       select.replaceChildren(new Option('참가자 선택',''),...picks.map(name=>new Option(name,name)));
+       if(picks.includes(previous))select.value=previous;
+     }
+     note('넥슨 계정 연동 완료: '+picks.length+'명 · 두 명을 선택하고 조회하세요.');
+   }catch(e){note('연동 목록 조회 실패: '+e.message);}finally{setBusy(false);}
+ }
+ async function search(){
+   if(busy)return;
+   const player_a=$('v1291A').value,player_b=$('v1291B').value;
+   if(!player_a||!player_b||player_a===player_b){note('서로 다른 두 참가자를 선택해 주세요.');return;}
+   setBusy(true);results.replaceChildren();note('양쪽 넥슨 매치 ID 대조 및 상세 기록 확인 중…');
+   try{
+     const x=await invoke({action:'find_matches',player_a,player_b});
+     const candidates=Array.isArray(x.candidates)?x.candidates:[];
+     note('조회 완료 · A '+x.searched.a+'건 / B '+x.searched.b+'건 · 공통 ID '+x.searched.common+'건 · 검증된 대결 '+candidates.length+'건');
+     if(!candidates.length){const p=document.createElement('p');p.className='v1291-desc';p.textContent='검색 범위에서 두 참가자의 스페셜 매치를 찾지 못했습니다. 두 계정의 닉네임 및 최근 경기 여부를 확인해 주세요.';results.append(p);return;}
+     for(const m of candidates){
+       const item=document.createElement('article');item.className='v1291-item';
+       const goals=n=>Number.isFinite(Number(n))&&n!==null?String(n):'—';
+       const date=m.match_date?new Date(m.match_date).toLocaleString('ko-KR'):'경기 시간 미제공';
+       item.innerHTML='<strong>'+safe(m.a.player_name)+' vs '+safe(m.b.player_name)+'</strong>'+
+         '<div class="v1291-score">'+safe(goals(m.a.goals))+' : '+safe(goals(m.b.goals))+'</div>'+
+         '<div class="v1291-meta">'+safe(date)+' · 매치 종류 '+safe(m.match_type)+'<br>넥슨 감독: '+safe(m.a.nickname)+' / '+safe(m.b.nickname)+'<br>슈팅: '+safe(m.a.shoot_total??'—')+' / '+safe(m.b.shoot_total??'—')+'<br>매치 ID: '+safe(m.match_id)+'</div>';
+       results.append(item);
+     }
+   }catch(e){note('검색 실패: '+e.message);}finally{setBusy(false);}
+ }
+ function sync(){const yes=admin();trigger.hidden=!yes;if(!yes)modal.hidden=true;}
+ const old=$('v1290Open');if(old)new MutationObserver(sync).observe(old,{attributes:true,attributeFilter:['hidden']});
+ const draft=$('v1272OpenDraft');if(draft)new MutationObserver(sync).observe(draft,{attributes:true,attributeFilter:['hidden']});
+ cloudClient?.auth?.onAuthStateChange?.(()=>setTimeout(sync,0));
+ document.addEventListener('click',e=>{if(e.target.id==='v118AccountTrigger')setTimeout(sync,0);});
+ trigger.addEventListener('click',()=>{if(!admin())return;modal.hidden=false;accounts();});
+ $('v1291Close').addEventListener('click',()=>modal.hidden=true);
+ modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
+ $('v1291Accounts').addEventListener('click',accounts);$('v1291Search').addEventListener('click',search);sync();
 })();
 </script>
 </body></html>
