@@ -760,6 +760,19 @@ body.v1271-is-archive .hero,body.v1271-is-archive .v8-spotlight,body.v1271-is-ar
 .v1272-result{background:#172c43;border:1px solid #3d5874;padding:12px;border-radius:10px;margin:10px 0;font-size:12px;line-height:1.6}.v1272-result strong{color:#f0ca7e}
 .v1272-modal .v1272-primary{background:#d7b56e;color:#111e30;border-color:#d7b56e}
 
+
+/* V12.7.3: draft-only fixture planner, isolated from legacy league_state. */
+.v1273-planner{margin-top:22px;border:1px solid #52718c;border-radius:14px;background:#0a1b2e;padding:17px}
+.v1273-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.v1273-head small{font-size:10px;color:#ddbd75;font-weight:800;letter-spacing:1.4px}
+.v1273-head h3{font-size:17px;margin:4px 0 0}.v1273-label{border:1px solid #af8d59;border-radius:30px;padding:6px 9px;font-size:10px;color:#e8ce9e}
+.v1273-planner p{font-size:12px;line-height:1.65;color:#b9cde0}
+.v1273-toolbar{display:flex;gap:8px;flex-wrap:wrap}.v1273-toolbar button:disabled{opacity:.42}
+.v1273-message{white-space:pre-wrap}.v1273-summary{font-weight:800;color:#e6c783;font-size:12px;padding:8px 0}
+.v1273-list{max-height:390px;overflow:auto;display:grid;gap:9px}.v1273-round{border:1px solid #34516d;border-radius:10px;padding:10px;background:#0f2640}
+.v1273-round strong{color:#e8cd8f;display:block;margin-bottom:6px}.v1273-game{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #2a4562;padding:7px 2px;font-size:12px}
+.v1273-game span:nth-child(2){color:#8aa3be;font-size:11px;white-space:nowrap}
+@media(max-width:600px){.v1273-planner{padding:12px}.v1273-game{font-size:11px}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌 3 · 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="v1272OpenDraft" type="button" hidden>🗓 시즌 4 준비</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
@@ -935,6 +948,13 @@ body.v1271-is-archive .hero,body.v1271-is-archive .v8-spotlight,body.v1271-is-ar
    <label class="v1272-field">참가자 (한 줄에 한 명, 2~32명)<textarea id="v1272Players" maxlength="2000" placeholder="박성욱&#10;송석현&#10;정민우" autocomplete="off"></textarea></label>
    <div class="v1272-actions"><button type="button" class="btn" id="v1272CopyRoster">시즌 3 참가자 채우기</button><button type="button" class="btn" id="v1272Refresh">현재 준비 정보 새로고침</button><button type="button" class="btn v1272-primary" id="v1272Save">시즌 4 준비 정보 저장</button></div>
    <p class="v1272-status" id="v1272Status" role="status">※ 생성·수정은 관리자 인증 상태에서만 가능합니다. 같은 시즌을 중복 생성하지 않습니다.</p>
+   <section class="v1273-planner" aria-labelledby="v1273Title">
+    <div class="v1273-head"><div><small>V12.7.3 · FIXTURE PLANNER</small><h3 id="v1273Title">시즌 4 정규리그 대진 준비</h3></div><span class="v1273-label">개막 전 · 점수 입력 불가</span></div>
+    <p>저장된 참가자 명단으로 단일 풀리그 대진을 생성합니다. 미리보기는 DB에 영향을 주지 않고, 확정 버튼을 누른 경우에만 시즌 4 저장소에 기록됩니다.</p>
+    <div class="v1273-toolbar"><button type="button" class="btn" id="v1273Preview">대진표 미리보기</button><button type="button" class="btn v1272-primary" id="v1273Commit" disabled>대진표 확정 저장</button><button type="button" class="btn" id="v1273Reload">저장된 대진 새로고침</button></div>
+    <p class="v1273-message" id="v1273Message" role="status">시즌 4 준비 정보 조회 후 대진표를 확인할 수 있습니다.</p>
+    <div class="v1273-summary" id="v1273Summary"></div><div class="v1273-list" id="v1273List" aria-live="polite"></div>
+   </section>
   </div>
 </div>
 
@@ -2303,6 +2323,83 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  // Rendering and account switching are already centralized in render().
  if(typeof window.render==='function'){const old=window.render;window.render=function(){const r=old.apply(this,arguments);syncAccess();return r;};}
  syncAccess();
+})();
+</script>
+
+<script>
+/* V12.7.3: Dedicated schedule preview; never writes to league_state.
+ * The only write endpoint is the authenticated admin RPC v1273_commit_fixture_plan.
+ */
+(function v1273Planner(){
+ 'use strict';
+ const el=id=>document.getElementById(id);
+ const pane=el('v1273List'),summary=el('v1273Summary'),message=el('v1273Message');
+ if(!pane)return;
+ const commit=el('v1273Commit');
+ let pending=null,loaded=null,busy=false;
+ const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const authorized=()=>typeof state!=='undefined'&&!!state.admin&&typeof currentUser!=='undefined'&&!!currentUser;
+ function roster(){return el('v1272Players').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);}
+ function valid(names){if(names.length<2||names.length>32||new Set(names).size!==names.length||names.some(n=>n.length>40))throw Error('참가자 2~32명, 중복 없는 명단을 확인하세요.');}
+ function calculate(names){
+  let teams=names.slice(),rounds=[],num=0;
+  if(teams.length%2)teams.push(null);
+  const n=teams.length;
+  for(let r=1;r<n;r++){
+   let games=[];
+   for(let i=0;i<n/2;i++){
+    const a=teams[i],b=teams[n-1-i];
+    if(a!==null&&b!==null)games.push({round:r,num:++num,a,b,sa:null,sb:null});
+   }
+   rounds.push({round:r,games});
+   teams=[teams[0],teams[n-1],...teams.slice(1,n-1)];
+  }
+  return rounds.flatMap(r=>r.games);
+ }
+ function render(matches,mode){
+  const rows=Array.isArray(matches)?matches:[];
+  const groups=new Map();rows.forEach(m=>{if(!groups.has(m.round))groups.set(m.round,[]);groups.get(m.round).push(m);});
+  summary.textContent=rows.length?`${mode==='saved'?'DB 보관 완료':'저장 전 미리보기'} · ${groups.size}라운드 · ${rows.length}경기 · 경기 점수 미입력`:'대진표가 생성되지 않았습니다.';
+  pane.innerHTML=[...groups].map(([r,arr])=>`<div class="v1273-round"><strong>MATCH DAY ${String(r).padStart(2,'0')}</strong>${arr.map(m=>`<div class="v1273-game"><span>${safe(m.a)}</span><span>VS</span><span>${safe(m.b)}</span></div>`).join('')}</div>`).join('');
+ }
+ function status(s){message.textContent=s;}
+ async function rpc(name,args){if(!authorized()||!cloudClient)throw Error('운영진 로그인이 필요합니다.');const {data,error}=await cloudClient.rpc(name,args||{});if(error)throw Error(error.message||'서버 작업 실패');return data;}
+ async function refresh(){
+  if(busy)return;busy=true;commit.disabled=true;pending=null;status('준비 시즌 및 기존 대진표 확인 중…');
+  try{
+   const data=await rpc('v1273_admin_fixture_plan',{p_season_id:4});loaded=data;
+   const rows=Array.isArray(data.matches)?data.matches:[];
+   if(rows.length){render(rows,'saved');status('시즌 4 대진표가 DB에 보관되어 있습니다. 대진을 다시 생성하지 않습니다.');}
+   else{render([], 'saved');status('아직 확정된 대진표가 없습니다. 참가자 명단을 저장한 후 미리보기를 진행하세요.');}
+  }catch(e){loaded=null;render([],'saved');status('조회 실패: '+e.message+' · V12.7.3 SQL 설치 및 관리자 권한을 확인하세요.');}
+  finally{busy=false;}
+ }
+ el('v1273Preview').addEventListener('click',()=>{
+  try{
+   if(!authorized())throw Error('관리자 로그인이 필요합니다.');
+   if(!loaded)throw Error('먼저 저장된 대진을 새로고침하여 확인하세요.');
+   if((loaded.matches||[]).length)throw Error('대진표가 이미 저장돼 있습니다. 기존 경기 기록은 덮어쓰지 않습니다.');
+   const names=roster();valid(names);
+   const persisted=Array.isArray(loaded.participants)?loaded.participants:[];
+   if(JSON.stringify(names)!==JSON.stringify(persisted))throw Error('입력 명단과 DB에 저장된 명단이 다릅니다. 먼저 참가자 변경을 저장하고 대진을 새로고침하세요.');
+   const matches=calculate(names);pending={matches,revision:Number(loaded.revision),names:names.slice()};
+   render(matches,'preview');commit.disabled=false;status('미리보기만 생성했습니다. DB 저장은 아직 실행되지 않았습니다.');
+  }catch(e){pending=null;commit.disabled=true;status(e.message);}
+ });
+ el('v1273Reload').addEventListener('click',refresh);
+ commit.addEventListener('click',async()=>{
+  if(busy||!pending)return;
+  if(!authorized()){status('관리자 로그인이 필요합니다.');return;}
+  const saved=pending;
+  if(JSON.stringify(saved.names)!==JSON.stringify(roster())){commit.disabled=true;pending=null;status('명단이 변경됐습니다. 다시 미리보기를 생성하세요.');return;}
+  if(!confirm(`시즌 4 대진 ${saved.matches.length}경기를 DB에 확정 저장할까요? 이후 이 화면에서는 대진을 덮어쓰거나 참가자를 변경할 수 없습니다. 개막 및 경기 점수 저장은 하지 않습니다.`))return;
+  busy=true;commit.disabled=true;status('운영진 권한 및 리비전 확인 후 저장 중…');
+  try{await rpc('v1273_commit_fixture_plan',{p_season_id:4,p_expected_revision:saved.revision,p_expected_teams:saved.names});status('대진표를 안전하게 저장했습니다. 개막·점수 입력은 아직 비활성화 상태입니다.');}
+  catch(e){status('저장 실패: '+e.message);}
+  finally{busy=false;pending=null;}
+  await refresh();
+ });
+ el('v1272OpenDraft').addEventListener('click',()=>{setTimeout(refresh,500);});
 })();
 </script>
 </body></html>
