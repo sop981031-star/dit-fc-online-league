@@ -2584,7 +2584,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
    caption.textContent='확정된 아카이브 · 읽기 전용';
    root.classList.remove('active');showTab(activeTab);
  }
- pick.addEventListener('change',()=>{if(pick.value==='live')live();else selectArchive(pick.value);});
+ pick.addEventListener('change',()=>{if(pick.value==='preseason'){live();return;}if(pick.value==='live')live();else selectArchive(pick.value);});
  nav.addEventListener('click',e=>{if(!selected)return;const btn=e.target.closest('[data-tab]');if(!btn)return;e.preventDefault();e.stopImmediatePropagation();showTab(btn.dataset.tab);},true);
  document.addEventListener('click',e=>{if(!selected)return;const btn=e.target.closest('[data-go]');if(btn){e.preventDefault();e.stopImmediatePropagation();showTab(btn.dataset.go);}},true);
  document.addEventListener('click',e=>{
@@ -2628,11 +2628,14 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
    for(const [key,a] of fresh)archives.set(key,a);
    const frag=document.createDocumentFragment();
    frag.appendChild(new Option('시즌 3','live'));
+   frag.appendChild(new Option('프리시즌','preseason'));
    for(const [key,a] of [...archives].sort((x,y)=>y[1].id-x[1].id)){
      frag.appendChild(new Option('시즌 '+a.id,key));
    }
    pick.replaceChildren(frag);
-   if(previous!=='live'&&archives.has(previous)){
+   if(previous==='preseason'){
+     pick.value='preseason';
+   }else if(previous!=='live'&&archives.has(previous)){
      pick.value=previous;
      if(selected){selected=archives.get(previous);showTab(activeTab);}
    }else if(previous!=='live'&&selected){
@@ -3102,6 +3105,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
        btn.addEventListener('click',()=>preview(m.match_id,player_a,player_b));item.append(btn);
        window.v1296AddCandidate?.(item,m);
        window.v1297AddCandidate?.(item,m);
+       window.v12910AddCandidate?.(item,m);
        results.append(item);
      }
    }catch(e){note('검색 실패: '+e.message);}finally{setBusy(false);}
@@ -3481,6 +3485,165 @@ button.v12941-player,button.v12941-player:hover,button.v12941-player:focus-visib
   const captain=row.captain_spid;if(captain&&!row.squad.some(p=>Number(p.sp_id)===Number(captain)))box.append(el('p','v1294-msg','이전에 지정한 대표 선수가 최신 스쿼드에 없습니다. 대표 선수 지정은 유지되며, 새 선수로 변경할 수 있습니다.'));
  }
  window.v1294LoadProfile=show;
+})();
+</script>
+
+<!-- V12.9.8–10: PRE-SEASON, independent from Season 3/4. No changes to existing scoring paths. -->
+<style>
+/* Only the selected PRE-SEASON view replaces the existing seasonal content. */
+body.v12910-preseason .hero,body.v12910-preseason .v8-spotlight,body.v12910-preseason .v118-more-row{display:none!important}
+body.v12910-preseason :is(#home,#standings,#fixtures,#tournament,#players,#halloffame,#rules).section > :not(.v12910-pane){display:none!important}
+.v12910-pane{display:none}
+body.v12910-preseason .section.active>.v12910-pane{display:block}
+.v12910-hero{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:20px;border:1px solid #7c673b;border-radius:14px;background:linear-gradient(120deg,#152f4c,#0b1a30)}
+.v12910-hero h2{color:#f1d494;margin:5px 0;font-size:clamp(21px,3vw,29px)}.v12910-hero small{color:#b7cbe0;font-size:11px;letter-spacing:.08em}
+.v12910-hero p{margin:3px 0;color:#c3d3e5;font-size:12px}.v12910-btn{border:1px solid #b29b65;border-radius:8px;padding:9px 12px;color:#f2d59d;background:#112943;cursor:pointer;font-weight:800}
+.v12910-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}.v12910-metric,.v12910-card{border:1px solid #294968;border-radius:12px;padding:15px;background:#0d2238;min-width:0}
+.v12910-metric small{display:block;color:#a9bfd7;font-size:11px}.v12910-metric strong{display:block;color:#f5d99e;font-size:25px;margin-top:5px}
+.v12910-card h3{margin:0 0 11px;font-size:16px;color:#f4d9a2}.v12910-card p{color:#baccdd;font-size:12px;line-height:1.7}
+.v12910-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #29425a;padding:12px 0;flex-wrap:wrap}.v12910-row:last-child{border-bottom:0}.v12910-row>details{flex-basis:100%;width:100%}.v12910-row small{color:#a6bed4;font-size:11px}
+.v12910-score{font-size:22px;color:#f8e1ac;font-weight:900;white-space:nowrap}.v12910-tablewrap{overflow:auto;border:1px solid #29435f;border-radius:10px}.v12910-table{width:100%;min-width:560px;border-collapse:collapse;font-size:12px}.v12910-table th,.v12910-table td{padding:11px 9px;text-align:left;border-bottom:1px solid #29435f}.v12910-table th{color:#e7d0a1;background:#102c48;font-size:11px}.v12910-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.v12910-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v12910-tag{display:inline-block;border:1px solid #766840;background:#40351c;color:#f0d28e;border-radius:7px;padding:3px 7px;font-size:10px;font-weight:800}
+.v12910-note{font-size:12px;color:#b9cde3;line-height:1.7}.v12910-danger{color:#ffbdc2!important;border-color:#a85e66!important}.v12910-msg{font-size:12px;margin:8px 0;color:#f0d59a;white-space:pre-line}
+.v12910-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.v12910-pre-btn{margin:9px 7px 0 0!important;border-color:#b39a5f!important}
+@media(max-width:680px){.v12910-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v12910-two{grid-template-columns:1fr}.v12910-hero{padding:15px}.v12910-card{padding:12px}.v12910-score{font-size:18px}}
+</style>
+<script>
+/* All statistics are derived ONLY from the preseason table. Friendly/NEXON search results never count until admin registers. */
+(function v12910Preseason(){
+ 'use strict';
+ const $=id=>document.getElementById(id),pick=$('v1271SeasonPicker'),nav=document.querySelector('nav.tabs');
+ if(!pick||!nav)return;
+ const ids=['home','standings','fixtures','tournament','players','halloffame','rules'];
+ let active='home',records=[],loaded=false,request=0,writing=false;
+ let names=new Map(),metadataRequested=false;
+ const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const num=v=>Number.isFinite(Number(v))?Number(v):0;
+ const playerName=id=>names.get(Number(id))||('선수 카드 '+id);
+ async function loadNames(){if(metadataRequested)return;metadataRequested=true;try{const r=await fetch('https://open.api.nexon.com/static/fconline/meta/spid.json');if(!r.ok)throw Error('metadata');const rows=await r.json();if(Array.isArray(rows)){names=new Map(rows.map(x=>[Number(x.id),String(x.name)]));if(pre())render();}}catch(e){/* show player ID as fallback when official metadata is unavailable */}}
+ const isAdmin=()=>typeof state!=='undefined'&&state.admin===true&&typeof currentUser!=='undefined'&&!!currentUser&&typeof cloudClient!=='undefined'&&!!cloudClient;
+ const pre=()=>pick.value==='preseason';
+ const errorText=async(error)=>{let detail='';try{detail=(await error?.context?.json?.())?.error||'';}catch(_){}return detail||error?.message||'연결 실패';};
+ // Keep the option when the legacy archived-season loader refreshes its SELECT DOM.
+ function option(){if(![...pick.options].some(o=>o.value==='preseason')){
+   const item=new Option('프리시즌','preseason');const after=pick.querySelector('option[value="live"]');if(after)after.after(item);else pick.append(item);
+ }}
+ option();
+ // Historical loader previously handled only the 'live' / 'archive-x' values.
+ for(const id of ids){const parent=$(id);if(!parent)continue;const pane=document.createElement('div');pane.className='v12910-pane';pane.dataset.tab=id;parent.appendChild(pane);}
+ function pickTab(id){active=ids.includes(id)?id:'home';document.querySelectorAll('nav.tabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===active));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===active));render();window.scrollTo?.({top:0,behavior:'instant'});}
+ function header(title,detail=''){
+   return `<div class="v12910-hero"><div><small>DIT FC ONLINE LEAGUE · PRE-SEASON</small><h2>${safe(title)}</h2>${detail?`<p>${safe(detail)}</p>`:''}</div><span class="v12910-tag">시즌 4 별도 운영</span></div>`;
+ }
+ const used=()=>records.filter(r=>r&&r.match_id&&r.player_a&&r.player_b&&Number.isInteger(Number(r.score_a))&&Number.isInteger(Number(r.score_b)));
+ function aggregate(){
+   const teams=new Map(),players=new Map(),matches=used();
+   const team=name=>{if(!teams.has(name))teams.set(name,{name,played:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});return teams.get(name);};
+   for(const m of matches){
+     const a=team(m.player_a),b=team(m.player_b),sa=num(m.score_a),sb=num(m.score_b);
+     for(const [x,goals,against] of [[a,sa,sb],[b,sb,sa]]){x.played++;x.gf+=goals;x.ga+=against;}
+     if(sa>sb){a.w++;a.pts+=3;b.l++;}else if(sa<sb){b.w++;b.pts+=3;a.l++;}else{a.d++;b.d++;a.pts++;b.pts++;}
+     const participants=[];
+     for(const [side,name] of [['a',m.player_a],['b',m.player_b]]){
+       const squad=Array.isArray(m.match_stats?.[side]?.players)?m.match_stats[side].players:[];
+       for(const player of squad){const spid=Number(player.sp_id),rating=Number(player.rating);if(!Number.isSafeInteger(spid)||spid<=0)continue;
+         const key=name+'|'+spid;if(!players.has(key))players.set(key,{owner:name,spid,goals:0,assists:0,ratings:0,ratingGames:0,mvp:0,games:0});
+         const entry=players.get(key);entry.games++;entry.goals+=Math.max(0,num(player.goals));entry.assists+=Math.max(0,num(player.assists));
+         if(Number.isFinite(rating)&&rating>0){entry.ratings+=rating;entry.ratingGames++;participants.push({key,rating});}
+       }
+     }
+     if(participants.length){const best=Math.max(...participants.map(p=>p.rating));for(const player of participants.filter(p=>p.rating===best))players.get(player.key).mvp++;}
+   }
+   const teamRows=[...teams.values()].map(t=>({...t,gd:t.gf-t.ga,rate:t.played?t.w/t.played:0})).sort((a,b)=>b.rate-a.rate||b.pts-a.pts||b.gd-a.gd||a.name.localeCompare(b.name,'ko'));
+   const playerRows=[...players.values()].map(p=>({...p,avg:p.ratingGames?Math.round(100*p.ratings/p.ratingGames)/100:null}));
+   return {teamRows,playerRows,matches};
+ }
+ function metric(label,value){return `<div class="v12910-metric"><small>${safe(label)}</small><strong>${safe(value)}</strong></div>`;}
+ function table(cols,rows){return `<div class="v12910-tablewrap"><table class="v12910-table"><thead><tr>${cols.map(c=>`<th>${safe(c)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map((v,i)=>`<td${i?' class="num"':''}>${safe(v)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}">아직 등록된 기록이 없습니다.</td></tr>`}</tbody></table></div>`;}
+ function standings(rows){return table(['참가자','경기','승','무','패','득실','승률'],rows.map(r=>[r.name,r.played,r.w,r.d,r.l,(r.gd>0?'+':'')+r.gd,Math.round(r.rate*100)+'%']));}
+ function labelMatch(m){return `${safe(m.player_a)} <strong class="v12910-score">${num(m.score_a)} : ${num(m.score_b)}</strong> ${safe(m.player_b)}`;}
+ function details(m){
+   const x=m.match_stats||{}, a=x.a||{},b=x.b||{};
+   const show=v=>v===null||v===undefined?'—':safe(v);
+   const side=(x)=>Array.isArray(x.players)?x.players.filter(p=>Number(p.rating)>0||Number(p.goals)>0||Number(p.assists)>0):[];
+   const squad=player=>[playerName(player.sp_id),player.goals??'—',player.assists??'—',player.rating??'—'];
+   return `<details class="v12910-card" style="margin-top:8px"><summary style="cursor:pointer;color:#e6ce97;font-weight:800">경기 상세 통계</summary><div class="v12910-two" style="margin-top:12px">`+
+     `<div><strong>${safe(m.player_a)}</strong><p>점유율 ${show(a.possession)}% · 슈팅 ${show(a.shoot_total)} · 유효슈팅 ${show(a.shoot_effective)}</p>${table(['선수','골','도움','평점'],side(a).map(squad))}</div>`+
+     `<div><strong>${safe(m.player_b)}</strong><p>점유율 ${show(b.possession)}% · 슈팅 ${show(b.shoot_total)} · 유효슈팅 ${show(b.shoot_effective)}</p>${table(['선수','골','도움','평점'],side(b).map(squad))}</div>`+
+     `</div></details>`;
+ }
+ function lines(matches,allowDelete=false){if(!matches.length)return '<p class="v12910-note">등록된 프리시즌 경기가 없습니다.</p>';
+   return matches.map(m=>`<div class="v12910-row"><div><div>${labelMatch(m)}</div><small>${safe(m.match_date?new Date(m.match_date).toLocaleString('ko-KR'):'날짜 미확인')} · ${safe(m.match_id)}</small></div><div class="v12910-actions"><span class="v12910-tag">프리시즌</span>${allowDelete&&isAdmin()?`<button class="v12910-btn v12910-danger" type="button" data-pre-remove="${safe(m.match_id)}">삭제</button>`:''}</div>${allowDelete?details(m):''}</div>`).join('');
+ }
+ function leaders(rows,key,count=5,eligible=()=>true){return rows.filter(eligible).sort((a,b)=>num(b[key])-num(a[key])||b.goals-a.goals).slice(0,count);}
+ function leaderTable(rows,kind){return table(['참가자 · 선수',kind],rows.map(p=>[p.owner+' · '+playerName(p.spid),kind==='평균 평점'?p.avg:p[kind==='득점'?'goals':kind==='도움'?'assists':'mvp']]));}
+ function content(tab){const {teamRows,playerRows,matches}=aggregate();const total=matches.length,goals=matches.reduce((sum,m)=>sum+num(m.score_a)+num(m.score_b),0);
+   if(tab==='home')return header('프리시즌','자유롭게 진행한 경기 중 운영진이 확정한 기록만 반영됩니다.')+
+     `<div class="v12910-grid">${metric('등록 경기',total)}${metric('참가 감독',teamRows.length)}${metric('총 득점',goals)}</div>`+
+     `<div class="v12910-two"><div class="v12910-card"><h3>최근 경기</h3>${lines(matches.slice(0,5))}</div><div class="v12910-card"><h3>참가자 성적</h3>${standings(teamRows.slice(0,6))}</div></div>`;
+   if(tab==='standings')return header('프리시즌 성적')+`<div class="v12910-card" style="margin-top:15px"><h3>참가자별 전적</h3><p>경기 수가 서로 달라 승률 기준으로 표시합니다. 시즌 4 공식 순위와 무관합니다.</p>${standings(teamRows)}</div>`+
+     `<div class="v12910-two" style="margin-top:14px"><div class="v12910-card"><h3>득점 TOP 10</h3>${leaderTable(leaders(playerRows,'goals',10),'득점')}</div><div class="v12910-card"><h3>도움 TOP 10</h3>${leaderTable(leaders(playerRows,'assists',10),'도움')}</div><div class="v12910-card"><h3>평균 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'avg',10,p=>p.ratingGames>=3),'평균 평점')}</div><div class="v12910-card"><h3>경기 최고 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'mvp',10),'MVP')}</div></div>`;
+   if(tab==='fixtures')return header('프리시즌 경기 결과')+`<div class="v12910-card" style="margin-top:15px"><div class="v12910-row"><h3>등록 경기 · ${total}건</h3><div class="v12910-actions"><button type="button" class="v12910-btn" data-pre-refresh>새로고침</button>${isAdmin()?'<button type="button" class="v12910-btn" data-pre-open>경기 등록</button>':''}</div></div><div class="v12910-note">${isAdmin()?'경기를 잘못 등록했다면 삭제 후 넥슨 매치 검색에서 다시 등록할 수 있습니다.':'운영진이 등록한 경기만 표시됩니다.'}</div><div id="v12910-status" class="v12910-msg"></div>${lines(matches,true)}</div>`;
+   if(tab==='players')return header('프리시즌 참가자')+`<div class="v12910-two" style="margin-top:14px">${teamRows.length?teamRows.map(t=>`<div class="v12910-card"><h3>${safe(t.name)}</h3><div class="v12910-grid">${metric('경기',t.played)}${metric('승·무·패',t.w+'·'+t.d+'·'+t.l)}${metric('득점',t.gf)}</div><p>득실차 ${(t.gf-t.ga)>0?'+':''}${t.gf-t.ga} · 승률 ${Math.round(t.rate*100)}%</p></div>`).join(''):'<div class="v12910-card">등록된 참가자가 없습니다.</div>'}</div>`;
+   if(tab==='tournament')return header('프리시즌','컵대회는 프리시즌에 운영하지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>정규 시즌 컵대회와 별도</h3><p>챔피언스리그·유로파리그·슈퍼컵 기록은 시즌 3 또는 향후 공식 시즌에서 확인해 주세요.</p></div>';
+   if(tab==='halloffame')return header('프리시즌','공식 우승 기록은 생성되지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>명예의 전당</h3><p>프리시즌 기록은 공식 명예의 전당에 반영하지 않습니다.</p></div>';
+   return header('프리시즌 안내')+'<div class="v12910-card" style="margin-top:15px"><p>대진표 없이 자유롭게 진행합니다. 운영진이 선택한 스페셜 매치만 등록됩니다. 기록 수정은 삭제 후 재등록 방식입니다.</p></div>';
+ }
+ function render(){if(!pre())return;const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane)pane.innerHTML=content(active);}
+ async function refresh(){if(!pre()||typeof cloudClient==='undefined'||!cloudClient)return;const stamp=++request;
+   try{const {data,error}=await cloudClient.from('league_preseason_matches_v1298').select('match_id,match_date,player_a,player_b,score_a,score_b,match_stats').order('match_date',{ascending:false});if(error)throw error;
+     if(stamp!==request||!pre())return;records=data||[];loaded=true;render();
+   }catch(e){if(stamp!==request||!pre())return;render();const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane){const p=document.createElement('p');p.className='v12910-msg';p.textContent='프리시즌 조회 실패: '+e.message+' · SQL 설치 및 공개 읽기 권한을 확인해 주세요.';pane.prepend(p);}}
+ }
+ function switchView(){option();if(pre()){
+   document.body.classList.remove('v1271-is-archive');document.body.classList.add('v12910-preseason');
+   const showing=document.querySelector('.section.active');if(showing&&ids.includes(showing.id))active=showing.id;
+   pickTab(active);refresh();loadNames();
+ }else{document.body.classList.remove('v12910-preseason');}
+ }
+ // Keep the additional option without a MutationObserver: refresh happens only on user focus/visibility.
+ // Attach AFTER the existing archive loader. If it replaces options, restore preference immediately.
+ pick.addEventListener('change',switchView);
+ pick.addEventListener('focus',()=>{option();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){option();if(pre())refresh();}});
+ nav.addEventListener('click',e=>{if(!pre())return;const target=e.target.closest('button[data-tab]');if(!target)return;
+   e.preventDefault();e.stopImmediatePropagation();pickTab(target.dataset.tab);
+ },true);
+ document.addEventListener('click',async e=>{
+   const open=e.target.closest('[data-pre-open]');if(open&&pre()&&isAdmin()){$('v1291Open')?.click();return;}
+   const refreshBtn=e.target.closest('[data-pre-refresh]');if(refreshBtn&&pre()){refresh();return;}
+   const remove=e.target.closest('[data-pre-remove]');if(!remove||!pre()||!isAdmin()||writing)return;
+   const id=remove.dataset.preRemove,row=records.find(r=>r.match_id===id);if(!row)return;
+   if(!confirm(`${row.player_a} ${row.score_a}:${row.score_b} ${row.player_b}\n이 프리시즌 경기만 삭제할까요?`))return;
+   writing=true;remove.disabled=true;
+   try{await call({action:'remove',match_id:id,confirm:true});await refresh();}
+   catch(err){alert('프리시즌 경기 삭제 실패: '+err.message);}finally{writing=false;}
+ });
+ async function call(body){if(!isAdmin())throw Error('관리자 인증이 필요합니다.');
+   const {data,error}=await cloudClient.functions.invoke('nexon-preseason',{body});
+   if(error)throw Error(await errorText(error));if(!data?.ok)throw Error(data?.error||'처리에 실패했습니다.');return data;
+ }
+ // Extends the existing NEXON match finder without replacing its search/event handlers.
+ window.v12910AddCandidate=(item,m)=>{
+   if(!isAdmin()||!m?.match_id)return;
+   const btn=document.createElement('button');btn.type='button';btn.className='btn v12910-pre-btn';btn.textContent='프리시즌에 등록';
+   btn.addEventListener('click',async()=>{
+     if(writing)return;
+     const a=$('v1291A')?.value,b=$('v1291B')?.value;
+     if(!a||!b||a===b)return alert('감독 두 명을 먼저 선택해 주세요.');
+     if(!confirm(`${a} vs ${b}\n넥슨 매치 ${m.match_id}\n프리시즌 경기로 등록할까요? (시즌 3·4에 반영 안 됨)`))return;
+     writing=true;btn.disabled=true;btn.textContent='경기 확인 중…';
+     try{const response=await call({action:'register',player_a:a,player_b:b,match_id:m.match_id,confirm:true});
+       btn.textContent=response.updated?'프리시즌 재확인 완료':'프리시즌 등록 완료';
+       if(pre())await refresh();
+     }catch(err){btn.textContent='프리시즌에 등록';alert('등록 실패: '+err.message);}finally{writing=false;btn.disabled=false;}
+   });item.append(btn);
+ };
+ // Keep the preseason menu entry when the historical archive loader rebuilds the dropdown.
+ const obs=new MutationObserver(()=>{if(![...pick.options].some(o=>o.value==='preseason'))option();});
+ obs.observe(pick,{childList:true});
+ option();
+ window.addEventListener('load',()=>{option();if(pre())switchView();});
 })();
 </script>
 
