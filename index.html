@@ -990,6 +990,16 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
     touch-action:pan-x;
   }
 }
+
+/* V12.9.0 — isolated Nexon account-link manager */
+#v1290Modal[hidden]{display:none!important}
+#v1290Modal{position:fixed;inset:0;z-index:450;display:grid;place-items:center;padding:14px;background:rgba(0,8,20,.86);overflow:auto}
+.v1290-dialog{width:min(710px,100%);max-height:92dvh;overflow-y:auto;background:#101f33;border:1px solid #bd9a5d;border-radius:16px;color:#edf3ff;padding:22px;box-shadow:0 22px 65px #000a}
+.v1290-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v1290-head h2{margin:5px 0 0;color:#f2d390}.v1290-caption{font-size:12px;color:#b9c9dd;line-height:1.7;margin:10px 0 18px}
+.v1290-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.v1290-field{display:grid;gap:7px;font-size:12px;color:#cbd9ed;margin:10px 0}.v1290-field input,.v1290-field select{width:100%;min-width:0;padding:11px;background:#08192b;border:1px solid #486481;border-radius:8px;color:#fff;font:inherit}
+.v1290-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v1290-actions .btn{white-space:normal}.v1290-note{font-size:12px;line-height:1.6;padding:10px 12px;background:#0b2b44;border:1px solid #294e68;border-radius:8px;white-space:pre-line}
+.v1290-table-wrap{overflow:auto;margin-top:12px;border:1px solid #35506a;border-radius:10px}.v1290-table{width:100%;border-collapse:collapse;min-width:525px;font-size:12px}.v1290-table th,.v1290-table td{padding:10px;border-bottom:1px solid #253d57;text-align:left}.v1290-table th{color:#e6c280;background:#142d48}.v1290-table td{color:#e5eefb}.v1290-mini{font-size:11px;color:#adbed3}.v1290-empty{padding:20px;color:#bdccdc;text-align:center}
+@media(max-width:600px){.v1290-dialog{padding:15px}.v1290-row{grid-template-columns:1fr}.v1290-actions .btn{flex:1 1 auto}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌별 리그 기록과 커뮤니티</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>필요한 메뉴만 펼쳐서 사용</span></div>
@@ -1003,7 +1013,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
 <button class="btn v115-manage-btn" hidden="" id="memberManageOpen" type="button">계정 발급</button><button class="btn" hidden="" id="v120AdminOpen" type="button">📅 시즌 기간 관리</button><button class="btn" hidden="" id="v122OpsOpen" type="button">🏆 리그 종료·컵대회 관리</button>
 </div></details>
 <details class="v12823-menu-group"><summary>📅 시즌 · 기록 관리 <span aria-hidden="true">⌄</span></summary><div class="v12823-menu-items">
-<button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
+<button class="btn" hidden id="v1290Open" type="button">🔗 넥슨 감독 연동</button><button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
 </div></details>
 </div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">OFFICIAL LEAGUE PORTAL · MULTI-SEASON</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
@@ -2866,6 +2876,89 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
   nav.addEventListener('click',()=>requestAnimationFrame(revealActive));
   window.addEventListener('resize',()=>{lastActive=null;revealActive()},{passive:true});
   revealActive();
+})();
+</script>
+
+<div id="v1290Modal" hidden role="dialog" aria-modal="true" aria-labelledby="v1290Title">
+ <div class="v1290-dialog">
+  <div class="v1290-head"><div><small>ADMIN · NEXON OPEN API</small><h2 id="v1290Title">FC 온라인 감독 계정 연동</h2></div><button id="v1290Close" class="btn" type="button">닫기 ✕</button></div>
+  <p class="v1290-caption">운영진이 DIT 리그 참가자와 FC 온라인 감독 닉네임을 연결합니다. OUID·감독 레벨만 저장하며 시즌 3 기록, 경기 결과, 엠블럼, 시즌 4 개막 상태에는 영향을 주지 않습니다.</p>
+  <div class="v1290-row">
+   <label class="v1290-field">DIT 리그 참가자 이름<input id="v1290Player" maxlength="40" placeholder="예: 박성욱" list="v1290KnownPlayers" autocomplete="off" /><datalist id="v1290KnownPlayers"></datalist></label>
+   <label class="v1290-field">FC 온라인 감독 닉네임<input id="v1290Nickname" maxlength="40" placeholder="게임 내 감독 닉네임" autocomplete="off" /></label>
+  </div>
+  <div class="v1290-actions"><button type="button" class="btn" id="v1290Save">넥슨 계정 확인 및 연결</button><button type="button" class="btn" id="v1290Refresh">연동 목록 새로고침</button></div>
+  <div class="v1290-note" id="v1290Message" role="status">관리자 로그인 후 닉네임을 입력해 주세요. 넥슨 API 키는 서버에만 저장합니다.</div>
+  <div class="v1290-table-wrap"><table class="v1290-table"><thead><tr><th>DIT 참가자</th><th>FC 온라인 감독</th><th>레벨</th><th>조회 시각</th><th>관리</th></tr></thead><tbody id="v1290Rows"><tr><td colspan="5" class="v1290-empty">연동 목록을 조회해 주세요.</td></tr></tbody></table></div>
+  <p class="v1290-caption">※ 현재 단계는 감독 계정 식별만 수행합니다. 최근 스쿼드, 대표 선수, 경기 기록 자동 적용은 다음 버전에서 구현합니다.</p>
+ </div>
+</div>
+<script>
+/* V12.9.0 — Admin-only UI; API key and writes reside in Supabase Edge Function. */
+(function v1290NexonLink(){
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const trigger=$('v1290Open'),modal=$('v1290Modal'),status=$('v1290Message'),tbody=$('v1290Rows');
+ if(!trigger||!modal)return;
+ const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const admin=()=>typeof state!=='undefined'&&state.admin===true&&typeof currentUser!=='undefined'&&!!currentUser&&!!cloudClient;
+ let busy=false;
+ const tell=s=>{status.textContent=s;};
+ const wait=v=>{busy=v;$('v1290Save').disabled=v;$('v1290Refresh').disabled=v;};
+ async function invoke(body){
+   if(!admin())throw Error('운영진 로그인이 필요합니다.');
+   const {data,error}=await cloudClient.functions.invoke('nexon-account-link',{body});
+   if(error){let detail='';try{if(error.context?.json){const x=await error.context.json();detail=x?.error||'';}}catch(_){}throw Error(detail||error.message||'Edge Function 호출 실패');}
+   if(!data?.ok)throw Error(data?.error||'처리 실패');return data;
+ }
+ function roster(){
+   const known=new Set(Array.isArray(DATA?.teams)?DATA.teams:[]);
+   const a=$('v1272Players')?.value?.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)||[];
+   a.forEach(x=>known.add(x));
+   $('v1290KnownPlayers').replaceChildren(...[...known].sort((a,b)=>a.localeCompare(b,'ko')).map(x=>{const o=document.createElement('option');o.value=x;return o;}));
+ }
+ async function list(){
+   if(busy)return;wait(true);tell('저장된 계정 연동 정보를 확인 중…');
+   try{
+     const data=await invoke({action:'list'});
+     const rows=data.rows||[];tbody.replaceChildren();
+     if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="v1290-empty">아직 연결한 계정이 없습니다.</td></tr>';}
+     for(const item of rows){
+       const tr=document.createElement('tr');
+       tr.innerHTML=`<td>${safe(item.player_name)}</td><td>${safe(item.nickname)}<div class="v1290-mini">OUID 연결됨</div></td><td>${item.level==null?'—':safe(item.level)}</td><td>${item.synced_at?new Date(item.synced_at).toLocaleString('ko-KR'):'—'}</td>`;
+       const td=document.createElement('td'),btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='연결 해제';
+       btn.addEventListener('click',async()=>{
+         if(!confirm(item.player_name+'의 넥슨 계정 연결을 해제할까요? 경기 기록은 삭제하지 않습니다.'))return;
+         if(busy)return;wait(true);
+         try{await invoke({action:'unlink',player_name:item.player_name});tell('연결을 해제했습니다.');}catch(e){tell('연결 해제 실패: '+e.message);}finally{wait(false);}
+         await list();
+       });td.append(btn);tr.append(td);tbody.append(tr);
+     }
+     tell('연동 목록 조회 완료 · '+rows.length+'명.');
+   }catch(e){tell('조회 실패: '+e.message+' (SQL, Edge Function, 관리자 로그인 확인)');}finally{wait(false);}
+ }
+ async function save(){
+   if(busy)return;
+   const player_name=$('v1290Player').value.trim(),nickname=$('v1290Nickname').value.trim();
+   if(!player_name||!nickname){tell('DIT 참가자와 게임 닉네임을 모두 입력해 주세요.');return;}
+   if(!confirm(`${player_name} 참가자에 FC 온라인 감독 '${nickname}'을 연결할까요?`))return;
+   wait(true);tell('넥슨 계정 확인 및 연결 중…');
+   try{const x=await invoke({action:'link',player_name,nickname});tell(`${x.row.player_name} → ${x.row.nickname} 연결 완료 · 감독 레벨 ${x.row.level??'확인 중'}`);$('v1290Nickname').value='';}
+   catch(e){tell('연결 실패: '+e.message);}finally{wait(false);}
+   await list();
+ }
+ function open(){if(!admin())return;roster();modal.hidden=false;list();}
+ function close(){modal.hidden=true;}
+ trigger.addEventListener('click',open);$('v1290Close').addEventListener('click',close);
+ modal.addEventListener('click',e=>{if(e.target===modal)close();});
+ $('v1290Refresh').addEventListener('click',list);$('v1290Save').addEventListener('click',save);
+ // Maintain exactly the same admin visibility used by existing tools.
+ const adminButton=$('v1272OpenDraft');
+ const sync=()=>{const allowed=admin();trigger.hidden=!allowed;if(!allowed)close();};
+ if(adminButton)new MutationObserver(sync).observe(adminButton,{attributes:true,attributeFilter:['hidden']});
+ cloudClient?.auth?.onAuthStateChange?.(()=>setTimeout(sync,0));
+ document.addEventListener('click',e=>{if(e.target.id==='v118AccountTrigger')setTimeout(sync,0);});
+ sync();
 })();
 </script>
 </body></html>
