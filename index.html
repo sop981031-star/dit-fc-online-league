@@ -2977,7 +2977,20 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
 .v1291-item strong{color:#f5d99a}.v1291-score{font-size:22px;font-weight:900;color:#fff;margin:7px 0}.v1291-meta{font-size:12px;color:#bdccdb;line-height:1.6;overflow-wrap:anywhere}
 .v1291-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 @media(max-width:600px){.v1291-dialog{padding:15px}.v1291-grid{grid-template-columns:1fr}}
- .v1292-players{display:grid;gap:4px;margin:6px 0 12px;font-size:12px}.v1292-players div{padding:6px 8px;background:#0b223a;border-radius:5px}
+ /* V12.9.3 — official player metadata and compact match cards */
+ .v1292-players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 16px}
+ .v1293-player{display:flex;align-items:center;gap:10px;min-width:0;padding:9px;background:#0b223a;border:1px solid #29435f;border-radius:9px}
+ .v1293-photo{flex:none;width:53px;height:65px;object-fit:contain;background:linear-gradient(155deg,#203c5c,#0a192c);border-radius:5px}
+ .v1293-playercopy{min-width:0;flex:1}.v1293-playername{font-weight:750;color:#f8e6ae;overflow-wrap:anywhere;font-size:13px}.v1293-class{display:block;font-size:11px;color:#a7c2dc;margin:3px 0}.v1293-stats{font-size:11px;line-height:1.5;color:#e3ecf7}.v1293-id{color:#839cba;font-size:10px;word-break:break-all}
+ .v1293-match-header{padding:13px 12px;background:linear-gradient(115deg,#102e49,#0d1c31);border:1px solid #35516b;border-radius:10px;text-align:center;margin:8px 0 12px}
+ .v1293-match-header h3{margin:4px 0;font-size:20px;color:white}.v1293-match-header small{color:#b9cce0}
+ .v1293-statrow{display:grid;grid-template-columns:55px 1fr 55px;gap:6px;align-items:center;margin:10px 0;font-size:12px;text-align:center}
+ .v1293-statrow b{font-size:13px;color:#fff}.v1293-statrow span{color:#bfd0e2}.v1293-bar{display:flex;height:6px;border-radius:8px;overflow:hidden;margin:0 0 14px;background:#40526a}.v1293-bar>i{background:#d0ad65;height:100%;display:block}
+ .v1293-mvp{padding:10px 12px;background:#382f20;border:1px solid #ab8848;border-radius:9px;color:#ffe1a0;margin:12px 0}.v1293-mvp small{font-size:11px;color:#f0d7a8}
+ .v1293-teamtitle{margin:16px 0 6px;color:#f2d390;font-size:14px}
+ .v1293-meta-note{font-size:11px;color:#b0c9e4;margin:7px 0 12px}
+ @media(max-width:600px){.v1292-players{grid-template-columns:1fr}.v1293-player{padding:8px}.v1293-photo{width:47px;height:57px}.v1293-match-header h3{font-size:16px}}
+
 </style>
 <div id="v1291Modal" hidden role="dialog" aria-modal="true" aria-labelledby="v1291Title">
  <div class="v1291-dialog">
@@ -2994,7 +3007,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  </div>
 </div>
 <script>
-/* V12.9.2 — match finder with verified stats staging, admin-only */
+/* V12.9.3 — match finder with official player metadata view, admin-only */
 (function v1291MatchFinder(){
  'use strict';
  const $=id=>document.getElementById(id),trigger=$('v1291Open'),modal=$('v1291Modal'),msg=$('v1291Message'),results=$('v1291Results');
@@ -3050,27 +3063,82 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  function clearPreview(){selected=null;$('v1292Preview').hidden=true;$('v1292Preview').replaceChildren();$('v1292Confirm').hidden=true;}
  const val=n=>n===null||n===undefined?'—':String(n);
  function addLine(el,label,text){const p=document.createElement('p');p.style.margin='6px 0';p.textContent=label+': '+text;el.append(p);}
- function compactPlayers(arr){return (Array.isArray(arr)?arr:[]).filter(x=>x.sp_id!=null).sort((x,y)=>(y.rating??-1)-(x.rating??-1));}
- function renderDetail(m,el){
-   el.replaceChildren();const h=document.createElement('h3');h.textContent='넥슨 검증 경기 · '+m.player_a+' '+val(m.a.goals)+' : '+val(m.b.goals)+' '+m.player_b;el.append(h);
-   addLine(el,'경기 시간',m.match_date?new Date(m.match_date).toLocaleString('ko-KR'):'—');
-   addLine(el,'점유율',val(m.a.possession)+'% / '+val(m.b.possession)+'%');
-   addLine(el,'슈팅(유효)',val(m.a.shoot_total)+' ('+val(m.a.shoot_effective)+') / '+val(m.b.shoot_total)+' ('+val(m.b.shoot_effective)+')');
-   addLine(el,'패스 성공/시도',val(m.a.pass_success)+'/'+val(m.a.pass_total)+' · '+val(m.b.pass_success)+'/'+val(m.b.pass_total));
-   for(const [title,team] of [[m.player_a,m.a],[m.player_b,m.b]]){
-     const sub=document.createElement('h4');sub.textContent=title+' · 선수별 기록 (평점 순)';el.append(sub);
-     const list=document.createElement('div');list.className='v1292-players';
-     for(const p of compactPlayers(team.players)){
-       const line=document.createElement('div');line.textContent='SPID '+p.sp_id+' · 평점 '+val(p.rating)+' · 골 '+val(p.goals)+' · 도움 '+val(p.assists)+' · 위치 '+val(p.sp_position);list.append(line);
+ // Public, read-only NEXON metadata; no NEXON API secret in the browser.
+ const META_ROOT='https://open.api.nexon.com/static/fconline/meta/';
+ const PHOTO_ROOT='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/';
+ let playerMeta=null,classMeta=null,metaTask=null,metaStatus='선수 정보 준비 중';
+ function metaRows(x){return Array.isArray(x)?x:(Array.isArray(x?.data)?x.data:(Array.isArray(x?.items)?x.items:[]));}
+ function metaId(row){return Number(row?.id??row?.spId??row?.spid??row?.sp_id??row?.classId??row?.seasonId);}
+ async function loadPlayerMeta(){
+   if(metaTask)return metaTask;
+   metaTask=(async()=>{
+     const settled=await Promise.allSettled([
+       fetch(META_ROOT+'spid.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('spid '+r.status);return r.json();}),
+       fetch(META_ROOT+'class.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('class '+r.status);return r.json();})
+     ]);
+     if(settled[0].status==='fulfilled'){
+       playerMeta=new Map(metaRows(settled[0].value).map(r=>[metaId(r),String(r.name??r.spName??r.playerName??'')]).filter(([id,name])=>Number.isFinite(id)&&!!name));
      }
+     if(settled[1].status==='fulfilled'){
+       classMeta=new Map(metaRows(settled[1].value).map(r=>[metaId(r),String(r.className??r.name??r.seasonName??'')]).filter(([id,name])=>Number.isFinite(id)&&!!name));
+     }
+     metaStatus=playerMeta?.size?'넥슨 공식 선수 이름 연결 완료 ('+playerMeta.size+'명)':'선수 메타데이터 조회 실패 · SPID 표시 유지';
+     if(!classMeta?.size)metaStatus+=' · 클래스 정보 미제공';
+     return !!playerMeta?.size;
+   })();return metaTask;
+ }
+ function compactPlayers(arr){return (Array.isArray(arr)?arr:[]).filter(x=>x?.sp_id!=null).sort((x,y)=>(Number(y.rating) || -1)-(Number(x.rating)||-1));}
+ function clsOf(spid){const id=Math.floor(Number(spid)/1000000);return classMeta?.get(id)||'';}
+ function nameOf(spid){return playerMeta?.get(Number(spid))||'선수명 확인 불가';}
+ function node(tag,className,text){const x=document.createElement(tag);if(className)x.className=className;if(text!=null)x.textContent=String(text);return x;}
+ function statRow(root,title,aa,bb,percent){
+   const row=node('div','v1293-statrow');row.append(node('b','',val(aa)),node('span','',title),node('b','',val(bb)));root.append(row);
+   const a=Number(aa),b=Number(bb);if(Number.isFinite(a)&&Number.isFinite(b)&&a+b>0){const bar=node('div','v1293-bar'),fill=node('i');fill.style.width=Math.max(0,Math.min(100,a/(a+b)*100)).toFixed(1)+'%';bar.append(fill);root.append(bar);}
+ }
+ function playerCard(p){
+   const item=node('article','v1293-player'),sp=Number(p.sp_id);
+   const pic=node('img','v1293-photo');pic.alt='';pic.loading='lazy';pic.decoding='async';pic.referrerPolicy='no-referrer';pic.src=PHOTO_ROOT+'playersAction/p'+sp+'.png';
+   pic.onerror=()=>{if(pic.dataset.fallback)return;pic.dataset.fallback='1';pic.src=PHOTO_ROOT+'players/p'+sp+'.png';pic.onerror=()=>{pic.hidden=true;};};item.append(pic);
+   const content=node('div','v1293-playercopy');const nm=nameOf(sp);content.append(node('div','v1293-playername',nm));
+   const cl=clsOf(sp);content.append(node('span','v1293-class',cl||'시즌 클래스 확인 필요'));
+   content.append(node('div','v1293-stats','평점 '+val(p.rating)+' · '+val(p.goals)+'골 · '+val(p.assists)+'도움 · 포지션 '+val(p.sp_position)));
+   if(nm==='선수명 확인 불가')content.append(node('div','v1293-id','SPID '+sp));
+   item.append(content);return item;
+ }
+ function matchMvp(m){
+   const both=[...[...(m?.a?.players||[])].map(p=>({...p,side:m.player_a})),...[...(m?.b?.players||[])].map(p=>({...p,side:m.player_b}))];
+   const valid=both.filter(p=>p.sp_id!=null&&Number.isFinite(Number(p.rating))&&Number(p.rating)>0);
+   if(!valid.length)return null;
+   const best=Math.max(...valid.map(p=>Number(p.rating))),tied=valid.filter(p=>Number(p.rating)===best);
+   return {best,tied};
+ }
+ function renderDetail(m,el){
+   el.replaceChildren();if(!m?.a||!m?.b){el.append(node('p','','경기 상세 데이터가 없습니다.'));return;}
+   const head=node('div','v1293-match-header');head.append(node('small','','NEXON VERIFIED MATCH · 스페셜 매치 1:1'));
+   head.append(node('h3','',m.player_a+'  '+val(m.a.goals)+' : '+val(m.b.goals)+'  '+m.player_b));
+   head.append(node('small','',m.match_date?new Date(m.match_date).toLocaleString('ko-KR'):'시간 미제공'));el.append(head);
+   statRow(el,'점유율 (%)',m.a.possession,m.b.possession);
+   statRow(el,'총 슈팅',m.a.shoot_total,m.b.shoot_total);
+   statRow(el,'유효 슈팅',m.a.shoot_effective,m.b.shoot_effective);
+   statRow(el,'패스 성공',m.a.pass_success,m.b.pass_success);
+   addLine(el,'패스 시도',val(m.a.pass_total)+' / '+val(m.b.pass_total));
+   const mvp=matchMvp(m);if(mvp){const card=node('div','v1293-mvp');
+     card.append(node('strong','','🏅 DIT 매치 최고 평점 · '+mvp.best.toFixed(1)));
+     const names=mvp.tied.map(p=>nameOf(p.sp_id)+' ('+p.side+')').join(' · ');
+     card.append(node('div','',names));card.append(node('small','','※ 공식 MVP 아님 · 최고 평점 공동 1위 모두 표시'));el.append(card);
+   }
+   for(const [title,team] of [[m.player_a,m.a],[m.player_b,m.b]]){
+     el.append(node('h4','v1293-teamtitle',title+' · 선수별 기록 (평점 순)'));
+     const list=node('div','v1292-players');for(const p of compactPlayers(team.players)){list.append(playerCard(p));}
      if(!list.childNodes.length){addLine(el,'선수 기록','API에 없음');}else el.append(list);
    }
+   el.append(node('div','v1293-meta-note',metaStatus+' · 선수 사진은 넥슨 CDN 제공 여부에 따라 다를 수 있습니다.'));
    addLine(el,'매치 ID',m.match_id);
  }
  async function preview(match_id,player_a,player_b){
    if(busy)return;clearPreview();setBusy(true);note('넥슨에서 상세 기록을 다시 조회하고 있습니다…');
    try{const x=await invoke({action:'match_preview',match_id,player_a,player_b});selected={match_id,player_a,player_b};
-     const box=$('v1292Preview');renderDetail(x.match,box);box.hidden=false;$('v1292Confirm').hidden=false;
+     await loadPlayerMeta().catch(()=>false);const box=$('v1292Preview');renderDetail(x.match,box);box.hidden=false;$('v1292Confirm').hidden=false;
      box.scrollIntoView({behavior:'smooth',block:'nearest'});note('상세 기록 확인 완료 · DB 미저장. 이상 없으면 보관 버튼을 누르세요.');
    }catch(e){note('상세 조회 실패: '+e.message);}finally{setBusy(false);}
  }
@@ -3092,7 +3160,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
      for(const row of rows){const item=document.createElement('article');item.className='v1291-item';
        const title=document.createElement('strong');title.textContent=row.player_a+' '+row.score_a+' : '+row.score_b+' '+row.player_b;item.append(title);
        addLine(item,'넥슨 매치 ID',row.match_id);addLine(item,'확정 시각',new Date(row.verified_at).toLocaleString('ko-KR'));
-       const btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='상세 통계 보기';btn.addEventListener('click',()=>{const detail=document.createElement('div');detail.className='v1291-note';renderDetail(row.stats,detail);item.append(detail);btn.disabled=true;});item.append(btn);box.append(item);
+       const btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='상세 통계 보기';btn.addEventListener('click',async()=>{btn.disabled=true;btn.textContent='선수 정보 불러오는 중…';await loadPlayerMeta().catch(()=>false);const detail=document.createElement('div');detail.className='v1291-note';renderDetail(row.stats,detail);item.append(detail);btn.textContent='상세 통계 펼쳐짐';});item.append(btn);box.append(item);
      }
      if(!nested)note('시즌 4 검증 보관함 조회 완료 · '+rows.length+'건. 정규리그 결과는 미변경.');
    }catch(e){note('확정 기록 조회 실패: '+e.message);}finally{if(!nested)setBusy(false);}
