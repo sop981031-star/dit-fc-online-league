@@ -805,11 +805,20 @@ body.v1271-is-archive .section[id="rules"] > :not(.v12731-context):not(.v12732-a
 .v12732-archive-pane .v1271-grid{min-width:0}
 .v12732-archive-pane [data-v1271-player]{cursor:pointer}
 @media(max-width:650px){.v12732-head{padding:13px}.v12732-head h2{font-size:18px}.v12732-archive-pane .panel{padding:12px}}
+
+/* V12.7.4 — Non-mutating admin-only draft status view. */
+.v1274-draft-btn{border-color:rgba(227,192,116,.55)!important;background:rgba(55,42,23,.67)!important;color:#f4d996!important;white-space:normal;text-align:center}
+.v1274-draft-status{margin:11px 0 12px;border:1px solid rgba(215,181,110,.42);background:rgba(24,42,64,.65);border-radius:12px;padding:12px 14px;color:#e8f0fd;display:grid;gap:6px}
+.v1274-draft-status strong{color:#f1d18c;font-size:13px}
+.v1274-draft-status small{color:#bed0e4;font-size:11px;line-height:1.6}
+.v1274-draft-status .v1274-draft-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.v1274-draft-status .v1274-draft-actions button{font-size:11px;padding:7px 11px}
+@media(max-width:650px){.v1274-draft-btn{width:100%}.v1274-draft-status{padding:11px}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>멀티 시즌 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="v1272OpenDraft" type="button" hidden>🗓 시즌 4 준비</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="stats"><div class="stat"><label>전체 경기</label><strong id="total">45</strong><small>정규 리그</small></div><div class="stat"><label>진행 경기</label><strong id="played">0 / 45</strong><small id="progress">진행률 0%</small></div><div class="stat"><label>득점</label><strong id="goals">0</strong><small>리그 전체 득점</small></div><div class="stat"><label>선두</label><strong id="leader" style="font-size:20px">—</strong><small id="leaderPts">0점</small></div></div>
-<div class="v124-season-toolbar" aria-label="시즌 조회"><div><strong id="v124SeasonToolbarTitle">SEASON 03</strong><small id="v124SeasonToolbarCaption">현재 운영 시즌 · 완료 기록</small></div><div class="v1271-controls"><label for="v1271SeasonPicker">시즌 선택</label><select id="v1271SeasonPicker" class="field" aria-label="시즌 선택"><option value="live">시즌 3 · 운영 데이터</option></select><button type="button" class="btn" id="v124OpenSeason" aria-haspopup="dialog">🗂 시즌 기록 보기</button></div></div>
+<div class="v124-season-toolbar" aria-label="시즌 조회"><div><strong id="v124SeasonToolbarTitle">SEASON 03</strong><small id="v124SeasonToolbarCaption">현재 운영 시즌 · 완료 기록</small></div><div class="v1271-controls"><label for="v1271SeasonPicker">시즌 선택</label><select id="v1271SeasonPicker" class="field" aria-label="시즌 선택"><option value="live">시즌 3 · 운영 데이터</option></select><button type="button" class="btn" id="v124OpenSeason" aria-haspopup="dialog">🗂 시즌 기록 보기</button><button type="button" class="btn v1274-draft-btn" id="v1274DraftCheck" hidden aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인">🗓 시즌 4 준비 현황</button></div></div>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button><button class="tab" data-tab="halloffame">🏛 명예의 전당</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON HUB · MATCH CENTER</span></div>
 <section id="v1271ArchivedView" class="section v1271-archive-view" aria-label="보관 시즌 호환 영역 (미사용)">
  <div class="v1271-readonly"><span>ARCHIVED SEASON · READ ONLY</span><strong id="v1271ArchiveHeading">보관 시즌</strong><p id="v1271ArchiveStatus">읽기 전용 기록을 조회하고 있습니다.</p></div>
@@ -987,6 +996,11 @@ body.v1271-is-archive .section[id="rules"] > :not(.v12731-context):not(.v12732-a
   <div class="v1272-box">
    <div class="v124-head"><div><small>ADMIN · SEASON MANAGEMENT</small><h2 id="v1272Title">SEASON 4 준비</h2></div><button type="button" class="btn" id="v1272Close">닫기 ✕</button></div>
    <p class="v1272-sub">운영진 전용 · 시즌 4를 <strong>준비 중(DRAFT)</strong>으로만 생성합니다. 시즌 3 기록·기존 계정·대진표는 유지되며, 새로운 경기 생성·개막·순위 초기화는 수행하지 않습니다.</p>
+   <div class="v1274-draft-status" id="v1274DraftOverview" aria-live="polite">
+      <strong>시즌 4 준비 상태 · 미조회</strong>
+      <small>운영진이 준비된 참가자와 대진 수를 조회할 수 있습니다. 이 화면에서는 개막하거나 경기 결과를 변경하지 않습니다.</small>
+      <div class="v1274-draft-actions"><button type="button" class="btn" id="v1274Reload">준비 상태 새로고침</button></div>
+   </div>
    <div id="v1272Current" class="v1272-result">저장된 준비 시즌 확인 전</div>
    <label class="v1272-field">시즌 이름<input id="v1272Name" type="text" maxlength="100" value="SEASON 4" autocomplete="off"></label>
    <label class="v1272-field">참가자 (한 줄에 한 명, 2~32명)<textarea id="v1272Players" maxlength="2000" placeholder="박성욱&#10;송석현&#10;정민우" autocomplete="off"></textarea></label>
@@ -2532,6 +2546,78 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
   sync();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+</script>
+<script>
+/* V12.7.4: Admin-only Season 4 draft status.
+ * Read only: reuses the already installed v1273_admin_fixture_plan RPC.
+ * Does not register an archive option, write to any table, change league_state,
+ * change authentication, or activate Season 4.
+ */
+(function v1274DraftStatus(){
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const trigger=$('v1274DraftCheck'),modal=$('v1272DraftModal'),adminMenu=$('v1272OpenDraft');
+ const overview=$('v1274DraftOverview'),reload=$('v1274Reload');
+ if(!trigger||!modal||!adminMenu||!overview||!reload)return;
+ let fetching=false;
+ function authorized(){
+   return typeof state!=='undefined'&&!!state.admin&&
+     typeof currentUser!=='undefined'&&!!currentUser&&
+     !adminMenu.hidden&&typeof cloudClient!=='undefined'&&!!cloudClient;
+ }
+ function hide(){trigger.hidden=true;overview.querySelector('strong').textContent='시즌 4 준비 상태 · 미조회';}
+ function sync(){
+   if(!authorized()){hide();return;}
+   trigger.hidden=false;
+ }
+ function text(main,detail){
+   overview.querySelector('strong').textContent=main;
+   overview.querySelector('small').textContent=detail;
+ }
+ async function refresh(){
+   if(fetching)return;
+   if(!authorized()){hide();return;}
+   fetching=true;reload.disabled=true;
+   text('시즌 4 준비 상태 확인 중…','Supabase에 저장된 준비 시즌 정보만 조회합니다.');
+   try{
+     const {data,error}=await cloudClient.rpc('v1273_admin_fixture_plan',{p_season_id:4});
+     if(!authorized()){hide();return;}
+     if(error){
+       const detail=String(error.message||'알 수 없는 오류');
+       if(/준비 정보가 없습니다|not found|no rows/i.test(detail)){
+         text('시즌 4 · 아직 미개설','시즌 3은 그대로 보존됩니다. 준비 시즌은 관리자 메뉴에서 생성할 수 있어요.');
+       }else{
+         text('조회 실패 · 기존 기능 유지','관리자 인증 또는 V12.7.3 SQL 설치를 확인하세요. '+detail);
+       }
+       return;
+     }
+     if(!data||data.status!=='draft'){
+       text('현재 조회 가능한 준비 시즌 없음','준비 중(DRAFT) 상태인 시즌만 이 화면에서 조회합니다.');
+       return;
+     }
+     const people=Array.isArray(data.participants)?data.participants.length:0;
+     const matches=Array.isArray(data.matches)?data.matches.length:0;
+     text('SEASON 4 · 준비 중 (DRAFT)',
+       `참가자 ${people}명 · 대진 ${matches}경기 ${matches?'저장됨':'미생성'} · 개막 전 · 점수 입력 불가. 시즌 3 운영 및 아카이브와 분리되어 있습니다.`);
+   }catch(e){
+     if(authorized())text('조회 실패 · 기존 기능 유지',String(e?.message||e));
+   }finally{fetching=false;reload.disabled=false;}
+ }
+ trigger.addEventListener('click',()=>{
+   if(!authorized())return;
+   // Reuse existing administrator modal; its own listener performs normal refresh.
+   adminMenu.click();
+   refresh();
+ });
+ reload.addEventListener('click',refresh);
+ // Ensure status reflects saves/refreshes performed in the original draft manager.
+ $('v1272Refresh')?.addEventListener('click',()=>{if(!modal.hidden)refresh();});
+ $('v1273Reload')?.addEventListener('click',()=>{if(!modal.hidden)refresh();});
+ $('v1272Save')?.addEventListener('click',()=>{text('시즌 준비 정보 변경 중','저장 결과는 기존 관리자 화면에서 확인하고, 이후 새로고침으로 상태를 다시 조회하세요.');});
+ new MutationObserver(sync).observe(adminMenu,{attributes:true,attributeFilter:['hidden']});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();});
+ sync();
 })();
 </script>
 </body></html>
