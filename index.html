@@ -929,6 +929,67 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
 }
 @media(prefers-reduced-motion:reduce){.v12823-menu-group>summary>span{transition:none}}
 
+
+/* V12.8.4 — Mobile nav compact: one single-row horizontal scroller.
+   Desktop navigation and all existing tab actions are intentionally untouched. */
+@media (max-width:700px) {
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important; }
+  .wrap { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important; }
+  nav.tabs {
+    position:fixed !important;
+    top:auto !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:0 !important;
+    z-index:58;
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap !important;
+    grid-template-columns:none !important;
+    grid-auto-rows:auto !important;
+    align-items:stretch !important;
+    align-content:center !important;
+    justify-content:flex-start !important;
+    box-sizing:border-box;
+    width:100%;
+    height:calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:5px 8px calc(5px + env(safe-area-inset-bottom, 0px)) !important;
+    gap:5px !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    scroll-snap-type:x proximity;
+    background:rgba(9,27,46,.97);
+    border-top:1px solid #48617a;
+  }
+  nav.tabs::-webkit-scrollbar { display:none; }
+  nav.tabs > .tab {
+    flex:0 0 auto !important;
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    box-sizing:border-box;
+    min-width:62px !important;
+    width:auto !important;
+    height:46px !important;
+    min-height:46px !important;
+    max-height:46px !important;
+    padding:0 12px !important;
+    margin:0 !important;
+    border-radius:9px;
+    font-size:11px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    word-break:keep-all;
+    scroll-snap-align:nearest;
+    touch-action:pan-x;
+  }
+}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌별 리그 기록과 커뮤니티</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>필요한 메뉴만 펼쳐서 사용</span></div>
@@ -2777,6 +2838,34 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  new MutationObserver(sync).observe(adminMenu,{attributes:true,attributeFilter:['hidden']});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();});
  sync();
+})();
+</script>
+
+<script>
+/* V12.8.4 — Keep the selected mobile nav item visible. No changes to navigation handlers. */
+(()=>{
+  const nav=document.querySelector('nav.tabs');
+  if(!nav)return;
+  const mobile=window.matchMedia('(max-width:700px)');
+  let lastActive=null;
+  function revealActive(){
+    if(!mobile.matches)return;
+    const selected=nav.querySelector('.tab.active');
+    if(!selected || selected===lastActive)return;
+    lastActive=selected;
+    const navRect=nav.getBoundingClientRect();
+    const itemRect=selected.getBoundingClientRect();
+    const pad=10;
+    if(itemRect.left<navRect.left+pad || itemRect.right>navRect.right-pad){
+      const next=nav.scrollLeft+(itemRect.left-navRect.left)-(nav.clientWidth-itemRect.width)/2;
+      nav.scrollTo({left:Math.max(0,next),behavior:'smooth'});
+    }
+  }
+  const observer=new MutationObserver(revealActive);
+  nav.querySelectorAll('.tab').forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
+  nav.addEventListener('click',()=>requestAnimationFrame(revealActive));
+  window.addEventListener('resize',()=>{lastActive=null;revealActive()},{passive:true});
+  revealActive();
 })();
 </script>
 </body></html>
