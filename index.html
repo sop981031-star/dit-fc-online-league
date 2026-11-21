@@ -783,13 +783,35 @@ body.v1271-is-archive .hero,body.v1271-is-archive .v8-spotlight,body.v1271-is-ar
 .v12731-select-label{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#b8c9de;font-size:11px}
 .v12731-picker{min-width:140px;max-width:210px;padding:6px 27px 6px 9px;border:1px solid rgba(171,192,220,.3);border-radius:8px;background:#122743;color:#f3f7ff;font:inherit;font-size:12px}
 @media(max-width:600px){.v12731-context{padding:9px 10px;align-items:flex-start;flex-direction:column;gap:8px}.v12731-select-label{width:100%;justify-content:space-between}.v12731-picker{flex:1;max-width:100%}}
+
+/* V12.7.3.2 — Render selected archives in their ORIGINAL navigation sections.
+   Display-only overlay; no league_state, authentication, admin or RPC changes. */
+body.v1271-is-archive #v1271ArchivedView {display:none!important}
+body.v1271-is-archive .section[id="home"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="standings"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="fixtures"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="tournament"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="players"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="halloffame"] > :not(.v12731-context):not(.v12732-archive-pane),
+body.v1271-is-archive .section[id="rules"] > :not(.v12731-context):not(.v12732-archive-pane){display:none!important}
+.v12732-archive-pane{margin:0 0 23px;min-width:0}
+.v12732-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 12px;padding:16px 18px;border:1px solid #947448;border-radius:13px;background:linear-gradient(115deg,rgba(19,42,72,.95),rgba(7,21,38,.98))}
+.v12732-head small{display:block;letter-spacing:1.4px;font-size:10px;font-weight:800;color:#e4c387}
+.v12732-head h2{margin:5px 0 0;font-size:22px;color:#fff}
+.v12732-readonly{font-size:11px;color:#f7dab0;border:1px solid #947448;padding:7px 10px;border-radius:24px}
+.v12732-note{font-size:12px;color:#aebfd5;line-height:1.6;margin:0 0 15px}
+.v12732-archive-pane .panel{padding:20px;max-width:100%;overflow:hidden}
+.v12732-archive-pane .v1271-table-wrap{overflow:auto}
+.v12732-archive-pane .v1271-grid{min-width:0}
+.v12732-archive-pane [data-v1271-player]{cursor:pointer}
+@media(max-width:650px){.v12732-head{padding:13px}.v12732-head h2{font-size:18px}.v12732-archive-pane .panel{padding:12px}}
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>멀티 시즌 리그 & 커뮤니티</small></div></div><div class="headright"><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">내 계정 / 운영진</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="v1272OpenDraft" type="button" hidden>🗓 시즌 4 준비</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">2026 · SEASON 03 / OFFICIAL LEAGUE PORTAL</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="stats"><div class="stat"><label>전체 경기</label><strong id="total">45</strong><small>정규 리그</small></div><div class="stat"><label>진행 경기</label><strong id="played">0 / 45</strong><small id="progress">진행률 0%</small></div><div class="stat"><label>득점</label><strong id="goals">0</strong><small>리그 전체 득점</small></div><div class="stat"><label>선두</label><strong id="leader" style="font-size:20px">—</strong><small id="leaderPts">0점</small></div></div>
 <div class="v124-season-toolbar" aria-label="시즌 조회"><div><strong id="v124SeasonToolbarTitle">SEASON 03</strong><small id="v124SeasonToolbarCaption">현재 운영 시즌 · 완료 기록</small></div><div class="v1271-controls"><label for="v1271SeasonPicker">시즌 선택</label><select id="v1271SeasonPicker" class="field" aria-label="시즌 선택"><option value="live">시즌 3 · 운영 데이터</option></select><button type="button" class="btn" id="v124OpenSeason" aria-haspopup="dialog">🗂 시즌 기록 보기</button></div></div>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button><button class="tab" data-tab="halloffame">🏛 명예의 전당</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON HUB · MATCH CENTER</span></div>
-<section id="v1271ArchivedView" class="section v1271-archive-view" aria-label="보관 시즌 기록 조회">
+<section id="v1271ArchivedView" class="section v1271-archive-view" aria-label="보관 시즌 호환 영역 (미사용)">
  <div class="v1271-readonly"><span>ARCHIVED SEASON · READ ONLY</span><strong id="v1271ArchiveHeading">보관 시즌</strong><p id="v1271ArchiveStatus">읽기 전용 기록을 조회하고 있습니다.</p></div>
  <div id="v1271ArchiveContent" class="panel">아카이브 데이터 불러오는 중…</div>
 </section>
@@ -2269,19 +2291,72 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  function player(a){const r=standings(a);return `<h3>선수별 해당 시즌 기록</h3><div class="v1271-grid">${r.map((x,i)=>`<div class="v1271-card"><small>${i+1}위 · 승점 ${x.pts}</small><strong>${escape(x.name)}</strong><p>${x.mp}경기 · ${x.w}승 ${x.d}무 ${x.l}패 · 팀 득점 ${x.gf}</p><button class="v1271-select-player" type="button" data-v1271-player="${escape(x.name)}">경기별 결과 확인</button></div>`).join('')}</div><div class="v1271-profile" id="v1271PlayerDetails" hidden></div>`;}
  function honours(a){let html=cards(a);if(a.id===3){const files=[['정규리그','league-s3.webp'],['챔피언스리그','ucl-s3.webp'],['유로파리그','uel-s3.webp'],['슈퍼컵','supercup-s3.webp']];html+=`<h3>시즌 3 우승 포스터</h3><div class="v1271-photo-grid">${files.map(([t,f])=>`<div class="v1271-card"><small>${escape(t)}</small><a href="./assets/hall-of-fame/${f}" target="_blank" rel="noopener"><img src="./assets/hall-of-fame/${f}" loading="lazy" alt="${escape(t)} 우승 포스터"></a></div>`).join('')}</div>`;}return html;}
  const labels={home:'시즌 결산',standings:'최종 순위',fixtures:'경기 결과',tournament:'컵대회 결과',players:'선수별 기록',halloffame:'명예의 전당',rules:'시즌 기록'};
- function showTab(tab){if(!selected)return;activeTab=labels[tab]?tab:'home';root.classList.add('active');document.querySelectorAll('.section').forEach(s=>{if(s!==root)s.classList.remove('active')});document.querySelectorAll('.tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===activeTab));
-  const a=selected;title.textContent=a.title+' · '+labels[activeTab];status.textContent='보관 스냅샷 조회 전용 · 점수 입력 및 기록 수정 불가';
-  const view=activeTab==='standings'?recordTable(a):activeTab==='fixtures'?games(a):activeTab==='tournament'?cup(a):activeTab==='players'?player(a):activeTab==='halloffame'?honours(a):metrics(a)+cards(a)+`<h3>최종 순위</h3>`+recordTable(a);
-  content.innerHTML=view;window.scrollTo?.({top:0,behavior:'instant'});
+ /* V12.7.3.2: archive reads now appear inside the selected EXISTING tab.
+    Each pane is display-only; legacy live DOM and all event handlers remain intact. */
+ const paneIds=['home','standings','fixtures','tournament','players','halloffame','rules'];
+ const panes=new Map();
+ for(const id of paneIds){
+   const section=document.getElementById(id);
+   if(!section)continue;
+   const pane=document.createElement('div');pane.className='v12732-archive-pane';
+   pane.setAttribute('aria-label','선택 시즌 보존 기록');
+   section.appendChild(pane);panes.set(id,pane);
  }
- function live(){selected=null;document.body.classList.remove('v1271-is-archive');toolbarTitle.textContent='SEASON 03';caption.textContent='현재 운영 화면 · 시즌 3 최종 기록';
-  if(typeof activate==='function')activate(activeTab==='rules'?'home':activeTab);else{document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='home'));root.classList.remove('active')}
+ function archiveContent(a,tab){
+   if(tab==='standings')return recordTable(a);
+   if(tab==='fixtures')return games(a);
+   if(tab==='tournament')return cup(a);
+   if(tab==='players')return player(a);
+   if(tab==='halloffame')return honours(a);
+   if(tab==='rules')return `<div class="v1271-card"><h3>과거 시즌 안내</h3><p>확정된 경기 및 대진 기록은 읽기 전용입니다. 리그 규정은 해당 시즌에 저장된 원문이 없으므로 현재 운영 규정을 과거 시즌의 규정으로 표시하지 않습니다.</p></div>`;
+   return metrics(a)+cards(a)+`<h3>최종 순위</h3>`+recordTable(a);
  }
- function selectArchive(key){const item=archives.get(key);if(!item){live();return;}selected=item;document.body.classList.add('v1271-is-archive');toolbarTitle.textContent='SEASON '+String(item.id).padStart(2,'0');caption.textContent='확정된 아카이브 · 읽기 전용';showTab(activeTab);}
+ function showTab(tab){
+   if(!selected)return;
+   activeTab=panes.has(tab)?tab:'home';
+   const current=panes.get(activeTab);
+   // The original navigation section stays active; archived content replaces its visible body.
+   document.querySelectorAll('.section').forEach(section=>section.classList.toggle('active',section.id===activeTab));
+   document.querySelectorAll('.tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===activeTab));
+   title.textContent=selected.title+' · '+labels[activeTab];
+   status.textContent='보존 기록 · 읽기 전용';
+   current.innerHTML=`<div class="v12732-head"><div><small>SEASON ${String(selected.id).padStart(2,'0')} · ARCHIVE</small><h2>${escape(labels[activeTab])}</h2></div><span class="v12732-readonly">🔒 읽기 전용</span></div><p class="v12732-note">${escape(selected.title)}의 저장된 최종 기록입니다. 기존 운영 데이터와 계정은 변경되지 않습니다.</p><div class="panel">${archiveContent(selected,activeTab)}</div>`;
+   window.scrollTo?.({top:0,behavior:'instant'});
+ }
+ function live(){
+   selected=null;
+   document.body.classList.remove('v1271-is-archive');
+   toolbarTitle.textContent='SEASON 03';caption.textContent='현재 운영 화면 · 시즌 3 최종 기록';
+   root.classList.remove('active');
+   for(const pane of panes.values())pane.replaceChildren();
+   const target=activeTab==='rules'?'home':activeTab;
+   if(typeof activate==='function')activate(target);
+   else{document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===target));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===target));}
+ }
+ function selectArchive(key){
+   const item=archives.get(key);if(!item){live();return;}
+   const showing=document.querySelector('.section.active');
+   if(showing&&panes.has(showing.id))activeTab=showing.id;
+   selected=item;document.body.classList.add('v1271-is-archive');
+   toolbarTitle.textContent='SEASON '+String(item.id).padStart(2,'0');
+   caption.textContent='확정된 아카이브 · 읽기 전용';
+   root.classList.remove('active');showTab(activeTab);
+ }
  pick.addEventListener('change',()=>{if(pick.value==='live')live();else selectArchive(pick.value);});
  nav.addEventListener('click',e=>{if(!selected)return;const btn=e.target.closest('[data-tab]');if(!btn)return;e.preventDefault();e.stopImmediatePropagation();showTab(btn.dataset.tab);},true);
  document.addEventListener('click',e=>{if(!selected)return;const btn=e.target.closest('[data-go]');if(btn){e.preventDefault();e.stopImmediatePropagation();showTab(btn.dataset.go);}},true);
- content.addEventListener('click',e=>{const btn=e.target.closest('[data-v1271-player]');if(!btn||!selected)return;const name=btn.dataset.v1271Player;const games=selected.matches.filter(m=>m.a===name||m.b===name);const target=document.getElementById('v1271PlayerDetails');if(!target)return;target.hidden=false;target.innerHTML='<h3>'+escape(name)+' · 정규리그 기록</h3>'+games.map(m=>`<div class="v1271-fixture"><span>${escape(m.a)} vs ${escape(m.b)}</span><strong>${resultOk(m)?Number(m.sa)+' : '+Number(m.sb):'미완료'}</strong></div>`).join('');target.scrollIntoView({behavior:'smooth',block:'nearest'});});
+ document.addEventListener('click',e=>{
+   if(!selected)return;
+   const btn=e.target.closest('.v12732-archive-pane [data-v1271-player]');
+   if(!btn)return;
+   const name=btn.dataset.v1271Player;
+   const games=selected.matches.filter(m=>m.a===name||m.b===name);
+   const target=panes.get('players')?.querySelector('#v1271PlayerDetails');
+   if(!target)return;
+   target.hidden=false;
+   target.innerHTML='<h3>'+escape(name)+' · 정규리그 기록</h3>'+games.map(m=>`<div class="v1271-fixture"><span>${escape(m.a)} vs ${escape(m.b)}</span><strong>${resultOk(m)?Number(m.sa)+' : '+Number(m.sb):'미완료'}</strong></div>`).join('');
+   target.scrollIntoView({behavior:'smooth',block:'nearest'});
+ });
  async function loadOptions(){const id=++requestId;let records=[];if(typeof cloudClient==='undefined'||!cloudClient){caption.textContent='시즌 기록 DB 연결 대기 · 현재 시즌 화면 유지';return;}
   try{const {data,error}=await cloudClient.from('league_season_archives_v124').select('season_id,season_name,snapshot').order('season_id',{ascending:false});if(error)throw error;records=data||[];}
   catch(e){caption.textContent='시즌 아카이브 조회 불가 · 현재 화면은 정상 이용 가능';return;}
