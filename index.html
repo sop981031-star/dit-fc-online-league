@@ -884,7 +884,7 @@ body.v125-season-complete #home .v118-home-details{display:none}
 <div class="detail"><strong>💬 컵대회 경기 댓글</strong><div id="v123CupComments" style="margin-top:10px">불러오는 중…</div>
 <div class="v123-comment-form"><textarea id="v123CupCommentBody" maxlength="500" aria-label="컵대회 댓글" placeholder="로그인 후 경기 댓글을 입력할 수 있습니다 (최대 500자)"></textarea><div class="v123-modal-buttons"><button type="button" id="v123CupCommentSubmit">댓글 등록</button></div><div class="v123-modal-note" id="v123CupCommentStatus">컵대회 댓글은 선택 설치 기능입니다. 별도 SQL 적용 전에도 경기 상세 화면은 사용할 수 있습니다.</div></div></div>
 </div></div>
-<div id="v124ArchiveModal" class="v124-modal" hidden role="dialog" aria-modal="true" aria-labelledby="v124ModalTitle"><div class="v124-dialog"><div class="v124-head"><div><small>SEASON RECORDS · READ ONLY</small><h2 id="v124ModalTitle">시즌별 기록</h2></div><button type="button" class="btn" id="v124CloseSeason" aria-label="시즌 기록 창 닫기">닫기 ✕</button></div><p class="v124-help">현재 시즌은 기존 메뉴에서 그대로 운영합니다. 이 화면에서는 보관된 시즌 기록만 읽고, 경기 결과와 관리자 데이터를 수정하지 않습니다.</p><div class="v124-controls"><label for="v124SeasonSelect">보관 시즌</label><select class="field" id="v124SeasonSelect"><option value="">조회 가능한 보관 시즌 없음</option></select><button type="button" class="btn" id="v124LoadArchive">기록 조회</button></div><details class="v124-import"><summary>백업 JSON으로 미리보기 (서버 저장 없음)</summary><p>사이트에서 내려받은 시즌별 백업 JSON 파일을 로컬에서 열어 기록을 점검할 수 있습니다. 파일 내용은 서버에 업로드되지 않습니다.</p><input type="file" id="v124ImportFile" accept=".json,application/json" aria-label="백업 JSON 파일 선택"></details><div class="v126-actions"><button type="button" class="btn" id="v126ViewCurrent">현재 시즌 3 기록 미리보기</button><button type="button" class="btn" id="v126DownloadSnapshot">시즌 3 안전 백업 다운로드</button></div><p class="v126-notice">※ 미리보기와 백업은 현재 불러온 기록을 사용하며 서버 데이터를 변경하지 않습니다. 영구 아카이브는 운영자가 별도 SQL을 검토·실행해야 합니다.</p><div id="v124ArchiveStatus" class="v124-help" role="status">보관 기록을 불러오려면 선택하세요.</div><div id="v124ArchiveBody" class="v124-records"></div></div></div>
+<div id="v124ArchiveModal" class="v124-modal" hidden role="dialog" aria-modal="true" aria-labelledby="v124ModalTitle"><div class="v124-dialog"><div class="v124-head"><div><small>SEASON RECORDS · READ ONLY</small><h2 id="v124ModalTitle">시즌별 기록</h2></div><button type="button" class="btn" id="v124CloseSeason" aria-label="시즌 기록 창 닫기">닫기 ✕</button></div><p class="v124-help">현재 시즌은 기존 메뉴에서 그대로 운영합니다. 이 화면에서는 보관된 시즌 기록만 읽고, 경기 결과와 관리자 데이터를 수정하지 않습니다.</p><div class="v124-controls"><label for="v124SeasonSelect">보관 시즌</label><select class="field" id="v124SeasonSelect"><option value="">조회 가능한 보관 시즌 없음</option></select><button type="button" class="btn" id="v124LoadArchive">기록 조회</button></div><details class="v124-import"><summary>백업 JSON으로 미리보기 (서버 저장 없음)</summary><p>사이트에서 내려받은 시즌별 백업 JSON 파일을 로컬에서 열어 기록을 점검할 수 있습니다. 파일 내용은 서버에 업로드되지 않습니다.</p><input type="file" id="v124ImportFile" accept=".json,application/json" aria-label="백업 JSON 파일 선택"></details><div class="v126-actions"><button type="button" class="btn" id="v126ViewCurrent">현재 시즌 3 기록 미리보기</button><button type="button" class="btn" id="v126DownloadSnapshot">시즌 3 안전 백업 다운로드</button></div><p class="v126-notice">※ 미리보기와 백업은 현재 불러온 기록을 사용하며 서버 데이터를 변경하지 않습니다. 영구 아카이브는 운영자가 별도 SQL을 검토·실행해야 합니다.</p><div id="v127FoundationStatus" class="v124-help" role="status">시즌 관리 기반: 확인 전 (기존 운영은 시즌 3으로 유지)</div><div id="v124ArchiveStatus" class="v124-help" role="status">보관 기록을 불러오려면 선택하세요.</div><div id="v124ArchiveBody" class="v124-records"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./config.js"></script>
 <script>
@@ -2098,4 +2098,33 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
 })();
 </script>
 
+<script>
+/* V12.7.0: read-only metadata health indicator. No state changes or save calls. */
+(function v127FoundationStatus(){
+  'use strict';
+  const status=document.getElementById('v127FoundationStatus');
+  const openBtn=document.getElementById('v124OpenSeason');
+  if(!status||!openBtn) return;
+  async function check(){
+    if(typeof cloudClient==='undefined'||!cloudClient){
+      status.textContent='시즌 관리 기반: 온라인 연결 대기 (현재 시즌 3은 그대로 유지)';return;
+    }
+    try {
+      const {data,error}=await cloudClient.from('league_seasons_v127')
+        .select('season_id,season_name,status').order('season_id',{ascending:true});
+      if(error) throw error;
+      const all=Array.isArray(data)?data:[];
+      const s3=all.find(s=>s.season_id===3);
+      const s4=all.find(s=>s.season_id===4);
+      status.textContent='시즌 관리 기반: 연결됨 · 시즌 3 '+
+        (s3?s3.status:'아카이브 메타데이터 미등록')+
+        ' · 시즌 4 '+(s4?s4.status:'미개설/비공개')+
+        ' (조회 전용 · 현재 사이트는 시즌 3 운영 상태 유지)';
+    } catch(e){
+      status.textContent='시즌 관리 기반: 아직 설치되지 않았거나 조회할 수 없습니다. 기존 리그 운영에는 영향을 주지 않습니다.';
+    }
+  }
+  openBtn.addEventListener('click',check);
+})();
+</script>
 </body></html>
