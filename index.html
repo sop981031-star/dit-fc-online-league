@@ -866,8 +866,85 @@ body.v1271-is-archive .v1271-card{background:rgba(14,33,58,.88);border:1px solid
 body.v1271-is-archive .v1271-fixture{border-bottom-color:rgba(158,181,210,.17)}
 body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fit:contain}
 @media(max-width:600px){body.v1271-is-archive .v12732-head{gap:7px}body.v1271-is-archive .v12732-archive-pane .panel{padding:12px}}
+
+/* V12.8.2 + V12.8.3 — account menu organization and responsive compactness.
+   Presentation-only: existing IDs, events, storage, and database calls are untouched. */
+.v12823-account-menu{width:min(326px,calc(100vw - 24px));gap:7px;padding:12px;overscroll-behavior:contain}
+.v12823-menu-top{display:flex;flex-direction:column;gap:3px;padding:2px 5px 9px;border-bottom:1px solid rgba(155,176,208,.22)}
+.v12823-menu-top strong{font-size:13px;color:#f2d39d}
+.v12823-menu-top span{font-size:10px;color:#b4c5da}
+.v12823-menu-block{display:flex;flex-direction:column;gap:6px;padding:4px 0 7px}
+.v12823-menu-label{color:#d5e3f5;font-size:11px;font-weight:800;padding:2px 5px}
+.v12823-menu-group{border:1px solid rgba(155,176,208,.2);border-radius:10px;background:rgba(6,21,40,.58);overflow:hidden}
+.v12823-menu-group>summary{display:flex;align-items:center;justify-content:space-between;gap:9px;cursor:pointer;padding:12px 11px;color:#e4d2aa;font-size:12px;font-weight:800;list-style:none;touch-action:manipulation}
+.v12823-menu-group>summary::-webkit-details-marker{display:none}
+.v12823-menu-group>summary>span{font-size:15px;transition:transform .15s ease}
+.v12823-menu-group[open]>summary>span{transform:rotate(180deg)}
+.v12823-menu-group>summary:focus-visible{outline:2px solid #f2d39d;outline-offset:-3px}
+.v12823-menu-items{display:flex;flex-direction:column;gap:6px;padding:0 8px 9px}
+.v12823-account-menu .btn{min-height:36px;padding:9px 11px;font-size:12px;border-radius:8px}
+.v12823-account-menu button[hidden]{display:none!important}
+@media(max-width:760px){
+ header .head{padding:10px 12px;gap:8px}
+ header .brand{gap:8px;min-width:0}
+ header .brand h1{font-size:13px;line-height:1.1;letter-spacing:0}
+ header .brand small{font-size:9px;line-height:1.2}
+ header .logo{width:34px;height:34px;flex-shrink:0;font-size:13px}
+ header .headright{gap:6px}
+ .v128-season-selector select{min-width:92px;max-width:125px;padding:7px 5px;font-size:11px}
+ .v118-account-trigger{padding:8px 10px;font-size:11px}
+ .v12823-account-menu{position:fixed;top:64px;right:10px;left:auto;width:min(326px,calc(100vw - 20px));max-height:min(78dvh,630px);overflow-y:auto}
+ .tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;gap:5px;padding:7px 4px 9px}
+ .tabs .tab{flex:0 0 auto;scroll-snap-align:start;min-height:40px;white-space:nowrap}
+ .v128-fixture-summary{padding:9px 11px;margin-bottom:12px}
+ .v128-fixture-summary>.stats{gap:6px}
+ .v128-fixture-summary>.stats .stat{min-height:auto;padding:11px}
+ .v128-fixture-summary>.stats .stat strong{font-size:21px}
+}
+@media(max-width:480px){
+ header .head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:7px}
+ header .brand{grid-column:1;grid-row:1}
+ header .brand h1{font-size:12px}
+ header .brand small{font-size:8px}
+ header .headright{grid-column:2;grid-row:1;width:auto;flex-wrap:nowrap;gap:4px;margin:0;justify-content:flex-end}
+ header .headright .status{display:none}
+ .v128-season-selector{padding:2px;border-radius:8px}
+ .v128-season-selector select{min-width:84px;max-width:105px;font-size:10px;padding:6px 3px}
+ .v118-account-trigger{padding:7px 8px;font-size:10px;max-width:92px;overflow:hidden;text-overflow:ellipsis}
+ .v12823-account-menu{top:58px;right:8px;width:min(326px,calc(100vw - 16px));max-height:calc(100dvh - 70px)}
+ .wrap{padding:12px 10px 35px}
+ .panel{padding:12px}
+ .tabs{margin:9px 0 12px}
+ .tabs .tab{padding:9px 11px;font-size:11px}
+ .v125-home-info{padding:15px!important}
+ .v125-hof-title{padding:20px 11px!important}
+ .v1271-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .v128-fixture-summary>.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:350px){
+ header .brand h1{font-size:10px}
+ header .brand small{display:none}
+ .v128-season-selector select{min-width:76px;max-width:83px}
+ .v118-account-trigger{max-width:72px;padding:7px 5px}
+}
+@media(prefers-reduced-motion:reduce){.v12823-menu-group>summary>span{transition:none}}
+
 </style></head><body>
-<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>멀티 시즌 리그 & 커뮤니티</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu" id="v118AccountMenu" hidden><div class="v118-menu-caption">계정 및 운영 관리</div><div class="v128-menu-history"><div class="v1275-menu-caption">시즌 및 기록</div><button type="button" class="btn" id="v124OpenSeason" aria-haspopup="dialog">🗂 기록 백업 · 조회</button><button type="button" class="btn v1274-draft-btn" id="v1274DraftCheck" hidden aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인">🗓 시즌 4 준비 현황</button></div><div class="v1275-menu-caption">프로필 · 구단</div><button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" id="clubManageOpen" hidden type="button">⚽ 구단 설정</button><div class="v1275-menu-caption">계정</div><button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" id="v115ChangeOpen" type="button" hidden>비밀번호 변경</button><button class="btn v115-manage-btn" id="memberManageOpen" type="button" hidden>계정 발급</button><button class="btn" id="v120AdminOpen" type="button" hidden>📅 시즌 기간 관리</button><button class="btn" id="v122OpsOpen" type="button" hidden>🏆 리그 종료·컵대회 관리</button><button class="btn" id="v1272OpenDraft" type="button" hidden>🗓 시즌 4 준비</button><button class="btn" id="adminToggle">관리자 로그인</button></div></div></div></header>
+<header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌별 리그 기록과 커뮤니티</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
+<div class="v12823-menu-top"><strong>계정 및 운영</strong><span>필요한 메뉴만 펼쳐서 사용</span></div>
+<section class="v12823-menu-block" aria-label="내 계정"><div class="v12823-menu-label">👤 내 계정</div>
+<button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" hidden="" id="v115ChangeOpen" type="button">비밀번호 변경</button><button class="btn" id="adminToggle">관리자 로그인</button>
+</section>
+<details class="v12823-menu-group" open><summary>⚽ 프로필 · 구단 <span aria-hidden="true">⌄</span></summary><div class="v12823-menu-items">
+<button class="btn v113-trigger" id="signatureOpen" type="button">★ 내 주력 선수</button><button class="btn club-manage-btn" hidden="" id="clubManageOpen" type="button">⚽ 구단 설정</button>
+</div></details>
+<details class="v12823-menu-group"><summary>🛠 리그 운영 <span aria-hidden="true">⌄</span></summary><div class="v12823-menu-items">
+<button class="btn v115-manage-btn" hidden="" id="memberManageOpen" type="button">계정 발급</button><button class="btn" hidden="" id="v120AdminOpen" type="button">📅 시즌 기간 관리</button><button class="btn" hidden="" id="v122OpsOpen" type="button">🏆 리그 종료·컵대회 관리</button>
+</div></details>
+<details class="v12823-menu-group"><summary>📅 시즌 · 기록 관리 <span aria-hidden="true">⌄</span></summary><div class="v12823-menu-items">
+<button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
+</div></details>
+</div></div></div></header>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">OFFICIAL LEAGUE PORTAL · MULTI-SEASON</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="v128-hidden-status" aria-hidden="true"><strong id="v124SeasonToolbarTitle">SEASON 03</strong><small id="v124SeasonToolbarCaption">시즌 3 최종 기록</small></div>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button><button class="tab" data-tab="halloffame">🏛 명예의 전당</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON HUB · MATCH CENTER</span></div>
@@ -923,7 +1000,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
 <div class="v12731-context v1275-season-context" aria-label="현재 조회 시즌"><div class="v12731-context-left"><span class="v12731-dot" aria-hidden="true"></span><span class="v12731-current">조회 시즌</span><span class="v12731-mode">상단에서 시즌 선택</span></div></div>
 
 <div class="v123-tournament-intro" id="v123CupTournamentIntro"><div><small>SEASON CUP RECORDS</small><strong>DIT CUP TOURNAMENT</strong><p>챔피언스리그 · 유로파리그 · 슈퍼컵</p></div><button type="button" id="v123ViewPoster">포스터 보기 ↗</button></div>
-<div class="v1231-summary"><div><span class="v1231-s-eyebrow">CUP SEASON · OFFICIAL BRACKET</span><h2>컵대회</h2><p>진행 상황은 간단하게, 경기 정보는 필요한 곳에서.</p></div></div>
+<div class="v1231-summary"><div><span class="v1231-s-eyebrow">CUP SEASON · OFFICIAL BRACKET</span><h2>컵대회</h2><p>대진과 경기 결과를 확인하세요.</p></div></div>
 <nav class="v1231-nav" aria-label="컵대회 내부 메뉴">
  <button type="button" class="v1231-nav-btn active" data-v1231-view="bracket" aria-pressed="true">🏆 대진표</button>
  <button type="button" class="v1231-nav-btn" data-v1231-view="matches" aria-pressed="false">⚽ 매치센터</button>
@@ -953,7 +1030,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
  <div class="v123-progress-stats" id="v123ProgressStats" aria-live="polite"></div>
  <div class="v123-overall"><strong id="v123ProgressCaption">컵대회 준비 중</strong><span id="v123ProgressPct">0%</span></div>
  <div class="v123-center-list" id="v123CupMatchList"></div>
- <p style="margin-top:13px">경기 점수 입력과 승자 확정은 대진표 화면에서 운영진만 수행할 수 있습니다. 동점 경기의 승자는 관리자 선택으로 확정합니다.</p>
+ <p style="margin-top:13px">결과 수정 및 승자 확정은 운영진만 할 수 있습니다.</p>
 </div>
 </div>
 </section>
@@ -1062,7 +1139,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
     <div class="v1273-head"><div><small>V12.7.3 · FIXTURE PLANNER</small><h3 id="v1273Title">시즌 4 정규리그 대진 준비</h3></div><span class="v1273-label">개막 전 · 점수 입력 불가</span></div>
     <p>저장된 참가자 명단으로 단일 풀리그 대진을 생성합니다. 미리보기는 DB에 영향을 주지 않고, 확정 버튼을 누른 경우에만 시즌 4 저장소에 기록됩니다.</p>
     <div class="v1273-toolbar"><button type="button" class="btn" id="v1273Preview">대진표 미리보기</button><button type="button" class="btn v1272-primary" id="v1273Commit" disabled>대진표 확정 저장</button><button type="button" class="btn" id="v1273Reload">저장된 대진 새로고침</button></div>
-    <p class="v1273-message" id="v1273Message" role="status">시즌 4 준비 정보 조회 후 대진표를 확인할 수 있습니다.</p>
+    <p class="v1273-message" id="v1273Message" role="status">참가자 명단을 확인한 뒤 대진표를 검토할 수 있어요.</p>
     <div class="v1273-summary" id="v1273Summary"></div><div class="v1273-list" id="v1273List" aria-live="polite"></div>
    </section>
   </div>
