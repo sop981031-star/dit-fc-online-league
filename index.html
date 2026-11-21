@@ -3018,29 +3018,19 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  .v1293-teamtitle{margin:16px 0 6px;color:#f2d390;font-size:14px}
  .v1293-meta-note{font-size:11px;color:#b0c9e4;margin:7px 0 12px}
  @media(max-width:600px){.v1292-players{grid-template-columns:1fr}.v1293-player{padding:8px}.v1293-photo{width:47px;height:57px}.v1293-match-header h3{font-size:16px}}
- .v1295-section{border:1px solid #38506b;background:#0b1a2c;border-radius:12px;padding:14px;margin:12px 0}
- .v1295-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#f1d496}
- .v1295-result{margin-top:8px}.v1295-label{margin:12px 0 6px;color:#f3d48e;font-size:12px;font-weight:800}
- .v1295-summary-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.v1295-chip{background:#18334d;border:1px solid #355a76;border-radius:9px;padding:9px 12px;font-weight:750}
- .v1295-table-wrap{overflow-x:auto;width:100%}.v1295-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
- .v1295-table th,.v1295-table td{padding:8px 7px;border-bottom:1px solid #28425a;text-align:left}.v1295-table th{color:#a7c3d9;font-size:11px}
- .v1295-muted{font-size:11px;color:#a3bbd0;margin:10px 0;line-height:1.5}
 
 
 </style>
 <div id="v1291Modal" hidden role="dialog" aria-modal="true" aria-labelledby="v1291Title">
  <div class="v1291-dialog">
   <div class="v1291-head"><div><small>ADMIN · NEXON MATCH FINDER</small><h2 id="v1291Title">스페셜 매치 기록 검색</h2></div><button id="v1291Close" class="btn" type="button">닫기 ✕</button></div>
-  <p class="v1291-desc">연동된 감독 두 명의 최근 <b>스페셜 매치(클래식 1:1 · 코드 40)</b>에서 같은 매치 ID를 찾습니다. 조회한 경기를 미리보기로 검증한 후 <b>시즌 4 별도 보관함에 확정 저장</b>할 수 있습니다. 정규리그 점수·순위와 시즌 3 데이터는 변경하지 않습니다.</p>
+  <p class="v1291-desc">두 참가자의 스페셜 매치(클래식 1:1) 기록을 검색하고 상세 통계를 확인합니다.</p>
   <div class="v1291-grid"><label>DIT 참가자 A<select id="v1291A"><option value="">참가자 선택</option></select></label><label>DIT 참가자 B<select id="v1291B"><option value="">참가자 선택</option></select></label></div>
   <div class="v1291-actions"><button class="btn" id="v1291Search" type="button">🔎 두 참가자 매치 조회</button><button class="btn" id="v1291Accounts" type="button">연동 계정 다시 불러오기</button></div>
   <div id="v1291Message" class="v1291-note" role="status">감독 계정 2개가 연결되어 있어야 검색할 수 있습니다.</div>
   <div id="v1291Results" class="v1291-list"></div>
   <div id="v1292Preview" class="v1291-note" hidden aria-live="polite"></div>
-  <div class="v1291-actions"><button class="btn" id="v1292Confirm" hidden type="button">✅ 검증된 상세 기록 보관</button><button class="btn" id="v1292Saved" type="button">📂 확정 보관 기록 조회</button></div>
-  <section class="v1295-section"><div class="v1295-head"><strong>검증 보관 통계</strong><button class="btn" id="v1295Load" type="button">통계 조회</button></div><div id="v1295Summary" class="v1295-result" aria-live="polite"></div></section>
-  <div id="v1292SavedList" class="v1291-list"></div>
-  <p class="v1291-desc">※ 넥슨 데이터는 반영 지연이 있을 수 있습니다. 이번 단계의 확정은 넥슨 상세 기록을 별도 저장하는 작업입니다. 시즌 4 공식 경기표·승점에는 반영되지 않습니다. 개막 이후 경기표 연결은 다음 버전에서 진행합니다.</p>
+  <p class="v1291-desc">리그 경기 확정은 공식 대진표 연결 기능에서 진행합니다. 현재 화면은 조회 전용입니다.</p>
  </div>
 </div>
 <script>
@@ -3051,8 +3041,8 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  if(!trigger||!modal)return;
  const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  const admin=()=>typeof state!=='undefined'&&state.admin===true&&typeof currentUser!=='undefined'&&!!currentUser&&!!cloudClient;
- let busy=false,selected=null;
- function setBusy(v){busy=v;['v1291Search','v1291Accounts','v1292Saved','v1292Confirm','v1295Load'].forEach(id=>$(id).disabled=v);}
+ let busy=false;
+ function setBusy(v){busy=v;['v1291Search','v1291Accounts'].forEach(id=>$(id).disabled=v);}
  function note(s){msg.textContent=s;}
  async function invoke(body){
    if(!admin())throw Error('운영진 로그인이 필요합니다.');
@@ -3097,7 +3087,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
    }catch(e){note('검색 실패: '+e.message);}finally{setBusy(false);}
  }
 
- function clearPreview(){selected=null;$('v1292Preview').hidden=true;$('v1292Preview').replaceChildren();$('v1292Confirm').hidden=true;}
+ function clearPreview(){$('v1292Preview').hidden=true;$('v1292Preview').replaceChildren();}
  const val=n=>n===null||n===undefined?'—':String(n);
  function addLine(el,label,text){const p=document.createElement('p');p.style.margin='6px 0';p.textContent=label+': '+text;el.append(p);}
  // Public, read-only NEXON metadata; no NEXON API secret in the browser.
@@ -3174,61 +3164,10 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  }
  async function preview(match_id,player_a,player_b){
    if(busy)return;clearPreview();setBusy(true);note('넥슨에서 상세 기록을 다시 조회하고 있습니다…');
-   try{const x=await invoke({action:'match_preview',match_id,player_a,player_b});selected={match_id,player_a,player_b};
-     await loadPlayerMeta().catch(()=>false);const box=$('v1292Preview');renderDetail(x.match,box);box.hidden=false;$('v1292Confirm').hidden=false;
-     box.scrollIntoView({behavior:'smooth',block:'nearest'});note('상세 기록 확인 완료 · DB 미저장. 이상 없으면 보관 버튼을 누르세요.');
+   try{const x=await invoke({action:'match_preview',match_id,player_a,player_b});
+     await loadPlayerMeta().catch(()=>false);const box=$('v1292Preview');renderDetail(x.match,box);box.hidden=false;
+     box.scrollIntoView({behavior:'smooth',block:'nearest'});note('상세 통계 조회 완료 · 조회 전용 (리그 결과 미반영)');
    }catch(e){note('상세 조회 실패: '+e.message);}finally{setBusy(false);}
- }
- async function confirmMatch(){
-   if(!selected||busy)return;
-   if(!confirm('이 경기의 넥슨 상세 기록을 시즌 4 별도 검증 보관함에 저장할까요?\n승점·정규리그 점수에는 아직 반영되지 않습니다.'))return;
-   setBusy(true);note('넥슨 원본을 다시 검증한 뒤 보관하고 있습니다…');
-   try{const x=await invoke({action:'confirm_match',...selected,confirm:true});note(x.notice||'확정 보관 완료');
-      clearPreview();await savedList(true);
-   }catch(e){note('보관 실패: '+e.message);}finally{setBusy(false);}
- }
- async function savedList(nested=false){
-   if(busy&&!nested)return;
-   if(!nested)setBusy(true);
-   const box=$('v1292SavedList');box.replaceChildren();
-   try{const data=await invoke({action:'verified_matches'});const rows=data.rows||[];
-     const heading=document.createElement('h3');heading.textContent='시즌 4 · 검증 보관 '+rows.length+'건 (최근 30건)';box.append(heading);
-     if(!rows.length){addLine(box,'보관 기록','아직 없음');}
-     for(const row of rows){const item=document.createElement('article');item.className='v1291-item';
-       const title=document.createElement('strong');title.textContent=row.player_a+' '+row.score_a+' : '+row.score_b+' '+row.player_b;item.append(title);
-       addLine(item,'넥슨 매치 ID',row.match_id);addLine(item,'확정 시각',new Date(row.verified_at).toLocaleString('ko-KR'));
-       const btn=document.createElement('button');btn.type='button';btn.className='btn';btn.textContent='상세 통계 보기';btn.addEventListener('click',async()=>{btn.disabled=true;btn.textContent='선수 정보 불러오는 중…';await loadPlayerMeta().catch(()=>false);const detail=document.createElement('div');detail.className='v1291-note';renderDetail(row.stats,detail);item.append(detail);btn.textContent='상세 통계 펼쳐짐';});item.append(btn);box.append(item);
-     }
-     if(!nested)note('시즌 4 검증 보관함 조회 완료 · '+rows.length+'건. 정규리그 결과는 미변경.');
-   }catch(e){note('확정 기록 조회 실패: '+e.message);}finally{if(!nested)setBusy(false);}
- }
- async function loadVerifiedStats(){
-   if(busy)return;
-   const box=$('v1295Summary');setBusy(true);box.replaceChildren(node('p','v1295-muted','집계 중…'));
-   try{
-     const data=await invoke({action:'verified_stats'});
-     await loadPlayerMeta().catch(()=>false);
-     box.replaceChildren();
-     const count=Number(data.match_count)||0;
-     const chips=node('div','v1295-summary-row');chips.append(node('span','v1295-chip','보관 경기 '+count+'건'));
-     chips.append(node('span','v1295-chip','선수 카드 '+(data.players||[]).length+'종'));box.append(chips);
-     if(!count){box.append(node('p','v1295-muted','아직 검증 보관한 경기가 없습니다.'));return;}
-     function table(title,rows,columns){
-       box.append(node('h4','v1295-label',title));
-       const wrap=node('div','v1295-table-wrap'),t=node('table','v1295-table'),head=node('thead'),tr=node('tr');
-       for(const c of columns)tr.append(node('th','',c[0]));head.append(tr);t.append(head);
-       const body=node('tbody');for(const row of rows){const r=node('tr');for(const c of columns)r.append(node('td','',c[1](row)));body.append(r);}t.append(body);wrap.append(t);box.append(wrap);
-     }
-     const players=(data.players||[]).filter(p=>p&&Number.isFinite(Number(p.sp_id)));
-     const pcols=[['선수 카드',p=>nameOf(p.sp_id)],['감독',p=>p.coach],['골',p=>p.goals],['도움',p=>p.assists],['경기',p=>p.appearances],['평균 평점',p=>p.avg_rating==null?'—':Number(p.avg_rating).toFixed(2)],['최고평점 횟수',p=>p.mvp]];
-     table('득점 TOP 10',players.slice().sort((a,b)=>b.goals-a.goals||b.assists-a.assists).slice(0,10),pcols);
-     table('도움 TOP 10',players.slice().sort((a,b)=>b.assists-a.assists||b.goals-a.goals).slice(0,10),pcols);
-     table('평균 평점 TOP 10 (3경기 이상)',players.filter(p=>p.appearances>=3&&p.avg_rating!=null).sort((a,b)=>b.avg_rating-a.avg_rating).slice(0,10),pcols);
-     table('최고 평점 선정 TOP 10',players.slice().sort((a,b)=>b.mvp-a.mvp||b.goals-a.goals).filter(p=>p.mvp>0).slice(0,10),pcols);
-     table('참가자별 검증 경기',data.coaches||[],[['참가자',p=>p.name],['경기',p=>p.matches],['승',p=>p.wins],['무',p=>p.draws],['패',p=>p.losses],['득점',p=>p.goals_for]]);
-     box.append(node('p','v1295-muted','시즌 4 검증 보관 기록만 집계합니다. 공식 순위·득점왕이 아니며 리그 승점·경기표는 변경되지 않습니다. 동일 선수라도 감독·시즌 카드(SPID)가 다르면 별도 집계합니다. 최고 평점은 넥슨 공식 MVP가 아니며 공동 1위는 모두 포함합니다.'));
-   }catch(e){box.replaceChildren(node('p','v1295-muted','통계 조회 실패: '+e.message));}
-   finally{setBusy(false);}
  }
  function sync(){const yes=admin();trigger.hidden=!yes;if(!yes)modal.hidden=true;}
  const old=$('v1290Open');if(old)new MutationObserver(sync).observe(old,{attributes:true,attributeFilter:['hidden']});
@@ -3238,7 +3177,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  trigger.addEventListener('click',()=>{if(!admin())return;modal.hidden=false;accounts();});
  $('v1291Close').addEventListener('click',()=>modal.hidden=true);
  modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
- $('v1291Accounts').addEventListener('click',accounts);$('v1291Search').addEventListener('click',search);$('v1292Confirm').addEventListener('click',confirmMatch);$('v1292Saved').addEventListener('click',()=>savedList());$('v1295Load').addEventListener('click',loadVerifiedStats);sync();
+ $('v1291Accounts').addEventListener('click',accounts);$('v1291Search').addEventListener('click',search);sync();
 })();
 </script>
 
