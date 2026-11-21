@@ -3366,6 +3366,9 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
 .v12941-goal-top{top:-2px;border-top:0}.v12941-goal-bottom{bottom:-2px;border-bottom:0}
 .v12941-player{position:absolute;left:var(--px);top:var(--py);z-index:2;transform:translate(-50%,-50%);width:94px;min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid #e0c580a6;background:linear-gradient(180deg,#08283be8,#071726ee);border-radius:11px;padding:5px 4px 6px;color:#fff;text-align:center;box-shadow:0 5px 13px #001a18a8;cursor:default;font-family:inherit}
 button.v12941-player{cursor:pointer}button.v12941-player:hover{border-color:#ffe4a2;background:#10364a;filter:brightness(1.13)}button.v12941-player:focus-visible{outline:3px solid #fff;outline-offset:2px}
+/* v12.9.7.1: Global button:hover translates buttons upward, conflicting with pitch card centering. Keep the player position fixed in every interaction state. */
+button.v12941-player,button.v12941-player:hover,button.v12941-player:focus-visible,button.v12941-player:active,button.v12941-player:disabled{transform:translate(-50%,-50%);transition:border-color .15s ease,background-color .15s ease,filter .15s ease;will-change:auto}
+
 .v12941-player.captain{border:2px solid #ffe091;background:linear-gradient(180deg,#503b19ee,#18291cec);box-shadow:0 0 0 2px #ac8e4480,0 5px 18px #0008}
 .v12941-pos{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#081c25;border:1px solid #f3d28b;border-radius:6px;color:#ffe4a7;white-space:nowrap;font-size:10px;font-weight:800;padding:1px 6px}
 .v12941-photo{height:53px;width:49px;object-fit:contain;filter:drop-shadow(0 2px 2px #0007)}
