@@ -1498,10 +1498,12 @@ function renderProfile(name){
     <div class="v114-progress" role="progressbar" aria-valuenow="${completedFixtures}" aria-valuemin="0" aria-valuemax="${playerFixtures.length}" aria-label="리그 경기 완료 진행률"><span style="width:${completedRatio}%"></span></div>
     <div class="v6-profile-block"><h3>🗓 잔여 경기 · 아직 만나지 않은 상대</h3><div class="v114-fixtures">${remainingMarkup}</div><p class="v6-hint">상대를 선택하면 해당 미완료 경기로 이동합니다. 경기 점수가 등록되면 목록에서 자동 제외됩니다.</p></div>`}
     ${signatureProfileHTML(name)}
+    <div class="v6-profile-block v1294-panel" id="v1294Squad"><h3>⚽ FC 온라인 최근 스쿼드</h3><p class="note">연동된 최근 경기 선수단을 확인 중…</p></div>
     <div class="v6-profile-block"><h3>${state.matches.every(done)?'시즌 마지막 5경기':'최근 5경기'} · FORM</h3><div class="v6-form">${form.length?form.map(x=>`<span class="${x}">${x}</span>`).join(''):'<span style="width:auto;color:#aabdd2">경기 기록 없음</span>'}</div><p class="v6-hint">W 승 · D 무 · L 패 / 최근 입력된 결과 순</p></div>
     <div class="v6-profile-block"><h3>시즌 3 컵대회 경기 기록</h3><div class="v6-history">${cups.join('')||'<p class="note">아직 기록된 컵 대회 경기가 없습니다.</p>'}</div></div>
     <div class="v6-profile-block"><h3>시즌 3 정규리그 경기 기록</h3><div class="v6-history">${history}</div></div>`;
   document.getElementById('profileOverlay').style.display='flex';
+  window.v1294LoadProfile?.(name);
 }
 function v118RenderRoster(){
  const target=document.getElementById('v118Roster');if(!target)return;
@@ -3176,4 +3178,70 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
  $('v1291Accounts').addEventListener('click',accounts);$('v1291Search').addEventListener('click',search);$('v1292Confirm').addEventListener('click',confirmMatch);$('v1292Saved').addEventListener('click',()=>savedList());sync();
 })();
 </script>
+
+<!-- V12.9.4: recent Nexon squad + owner-selected captain, no changes to league scores -->
+<style>
+.v1294-panel{margin-top:16px}.v1294-headline{font-size:12px;color:#aebfd6;line-height:1.6;margin:6px 0 12px}
+.v1294-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.v1294-card{display:flex;align-items:center;gap:8px;min-width:0;padding:9px;background:#0b243c;border:1px solid #31526e;border-radius:10px;color:#e8f0fb;text-align:left}
+.v1294-card img{width:43px;height:53px;object-fit:contain;flex:none}.v1294-card strong{font-size:12px;line-height:1.4;overflow-wrap:anywhere}.v1294-card small{font-size:10px;color:#b3c8de;display:block;margin-top:4px}.v1294-card.captain{border-color:#d8b66b;background:#283020}
+.v1294-card button{cursor:pointer}.v1294-card[disabled]{cursor:default}.v1294-controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v1294-controls button{font-size:12px}
+.v1294-msg{font-size:12px;color:#e8c989;margin-top:9px}.v1294-badge{font-size:10px;color:#f8d690}.v1294-portrait{max-height:85px;width:68px;object-fit:contain}
+@media(max-width:700px){.v1294-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:390px){.v1294-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function v1294SquadUI(){
+ 'use strict';
+ const TABLE='league_nexon_squad_profiles_v1294',ROOT='https://open.api.nexon.com/static/fconline/meta/',PIC='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/';
+ let lookupTask=null,names=new Map();
+ const getNames=()=>lookupTask||(lookupTask=fetch(ROOT+'spid.json').then(r=>{if(!r.ok)throw Error('선수 메타데이터 조회 실패');return r.json();}).then(rows=>{names=new Map((Array.isArray(rows)?rows:[]).map(x=>[Number(x.id),String(x.name||'')]))}).catch(()=>{}));
+ const el=(tag,cls,txt)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=txt;return x;};
+ const who=()=>typeof v115Member!=='undefined'?v115Member?.player_name:null;
+ const isOperator=()=>typeof state!=='undefined'&&state.admin===true;
+ async function call(body){
+  const {data,error}=await cloudClient.functions.invoke('nexon-squad-profile',{body});
+  if(error){let reason=error.message||'서버 연결 실패';try{if(error.context?.json){const x=await error.context.json();reason=x?.error||reason;}}catch(_){}throw Error(reason);}
+  if(!data?.ok)throw Error(data?.error||'요청 실패');return data;
+ }
+ function canEdit(name){return !!who()&&who()===name;}
+ async function show(name){
+  const box=document.getElementById('v1294Squad');if(!box||document.getElementById('profileName')?.textContent!==name)return;
+  box.replaceChildren(el('h3','','⚽ FC 온라인 최근 스쿼드'),el('p','v1294-headline','게임의 현재 보유 선수단이 아니라 최근 스페셜 매치에서 확인한 출전 선수입니다. 시즌 3 기존 기록에는 반영되지 않습니다.'));
+  const msg=el('div','v1294-msg','스쿼드 조회 중…');box.append(msg);
+  if(!cloudClient)return void(msg.textContent='Supabase 연결을 확인해 주세요.');
+  let row;
+  try{const r=await cloudClient.from(TABLE).select('player_name,match_id,match_date,squad,captain_spid,synced_at').eq('player_name',name).maybeSingle();if(r.error)throw r.error;row=r.data;}
+  catch(e){msg.textContent='조회 실패: '+e.message;return;}
+  if(document.getElementById('profileName')?.textContent!==name)return;
+  const controls=el('div','v1294-controls');box.insertBefore(controls,msg);
+  if(canEdit(name)||isOperator()){
+   const refresh=el('button','btn','↻ 최근 선수단 갱신');refresh.type='button';controls.append(refresh);
+   refresh.onclick=async()=>{refresh.disabled=true;msg.textContent='넥슨 최근 경기에서 선수단을 확인 중…';try{await call({action:'refresh',player_name:name});await show(name);}catch(e){msg.textContent='갱신 실패: '+e.message;}finally{refresh.disabled=false;}};
+  }
+  if(!row||!Array.isArray(row.squad)||!row.squad.length){msg.textContent='저장된 최근 스쿼드가 없습니다. 본인 또는 운영진이 「최근 선수단 갱신」을 눌러주세요. (연동된 감독 계정 필요)';return;}
+  await getNames();if(document.getElementById('profileName')?.textContent!==name)return;
+  msg.textContent='조회 경기: '+(row.match_date?new Date(row.match_date).toLocaleString('ko-KR'):'날짜 미확인')+' · 최근 갱신: '+(row.synced_at?new Date(row.synced_at).toLocaleString('ko-KR'):'—');
+  const caption=el('p','v1294-headline','대표 선수는 본인 계정으로 로그인한 참가자만 지정할 수 있습니다. 스쿼드 갱신 시 기존 대표 선수는 자동 변경되지 않습니다.');box.append(caption);
+  const grid=el('div','v1294-grid');box.append(grid);
+  for(const p of row.squad){
+   const id=Number(p.sp_id);if(!Number.isSafeInteger(id))continue;
+   const selected=Number(row.captain_spid)===id;
+   const card=el(canEdit(name)?'button':'div','v1294-card'+(selected?' captain':''));
+   if(card.tagName==='BUTTON'){card.type='button';card.title='대표 선수로 지정';}
+   const img=el('img');img.alt='';img.loading='lazy';img.src=PIC+'playersAction/p'+id+'.png';img.onerror=function(){this.onerror=null;this.src=PIC+'players/p'+id+'.png';};card.append(img);
+   const inf=el('div');inf.append(el('strong','',names.get(id)||'선수 SPID '+id),el('small','',`포지션 ${p.sp_position??'—'} · 강화 +${p.sp_grade??'?'}${selected?' · ★ 대표 선수':''}`));card.append(inf);
+   if(canEdit(name))card.onclick=async()=>{
+     if(selected)return;
+     if(!confirm((names.get(id)||'해당 선수')+'을(를) 대표 선수로 지정할까요?'))return;
+     card.disabled=true;msg.textContent='대표 선수 저장 중…';
+     try{await call({action:'captain',sp_id:id});await show(name);}catch(e){msg.textContent='대표 선수 저장 실패: '+e.message;card.disabled=false;}
+   };
+   grid.append(card);
+  }
+  const captain=row.captain_spid;if(captain&&!row.squad.some(p=>Number(p.sp_id)===Number(captain)))box.append(el('p','v1294-msg','이전에 지정한 대표 선수가 최신 스쿼드에 없습니다. 대표 선수 지정은 유지되며, 새 선수로 변경할 수 있습니다.'));
+ }
+ window.v1294LoadProfile=show;
+})();
+</script>
+
 </body></html>
