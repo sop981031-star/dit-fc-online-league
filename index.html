@@ -1143,7 +1143,7 @@ body.v1271-is-archive .v1271-photo-grid img{max-width:100%;height:auto;object-fi
 
 <div id="signatureOverlay" class="v113-shade" role="dialog" aria-modal="true" aria-labelledby="signatureTitle">
  <div class="v113-dialog"><div class="v113-header"><div><div class="eyebrow">FC ONLINE · SIGNATURE PLAYER</div><h2 id="signatureTitle">내 주력 선수 설정</h2></div><button class="btn" type="button" id="signatureClose">닫기 ✕</button></div>
- <p class="note">주력 선수는 참가자 계정으로 로그인한 본인만 등록·수정할 수 있습니다. FC 온라인 공식 선수 DB에서 검색해 주세요.</p>
+ <p class="note">주력 선수는 참가자 계정으로 로그인한 본인만 등록·수정할 수 있습니다. FC 온라인 공식 선수 DB에서 검색해 주세요. 넥슨 최근 스쿼드에서 대표 선수를 지정한 경우, 프로필에는 대표 선수가 우선 표시됩니다.</p>
  <div class="v113-editor"><div>
  <label for="signatureOwner">등록 참가자 (로그인 계정에 자동 연결)</label><select class="field" id="signatureOwner" disabled><option value="">로그인 후 이용해 주세요.</option></select><p class="note" id="signatureLoginHint">선수 카드를 등록하려면 참가자 계정으로 로그인해 주세요.</p>
  <label for="signatureSearch">FC 온라인 공식 선수 DB 검색</label><input class="field" id="signatureSearch" placeholder="선수 이름을 검색해주세요. (예: 손흥민)" autocomplete="off"/>
@@ -1582,12 +1582,38 @@ function renderV8Spotlight(){
 // Isolated entertainment data: never changes state, persist(), exportableState(), league_state or admin permissions.
 const SIGNATURE_TABLE='league_signature_public';
 let signatureCatalog=null,signatureSeasons={},signatureSelection=null,signatureRecords={};
+// V12.9.4.2: display the owner-selected Nexon squad captain as the signature player.
+// This is a view-only preference: legacy manual records are preserved unchanged.
+const signatureSquadCache=Object.create(null);
 const sigEl=id=>document.getElementById(id);
 function signatureImage(spid){return 'https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p'+Number(spid)+'.png';}
-function signatureProfileHTML(name){const s=signatureRecords[name];if(!s)return '<div class="v113-profile"><h3>★ MY SIGNATURE PLAYER</h3><p class="note">등록된 주력 선수가 없습니다. 상단의 주력 선수 메뉴에서 등록하실 수 있습니다.</p></div>';
+function signatureProfileHTML(name){const s=signatureSquadCache[name]||signatureRecords[name];if(!s)return '<div class="v113-profile"><h3>★ MY SIGNATURE PLAYER</h3><p class="note">등록된 주력 선수가 없습니다. 상단의 주력 선수 메뉴에서 등록하실 수 있습니다.</p></div>';
  const pos=['ST','CF','LW','RW','CAM','CM','CDM','LB','RB','CB','GK'].includes(s.position)?s.position:'ST';
- return `<div class="v113-profile"><h3>★ MY SIGNATURE PLAYER</h3><div class="v113-card"><img src="${esc(signatureImage(s.spid))}" alt="${esc(s.display_name)} 선수 이미지" loading="lazy" onerror="this.onerror=null;this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${Number(s.spid)}.png';this.onerror=()=>this.style.display='none'"><div><strong>${esc(s.display_name)}</strong><p>${esc(s.season)} · ${esc(pos)}</p><span class="badge-number">+${Number(s.enhance)||1} 강화</span></div></div></div>`;
+ return `<div class="v113-profile"><h3>★ MY SIGNATURE PLAYER</h3><div class="v113-card"><img src="${esc(signatureImage(s.spid))}" alt="${esc(s.display_name)} 선수 이미지" loading="lazy" onerror="this.onerror=null;this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${Number(s.spid)}.png';this.onerror=()=>this.style.display='none'"><div><strong>${esc(s.display_name)}</strong><p>${esc(s.season)} · ${esc(pos)}</p><span class="badge-number">${s.enhance?'+'+Number(s.enhance)+' 강화':'강화 정보 없음'}</span>${s.fromSquad?'<p class="note" style="margin:6px 0 0">최근 스쿼드에서 지정한 대표 선수가 자동 반영됩니다.</p>':''}</div></div></div>`;
 }
+// Called by the independent squad reader after its DB + public metadata lookup.
+// Never upserts to league_signature_public: the squad captain is the single source of truth.
+function signatureSyncFromSquad(name,row,playerNames,posName,classes){
+ if(!row?.captain_spid){delete signatureSquadCache[name];}
+ else {
+  const id=Number(row.captain_spid);
+  const current=Array.isArray(row.squad)?row.squad.find(p=>Number(p.sp_id)===id):null;
+  if(Number.isSafeInteger(id)&&id>0){
+   const old=signatureSquadCache[name];
+   const cls=classes?.get(Math.floor(id/1000000))||'FC ONLINE';
+   signatureSquadCache[name]={player_name:name,spid:id,
+    display_name:playerNames?.get(id)||old?.display_name||'SPID '+id,
+    season:cls,position:current?posName(current.sp_position):(old?.position||'—'),
+    enhance:current?.sp_grade??(old?.spid===id?old?.enhance:null),fromSquad:true};
+  }
+ }
+ // Update only the signature widget, without reopening the profile or re-fetching the squad.
+ if(document.getElementById('profileName')?.textContent!==name)return;
+ const wrapper=document.getElementById('profileContent');
+ const oldCard=wrapper?.querySelector('.v113-profile');
+ if(oldCard)oldCard.outerHTML=signatureProfileHTML(name);
+}
+window.v12942SyncSignature=signatureSyncFromSquad;
 async function signatureRefresh(){if(!cloudClient)return;const {data,error}=await cloudClient.from(SIGNATURE_TABLE).select('player_name,spid,display_name,season,position,enhance');if(error){console.warn('signature fetch:',error.message);sigEl('signatureCatalogMessage').textContent='주력 선수 저장 테이블을 연결할 수 없습니다. v11.3 SQL 적용 여부를 확인해주세요.';return;}
  signatureRecords=Object.fromEntries((data||[]).filter(s=>DATA.teams.includes(s.player_name)).map(s=>[s.player_name,s]));const overlay=sigEl('profileOverlay');if(overlay&&overlay.style.display==='flex'){const n=sigEl('profileName').textContent;if(DATA.teams.includes(n))renderProfile(n);}
 }
@@ -3179,6 +3205,8 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
 })();
 </script>
 
+<!-- V12.9.4.2: selected squad captain becomes signature player (display sync, no SQL) -->
+<!-- V12.9.4.2a: participant or server-verified admin may choose captain -->
 <!-- V12.9.4.1: single football pitch view (no list/toggle), position metadata & captain selection -->
 <style>
 .v12941-pitch-shell{margin-top:14px;max-width:760px;margin-inline:auto}
@@ -3218,7 +3246,7 @@ button.v12941-player{cursor:pointer}button.v12941-player:hover{border-color:#ffe
 (function v1294SquadUI(){
  'use strict';
  const TABLE='league_nexon_squad_profiles_v1294',ROOT='https://open.api.nexon.com/static/fconline/meta/',PIC='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/';
- let lookupTask=null,names=new Map(),positionTask=null,positions=new Map();
+ let lookupTask=null,names=new Map(),positionTask=null,positions=new Map(),classTask=null,classes=new Map();
  // FC Online's official position metadata; static fallback for temporary network failures.
  const fallbackPositions=['GK','SW','RWB','RB','RCB','CB','LCB','LB','LWB','RDM','CDM','LDM','RM','RCM','CM','LCM','LM','RAM','CAM','LAM','RF','CF','LF','RW','RS','ST','LS','LW','SUB'];
  const getPositions=()=>positionTask||(positionTask=fetch(ROOT+'spposition.json').then(r=>{if(!r.ok)throw Error('포지션 메타데이터 조회 실패');return r.json();}).then(rows=>{positions=new Map((Array.isArray(rows)?rows:[]).map(x=>[Number(x.spposition??x.id),String(x.desc||x.name||'')]).filter(x=>x[1]));}).catch(()=>{}));
@@ -3247,6 +3275,7 @@ button.v12941-player{cursor:pointer}button.v12941-player:hover{border-color:#ffe
    return results;
  }
 
+ const getClasses=()=>classTask||(classTask=fetch(ROOT+'class.json').then(r=>{if(!r.ok)throw Error('클래스 메타데이터 조회 실패');return r.json();}).then(rows=>{classes=new Map((Array.isArray(rows)?rows:[]).map(x=>[Number(x.id??x.classId),String(x.className||x.name||'')]).filter(x=>Number.isFinite(x[0])&&x[1]));}).catch(()=>{}));
  const getNames=()=>lookupTask||(lookupTask=fetch(ROOT+'spid.json').then(r=>{if(!r.ok)throw Error('선수 메타데이터 조회 실패');return r.json();}).then(rows=>{names=new Map((Array.isArray(rows)?rows:[]).map(x=>[Number(x.id),String(x.name||'')]))}).catch(()=>{}));
  const el=(tag,cls,txt)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=txt;return x;};
  const who=()=>typeof v115Member!=='undefined'?v115Member?.player_name:null;
@@ -3271,10 +3300,11 @@ button.v12941-player{cursor:pointer}button.v12941-player:hover{border-color:#ffe
    const refresh=el('button','btn','↻ 최근 선수단 갱신');refresh.type='button';controls.append(refresh);
    refresh.onclick=async()=>{refresh.disabled=true;msg.textContent='넥슨 최근 경기에서 선수단을 확인 중…';try{await call({action:'refresh',player_name:name});await show(name);}catch(e){msg.textContent='갱신 실패: '+e.message;}finally{refresh.disabled=false;}};
   }
-  if(!row||!Array.isArray(row.squad)||!row.squad.length){msg.textContent='저장된 최근 스쿼드가 없습니다. 본인 또는 운영진이 「최근 선수단 갱신」을 눌러주세요. (연동된 감독 계정 필요)';return;}
-  await Promise.all([getNames(),getPositions()]);if(document.getElementById('profileName')?.textContent!==name)return;
+  if(!row||!Array.isArray(row.squad)||!row.squad.length){window.v12942SyncSignature?.(name,null,names,positionName,classes);msg.textContent='저장된 최근 스쿼드가 없습니다. 본인 또는 운영진이 「최근 선수단 갱신」을 눌러주세요. (연동된 감독 계정 필요)';return;}
+  await Promise.all([getNames(),getPositions(),getClasses()]);if(document.getElementById('profileName')?.textContent!==name)return;
+  window.v12942SyncSignature?.(name,row,names,positionName,classes);
   msg.textContent='조회 경기: '+(row.match_date?new Date(row.match_date).toLocaleString('ko-KR'):'날짜 미확인')+' · 최근 갱신: '+(row.synced_at?new Date(row.synced_at).toLocaleString('ko-KR'):'—');
-  const caption=el('p','v1294-headline','대표 선수는 본인 계정으로 로그인한 참가자만 지정할 수 있습니다. 스쿼드 갱신 시 기존 대표 선수는 자동 변경되지 않습니다.');box.append(caption);
+  const caption=el('p','v1294-headline','대표 선수는 참가자 본인 또는 운영진이 지정할 수 있습니다. 스쿼드 갱신 시 기존 대표 선수는 자동 변경되지 않습니다.');box.append(caption);
   const shell=el('div','v12941-pitch-shell');box.append(shell);
   const title=el('div','v12941-pitch-title');title.append(el('span','','STARTING XI · 포지션 배치'),el('span','','★ 대표 선수'));shell.append(title);
   const pitch=el('div','v12941-pitch');pitch.setAttribute('role','group');pitch.setAttribute('aria-label',name+' 최근 출전 선수단 포메이션');shell.append(pitch);
@@ -3284,22 +3314,22 @@ button.v12941-player{cursor:pointer}button.v12941-player:hover{border-color:#ffe
   for(const p of row.squad){
     const id=Number(p.sp_id);if(!Number.isSafeInteger(id))continue;
     const selected=Number(row.captain_spid)===id, xy=coords.get(p)||{x:50,y:50};
-    const card=el(canEdit(name)?'button':'div','v12941-player'+(selected?' captain':''));
+    const card=el((canEdit(name)||isOperator())?'button':'div','v12941-player'+(selected?' captain':''));
     card.style.setProperty('--px',xy.x+'%');card.style.setProperty('--py',xy.y+'%');
     if(card.tagName==='BUTTON'){card.type='button';card.title='대표 선수로 지정: '+(names.get(id)||id);}
     card.append(el('span','v12941-pos',positionName(p.sp_position)));
     const img=el('img','v12941-photo');img.alt='';img.loading='lazy';img.src=PIC+'playersAction/p'+id+'.png';img.onerror=function(){this.onerror=null;this.src=PIC+'players/p'+id+'.png';};card.append(img);
     card.append(el('span','v12941-name',names.get(id)||'SPID '+id),el('span','v12941-grade','강화 +'+(p.sp_grade??'?')));
     if(selected)card.append(el('span','v12941-crown','★'));
-    if(canEdit(name))card.onclick=async()=>{
+    if(canEdit(name)||isOperator())card.onclick=async()=>{
       if(selected)return;
       if(!confirm((names.get(id)||'해당 선수')+'을(를) 대표 선수로 지정할까요?'))return;
       card.disabled=true;msg.textContent='대표 선수 저장 중…';
-      try{await call({action:'captain',sp_id:id});await show(name);}catch(e){msg.textContent='대표 선수 저장 실패: '+e.message;card.disabled=false;}
+      try{await call({action:'captain',player_name:name,sp_id:id});await show(name);}catch(e){msg.textContent='대표 선수 저장 실패: '+e.message;card.disabled=false;}
     };
     pitch.append(card);
   }
-  shell.append(el('p','v12941-hint',canEdit(name)?'필드에서 선수를 클릭하면 내 대표 선수로 지정할 수 있어요.':'선수 위치는 최근 넥슨 경기 포지션 기준입니다.'));
+  shell.append(el('p','v12941-hint',(canEdit(name)||isOperator())?'필드의 선수를 클릭하면 대표 선수와 시그니처 카드가 함께 변경됩니다.':'선수 위치는 최근 넥슨 경기 포지션 기준입니다.'));
   const captain=row.captain_spid;if(captain&&!row.squad.some(p=>Number(p.sp_id)===Number(captain)))box.append(el('p','v1294-msg','이전에 지정한 대표 선수가 최신 스쿼드에 없습니다. 대표 선수 지정은 유지되며, 새 선수로 변경할 수 있습니다.'));
  }
  window.v1294LoadProfile=show;
