@@ -3687,6 +3687,40 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
 @media(prefers-reduced-motion:reduce){.v1304-player{transition:none}}
 
 </style>
+<style>
+
+/* V13.0.6 — practical mobile polish: fields, H2H, large touch targets. */
+@media(max-width:760px){
+ .v1304-field{height:clamp(540px,156vw,660px)}
+ .v1304-side-head{min-height:48px;height:auto}
+ .v1304-player{width:clamp(40px,13vw,53px);height:clamp(57px,17vw,65px);padding:3px 1px;border-radius:7px}
+ .v1304-player img{height:clamp(25px,8vw,31px);width:clamp(24px,8vw,30px)}
+ .v1304-rating{top:-7px;right:-4px;padding:2px 3px;font-size:8px}
+ .v1304-pos,.v1304-name{font-size:clamp(7px,2.2vw,9px)}
+ .v1304-selection{min-height:72px;line-height:1.65}
+ .v1304-metrics{padding:11px}
+ .v1302-score{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px}
+ .v1302-score strong{font-size:clamp(11px,3vw,15px)}
+ .v1302-score b{font-size:clamp(16px,4.8vw,22px)}
+ .v1302-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .v1302-stat{min-width:0;padding:10px 3px}
+ .v1302-stat b{font-size:clamp(12px,3.3vw,15px);overflow-wrap:anywhere}
+ .v1305-rival-row{flex-wrap:wrap;gap:8px}
+ .v1305-rival-row .v1305-go{margin-left:auto;min-height:40px}
+ .v130-filter{min-height:42px}
+ .v130-match>summary{min-height:104px}
+}
+@media(max-width:390px){
+ .v1304-field{height:clamp(550px,175vw,650px)}
+ .v1304-player{width:clamp(39px,12.5vw,48px);height:57px}
+ .v1302-stats{gap:5px}
+ .v1304-side-head{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){.v130-match *, .v1304-player{scroll-behavior:auto!important;transition:none!important}}
+/* Loading is non-blocking and communicates a real fetch, not a fake success. */
+.v1306-loading{margin:9px 0;padding:10px 13px;background:#16334b;border:1px solid #52718d;border-radius:9px;font-size:12px;color:#d8e7f5}
+.v1306-more{width:100%;min-height:44px;padding:12px;border-color:#9a7f4c!important;color:#f3d79c!important;background:#132c44!important}
+</style>
 <script>
 /* All statistics are derived ONLY from the preseason table. Friendly/NEXON search results never count until admin registers. */
 (function v12910Preseason(){
@@ -3695,7 +3729,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  if(!pick||!nav)return;
  const ids=['home','standings','fixtures','tournament','players','halloffame','rules'];
  let active='home',records=[],loaded=false,request=0,writing=false;
- let v130Scope='all',v130Participant='',v130Opponent='';
+ let v130Scope='all',v130Participant='',v130Opponent='',v1306Show=20,v1306Fetching=false;
  let names=new Map(),metadataRequested=false;
  const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const num=v=>Number.isFinite(Number(v))?Number(v):0;
@@ -3795,6 +3829,30 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    }
    return new Map(entries.map(p=>[p.index,{x:p.x,y:p.y}]));
  }
+ // Mobile's portrait is a separate pitch: avoid colliding cards after rotating
+ // landscape slots. No mutation of Nexon positions or stored match statistics.
+ function v1306MobileArrange(players,desktopCoords){
+   const result=new Map(),placed=[];
+   const ranked=players.map((p,i)=>{const raw=Number(p.sp_position),slot=desktopCoords.get(i)||{x:55,y:50};
+     return {i,x:slot.y,y:100-slot.x,lock:[0,25,23,27].includes(raw)};
+   }).sort((a,b)=>Number(b.lock)-Number(a.lock)||a.i-b.i);
+   for(const item of ranked){
+     let best=null;
+     const shifts=[0,-8,8,-16,16,-24,24];
+     for(const dx of shifts)for(const dy of shifts){
+       if(item.lock&&(dx!==0||dy!==0))continue;
+       const x=Math.max(10,Math.min(90,item.x+dx));
+       const y=Math.max(7,Math.min(93,item.y+dy));
+       const collisions=placed.reduce((count,p)=>count+(Math.abs(p.x-x)<17&&Math.abs(p.y-y)<12?1:0),0);
+       const cost=collisions*10000+Math.abs(dx)*1.1+Math.abs(dy);
+       if(!best||cost<best.cost)best={x,y,cost};
+       if(cost===0)break;
+     }
+     const found=best||{x:item.x,y:item.y};
+     placed.push(found);result.set(item.i,{x:found.x,y:found.y});
+   }
+   return result;
+ }
  function v1304Starting(players){
    const all=(Array.isArray(players)?players:[]).filter(p=>Number.isSafeInteger(Number(p?.sp_id))&&Number(p.sp_id)>0);
    // Position 28 marks substitute; prefer 0-27 and keep stable API order for starting XI.
@@ -3805,6 +3863,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    const values=m.match_stats?.[side]||{},split=v1304Starting(values.players),p=split.starting;
    if(!p.length)return `<div class="v1304-side ${side==='b'?'away':''}"><div class="v1304-side-head"><b>${safe(owner)}</b></div><div class="v1304-field"><div class="v1304-no-squad">선수 포지션 데이터가 없습니다.<br>하단 경기 통계는 확인할 수 있습니다.</div></div></div>`;
    const coords=v13042Arrange(p);
+   const mobileCoords=v1306MobileArrange(p,coords);
    const nodes=p.map((player,index)=>{
      const sp=Number(player.sp_id),rating=Number(player.rating),display=playerName(sp),originalIdx=(Array.isArray(values.players)?values.players:[]).indexOf(player);
      const isB=side==='b',slot=coords.get(index)||{x:55,y:50};
@@ -3812,7 +3871,8 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      // Away attacks left: flip both dimensions so LW is bottom and RW is top.
      const dx=isB?100-slot.x:slot.x,dy=isB?100-slot.y:slot.y;
      // Both independent mobile portraits attack upward: LW left, RW right.
-     const mx=slot.y,my=100-slot.x;
+     const mobile=mobileCoords.get(index)||{x:slot.y,y:100-slot.x};
+     const mx=mobile.x,my=mobile.y;
      const rate=Number.isFinite(rating)&&rating>0?rating.toFixed(1):'—';
      return `<button type="button" class="v1304-player ${isB?'away':''}" style="--dx:${dx}%;--dy:${dy}%;--mx:${mx}%;--my:${my}%" data-v1304-player data-v1304-match="${safe(m.match_id)}" data-v1304-side="${side}" data-v1304-idx="${originalIdx}" aria-pressed="false" title="${safe(display)} · ${v1304Position(player.sp_position)} · 평점 ${rate}">`+
        `<span class="v1304-pos">${v1304Position(player.sp_position)}</span><img alt="" loading="lazy" src="https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p${sp}.png" onerror="if(this.dataset.fallback)return this.hidden=true;this.dataset.fallback='1';this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${sp}.png'">`+
@@ -3842,7 +3902,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
     `<div class="v130-match-main"><div class="v130-team"><span class="v130-crest" aria-hidden="true">${badge(m.player_a)}</span><span class="v130-team-name">${a}</span></div>`+
     `<div class="v130-score">${num(m.score_a)} : ${num(m.score_b)}</div><div class="v130-team right"><span class="v130-team-name">${b}</span><span class="v130-crest" aria-hidden="true">${badge(m.player_b)}</span></div></div>`+
     `<div class="v130-match-foot">경기 상세 기록 <span class="v130-chevron">⌄</span></div></summary>`+
-    `<div class="v130-match-body">${details(m)}${adminControls&&isAdmin()?`<div class="v130-admin-actions"><button type="button" class="v12910-btn v12910-danger" data-pre-remove="${safe(m.match_id)}">경기 등록 취소</button></div>`:''}</div></details>`;
+    `<div class="v130-match-body" data-v1306-detail="${safe(m.match_id)}" data-v1306-admin="${adminControls?'1':'0'}"><p class="v130-caption">경기 상세 화면을 불러오는 중…</p></div></details>`;
  }
  function allCompetitors(){return [...new Set(used().flatMap(m=>[m.player_a,m.player_b]))].sort((a,b)=>a.localeCompare(b,'ko'));}
  function filterMatches(matches){let rows=[...matches];
@@ -3965,7 +4025,8 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `<div class="v130-tools" style="justify-content:space-between;margin-bottom:14px"><span class="v130-caption">${v130Scope==='mine'&&!self?'내 경기는 참가자 로그인 후 확인할 수 있어요.':visible.length?'최근 경기순':'조건에 맞는 경기 없음'}</span>`+
      `<span class="v130-tools"><button type="button" class="v12910-btn" data-pre-refresh>새로고침</button>${isAdmin()?'<button type="button" class="v12910-btn" data-pre-open>경기 등록</button>':''}</span></div>`+
      `<div id="v12910-status" class="v12910-msg" role="status"></div>`+
-     `<div class="v130-match-list">${visible.length?visible.map(m=>matchCard(m,true)).join(''):'<div class="v130-empty">아직 표시할 경기가 없어요.</div>'}</div></div>`;
+     `<div class="v130-match-list">${visible.length?visible.slice(0,v1306Show).map(m=>matchCard(m,true)).join(''):'<div class="v130-empty">아직 표시할 경기가 없어요.</div>'}</div>`+
+     (visible.length>v1306Show?`<button type="button" class="v1306-more" data-v1306-more>경기 더 보기 (${Math.min(v1306Show,visible.length)} / ${visible.length})</button>`:'')+`</div>`;
  }
  function lines(matches,allowDelete=false){if(!matches.length)return '<p class="v12910-note">등록된 프리시즌 경기가 없습니다.</p>';
    return matches.map(m=>matchCard(m,allowDelete)).join('');
@@ -4019,7 +4080,10 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    return header('프리시즌 안내')+'<div class="v12910-card" style="margin-top:15px"><p>참가자끼리 진행한 스페셜 매치를 자동 수집합니다. 상대별 최근 30경기가 통계에 반영됩니다.</p></div>';
  }
  function render(){if(!pre())return;const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane)pane.innerHTML=content(active);}
- async function refresh(){if(!pre()||typeof cloudClient==='undefined'||!cloudClient)return;const stamp=++request;
+ async function refresh(){if(!pre()||typeof cloudClient==='undefined'||!cloudClient)return;
+   if(v1306Fetching)return;v1306Fetching=true;const stamp=++request;
+   const pane=document.querySelector(`#${active}>.v12910-pane`);
+   if(pane){const note=document.createElement('div');note.className='v1306-loading';note.id='v1306Loading';note.setAttribute('role','status');note.textContent='최신 친선경기 기록을 확인하고 있어요…';pane.prepend(note);}
    try{const next=[],limit=500;
      for(let offset=0;offset<10000;offset+=limit){
        const {data,error}=await cloudClient.from('league_preseason_matches_v1298').select('match_id,match_date,player_a,player_b,score_a,score_b,match_stats,excluded_official')
@@ -4028,8 +4092,9 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
        next.push(...(data||[]));if((data||[]).length<limit)break;
        if(offset+limit>=10000)throw Error('경기 데이터가 조회 한도를 초과합니다.');
      }
-     records=next;loaded=true;render();
-   }catch(e){if(stamp!==request||!pre())return;render();const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane){const p=document.createElement('p');p.className='v12910-msg';p.textContent='프리시즌 조회 실패: '+e.message;pane.prepend(p);}}
+     records=next;loaded=true;v1305Cache=null;render();
+   }catch(e){if(stamp!==request||!pre())return;render();const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane){const p=document.createElement('p');p.className='v12910-msg';p.setAttribute('role','alert');p.textContent='프리시즌 조회 실패: '+e.message+' · 기존 화면 데이터는 유지했습니다.';pane.prepend(p);}}
+   finally{v1306Fetching=false;document.getElementById('v1306Loading')?.remove();}
  }
  function switchView(){option();if(pre()){
    document.body.classList.remove('v1271-is-archive');document.body.classList.add('v12910-preseason');
@@ -4046,10 +4111,22 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    e.preventDefault();e.stopImmediatePropagation();pickTab(target.dataset.tab);
  },true);
  document.addEventListener('change',e=>{if(!pre())return;
-   if(e.target.id==='v130-player'){v130Participant=e.target.value;render();}
-   if(e.target.id==='v130-opponent'){v130Opponent=e.target.value;render();}
+   if(e.target.id==='v130-player'){v130Participant=e.target.value;v1306Show=20;render();}
+   if(e.target.id==='v130-opponent'){v130Opponent=e.target.value;v1306Show=20;render();}
  });
+ document.addEventListener('toggle',e=>{
+   const card=e.target;
+   if(!pre()||!card?.matches?.('details.v130-match')||!card.open)return;
+   const body=card.querySelector('[data-v1306-detail]');
+   if(!body||body.dataset.v1306Ready==='1')return;
+   const row=records.find(r=>r.match_id===body.dataset.v1306Detail);
+   if(!row){body.textContent='경기 기록을 찾지 못했습니다. 새로고침 후 다시 확인해 주세요.';return;}
+   body.innerHTML=details(row)+(body.dataset.v1306Admin==='1'&&isAdmin()?`<div class="v130-admin-actions"><button type="button" class="v12910-btn v12910-danger" data-pre-remove="${safe(row.match_id)}">경기 등록 취소</button></div>`:'');
+   body.dataset.v1306Ready='1';
+ },true);
  document.addEventListener('click',async e=>{
+   const more=e.target.closest('[data-v1306-more]');
+   if(more&&pre()){v1306Show+=20;render();return;}
    const playerCard=e.target.closest('[data-v1304-player]');
    if(playerCard&&pre()){
      const id=playerCard.dataset.v1304Match,side=playerCard.dataset.v1304Side,idx=Number(playerCard.dataset.v1304Idx);
@@ -4066,7 +4143,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      const t=e.target.closest('[data-v1303-tab]');if(t){pickTab(t.dataset.v1303Tab);return;}
      const pair=e.target.closest('[data-v1303-a][data-v1303-b]');if(pair){v130Participant=pair.dataset.v1303A;v130Opponent=pair.dataset.v1303B;v130Scope='all';pickTab('fixtures');return;}
      const match=e.target.closest('[data-v1303-match]');if(match){
-       pickTab('fixtures');const node=[...document.querySelectorAll('#fixtures .v130-match')].find(d=>d.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===match.dataset.v1303Match);
+       v1306Show=20;pickTab('fixtures');const node=[...document.querySelectorAll('#fixtures .v130-match')].find(d=>d.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===match.dataset.v1303Match);
        if(node){node.open=true;node.scrollIntoView({block:'center',behavior:'smooth'});}return;
      }
    }
@@ -4079,7 +4156,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      pickTab('fixtures');return;
    }
    const rival=e.target.closest('[data-v1302-a]');if(rival&&pre()){v130Participant=rival.dataset.v1302A;v130Opponent=rival.dataset.v1302B;v130Scope='all';render();return;}
-   const scope=e.target.closest('[data-v130-scope]');if(scope&&pre()){v130Scope=scope.dataset.v130Scope;render();return;}
+   const scope=e.target.closest('[data-v130-scope]');if(scope&&pre()){v130Scope=scope.dataset.v130Scope;v1306Show=20;render();return;}
    const open=e.target.closest('[data-pre-open]');if(open&&pre()&&isAdmin()){$('v1291Open')?.click();return;}
    const refreshBtn=e.target.closest('[data-pre-refresh]');if(refreshBtn&&pre()){refresh();return;}
    const remove=e.target.closest('[data-pre-remove]');if(!remove||!pre()||!isAdmin()||writing)return;
