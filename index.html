@@ -3507,6 +3507,38 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
 .v12910-note{font-size:12px;color:#b9cde3;line-height:1.7}.v12910-danger{color:#ffbdc2!important;border-color:#a85e66!important}.v12910-msg{font-size:12px;margin:8px 0;color:#f0d59a;white-space:pre-line}
 .v12910-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.v12910-pre-btn{margin:9px 7px 0 0!important;border-color:#b39a5f!important}
 @media(max-width:680px){.v12910-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v12910-two{grid-template-columns:1fr}.v12910-hero{padding:15px}.v12910-card{padding:12px}.v12910-score{font-size:18px}}
+
+/* V13.0.0 — participant-facing preseason Match Center (UI-only, existing DB preserved) */
+.v130-shell{margin-top:16px}
+.v130-toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:14px}
+.v130-tabs{display:flex;gap:5px;padding:4px;background:#102840;border:1px solid #29445e;border-radius:11px}
+.v130-tabs button{border:0;border-radius:8px;padding:9px 16px;background:transparent;color:#b9cbdd;cursor:pointer;font-weight:800;font-size:12px}
+.v130-tabs button[aria-pressed="true"]{background:linear-gradient(125deg,#d1b16b,#aa884a);color:#081b30}
+.v130-filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.v130-filter{min-width:145px;max-width:220px;padding:10px 12px;background:#112943;border:1px solid #36536e;border-radius:10px;color:#e4edfa;font:inherit;font-size:12px}
+.v130-match-list{display:grid;gap:10px}
+.v130-match{border:1px solid #294a67;border-radius:15px;background:linear-gradient(130deg,#122d48,#0b2036);overflow:hidden;box-shadow:0 10px 22px #0000001a}
+.v130-match[open]{border-color:#b69656}
+.v130-match>summary{cursor:pointer;list-style:none;padding:15px 17px;display:block;outline-offset:-3px}
+.v130-match>summary::-webkit-details-marker{display:none}
+.v130-match>summary:hover{background:#ffffff08}
+.v130-match-head{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#a9bfd6;font-size:11px;margin-bottom:12px}
+.v130-match-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(82px,auto) minmax(0,1fr);gap:8px;align-items:center}
+.v130-team{display:flex;align-items:center;gap:9px;min-width:0;font-weight:850;font-size:clamp(13px,2.2vw,16px);color:#eaf3ff}
+.v130-team.right{justify-content:flex-end;text-align:right}
+.v130-team-name{overflow-wrap:anywhere}
+.v130-crest{display:grid;place-items:center;width:33px;height:33px;flex-shrink:0;background:#203d57;border:1px solid #45627c;border-radius:50%;font-size:15px;font-weight:900;color:#eed09b}
+.v130-score{color:#f1d69a;font-size:clamp(23px,4vw,29px);font-weight:950;white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.v130-match-foot{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:12px;color:#a9bed4;font-size:11px}
+.v130-match-foot .v130-chevron{transition:transform .2s}
+.v130-match[open] .v130-chevron{transform:rotate(180deg)}
+.v130-match-body{border-top:1px solid #29475f;padding:15px 16px}
+.v130-match-body .v12910-card{background:#0b2036}
+.v130-admin-actions{border-top:1px dashed #2d4a67;margin-top:14px;padding-top:12px;display:flex;justify-content:flex-end}
+.v130-empty{border:1px dashed #42617c;border-radius:14px;padding:32px;text-align:center;color:#b0c5d8;background:#0d2339}
+.v130-caption{color:#90a7bd;font-size:11px}
+.v130-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:640px){.v130-toolbar{align-items:stretch}.v130-tabs{width:100%}.v130-tabs button{flex:1}.v130-filters{width:100%}.v130-filter{flex:1;min-width:0;max-width:unset}.v130-match>summary{padding:13px 11px}.v130-team{gap:5px;font-size:12px}.v130-crest{width:25px;height:25px;font-size:12px}.v130-score{font-size:22px}.v130-match-head{font-size:10px}.v130-match-body{padding:10px}}
 </style>
 <script>
 /* All statistics are derived ONLY from the preseason table. Friendly/NEXON search results never count until admin registers. */
@@ -3516,6 +3548,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  if(!pick||!nav)return;
  const ids=['home','standings','fixtures','tournament','players','halloffame','rules'];
  let active='home',records=[],loaded=false,request=0,writing=false;
+ let v130Scope='all',v130Participant='',v130Opponent='';
  let names=new Map(),metadataRequested=false;
  const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const num=v=>Number.isFinite(Number(v))?Number(v):0;
@@ -3572,8 +3605,38 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `<div><strong>${safe(m.player_b)}</strong><p>점유율 ${show(b.possession)}% · 슈팅 ${show(b.shoot_total)} · 유효슈팅 ${show(b.shoot_effective)}</p>${table(['선수','골','도움','평점'],side(b).map(squad))}</div>`+
      `</div></details>`;
  }
+ function matchCard(m,adminControls=false){
+   const a=safe(m.player_a),b=safe(m.player_b),date=m.match_date?new Date(m.match_date).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}):'경기 일시 미확인';
+   const badge=n=>safe(String(n||'').trim().slice(0,1)||'?');
+   return `<details class="v130-match"><summary aria-label="${a} 대 ${b} 경기 상세 보기"><div class="v130-match-head"><span>PRE-SEASON · FRIENDLY</span><span>${safe(date)}</span></div>`+
+    `<div class="v130-match-main"><div class="v130-team"><span class="v130-crest" aria-hidden="true">${badge(m.player_a)}</span><span class="v130-team-name">${a}</span></div>`+
+    `<div class="v130-score">${num(m.score_a)} : ${num(m.score_b)}</div><div class="v130-team right"><span class="v130-team-name">${b}</span><span class="v130-crest" aria-hidden="true">${badge(m.player_b)}</span></div></div>`+
+    `<div class="v130-match-foot">경기 상세 기록 <span class="v130-chevron">⌄</span></div></summary>`+
+    `<div class="v130-match-body">${details(m)}${adminControls&&isAdmin()?`<div class="v130-admin-actions"><button type="button" class="v12910-btn v12910-danger" data-pre-remove="${safe(m.match_id)}">경기 등록 취소</button></div>`:''}</div></details>`;
+ }
+ function allCompetitors(){return [...new Set(used().flatMap(m=>[m.player_a,m.player_b]))].sort((a,b)=>a.localeCompare(b,'ko'));}
+ function filterMatches(matches){let rows=[...matches];
+   if(v130Scope==='mine'){
+     const self=typeof v115Member!=='undefined'?v115Member?.player_name:null;
+     if(self)rows=rows.filter(m=>m.player_a===self||m.player_b===self);else return [];
+   }
+   if(v130Participant)rows=rows.filter(m=>m.player_a===v130Participant||m.player_b===v130Participant);
+   if(v130Opponent)rows=rows.filter(m=>m.player_a===v130Opponent||m.player_b===v130Opponent);
+   return rows;
+ }
+ function matchCenter(matches){const people=allCompetitors(),self=typeof v115Member!=='undefined'?v115Member?.player_name:null;
+   const options=(selected)=>'<option value="">전체 참가자</option>'+people.map(name=>`<option value="${safe(name)}" ${selected===name?'selected':''}>${safe(name)}</option>`).join('');
+   const visible=filterMatches(matches);
+   return `<div class="v130-shell"><div class="v130-toolbar"><div class="v130-tabs" aria-label="경기 필터"><button type="button" data-v130-scope="all" aria-pressed="${v130Scope==='all'}">전체 경기</button><button type="button" data-v130-scope="mine" aria-pressed="${v130Scope==='mine'}" ${!self?'title="참가자 로그인 후 사용 가능"':''}>내 경기</button></div>`+
+     `<div class="v130-filters"><label class="v130-caption" for="v130-player">참가자</label><select id="v130-player" class="v130-filter" aria-label="참가자 필터">${options(v130Participant)}</select>`+
+     `<label class="v130-caption" for="v130-opponent">상대</label><select id="v130-opponent" class="v130-filter" aria-label="상대 필터">${options(v130Opponent)}</select></div></div>`+
+     `<div class="v130-tools" style="justify-content:space-between;margin-bottom:14px"><span class="v130-caption">${v130Scope==='mine'&&!self?'내 경기는 참가자 로그인 후 확인할 수 있어요.':visible.length?'최근 경기순':'조건에 맞는 경기 없음'}</span>`+
+     `<span class="v130-tools"><button type="button" class="v12910-btn" data-pre-refresh>새로고침</button>${isAdmin()?'<button type="button" class="v12910-btn" data-pre-open>경기 등록</button>':''}</span></div>`+
+     `<div id="v12910-status" class="v12910-msg" role="status"></div>`+
+     `<div class="v130-match-list">${visible.length?visible.map(m=>matchCard(m,true)).join(''):'<div class="v130-empty">아직 표시할 경기가 없어요.</div>'}</div></div>`;
+ }
  function lines(matches,allowDelete=false){if(!matches.length)return '<p class="v12910-note">등록된 프리시즌 경기가 없습니다.</p>';
-   return matches.map(m=>`<div class="v12910-row"><div><div>${labelMatch(m)}</div><small>${safe(m.match_date?new Date(m.match_date).toLocaleString('ko-KR'):'날짜 미확인')} · ${safe(m.match_id)}</small></div><div class="v12910-actions"><span class="v12910-tag">프리시즌</span>${allowDelete&&isAdmin()?`<button class="v12910-btn v12910-danger" type="button" data-pre-remove="${safe(m.match_id)}">삭제</button>`:''}</div>${allowDelete?details(m):''}</div>`).join('');
+   return matches.map(m=>matchCard(m,allowDelete)).join('');
  }
  function leaders(rows,key,count=5,eligible=()=>true){return rows.filter(eligible).sort((a,b)=>num(b[key])-num(a[key])||b.goals-a.goals).slice(0,count);}
  function leaderTable(rows,kind){return table(['참가자 · 선수',kind],rows.map(p=>[p.owner+' · '+playerName(p.spid),kind==='평균 평점'?p.avg:p[kind==='득점'?'goals':kind==='도움'?'assists':'mvp']]));}
@@ -3583,7 +3646,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `<div class="v12910-two"><div class="v12910-card"><h3>최근 경기</h3>${lines(matches.slice(0,5))}</div><div class="v12910-card"><h3>참가자 성적</h3>${standings(teamRows.slice(0,6))}</div></div>`;
    if(tab==='standings')return header('프리시즌 성적')+`<div class="v12910-card" style="margin-top:15px"><h3>참가자별 전적</h3><p>경기 수가 서로 달라 승률 기준으로 표시합니다. 시즌 4 공식 순위와 무관합니다.</p>${standings(teamRows)}</div>`+
      `<div class="v12910-two" style="margin-top:14px"><div class="v12910-card"><h3>득점 TOP 10</h3>${leaderTable(leaders(playerRows,'goals',10),'득점')}</div><div class="v12910-card"><h3>도움 TOP 10</h3>${leaderTable(leaders(playerRows,'assists',10),'도움')}</div><div class="v12910-card"><h3>평균 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'avg',10,p=>p.ratingGames>=3),'평균 평점')}</div><div class="v12910-card"><h3>경기 최고 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'mvp',10),'MVP')}</div></div>`;
-   if(tab==='fixtures')return header('프리시즌 경기 결과')+`<div class="v12910-card" style="margin-top:15px"><div class="v12910-row"><h3>등록 경기 · ${total}건</h3><div class="v12910-actions"><button type="button" class="v12910-btn" data-pre-refresh>새로고침</button>${isAdmin()?'<button type="button" class="v12910-btn" data-pre-open>경기 등록</button>':''}</div></div><div class="v12910-note">${isAdmin()?'경기를 잘못 등록했다면 삭제 후 넥슨 매치 검색에서 다시 등록할 수 있습니다.':'운영진이 등록한 경기만 표시됩니다.'}</div><div id="v12910-status" class="v12910-msg"></div>${lines(matches,true)}</div>`;
+   if(tab==='fixtures')return header('MATCH CENTER')+matchCenter(matches);
    if(tab==='players')return header('프리시즌 참가자')+`<div class="v12910-two" style="margin-top:14px">${teamRows.length?teamRows.map(t=>`<div class="v12910-card"><h3>${safe(t.name)}</h3><div class="v12910-grid">${metric('경기',t.played)}${metric('승·무·패',t.w+'·'+t.d+'·'+t.l)}${metric('득점',t.gf)}</div><p>득실차 ${(t.gf-t.ga)>0?'+':''}${t.gf-t.ga} · 승률 ${Math.round(t.rate*100)}%</p></div>`).join(''):'<div class="v12910-card">등록된 참가자가 없습니다.</div>'}</div>`;
    if(tab==='tournament')return header('프리시즌','컵대회는 프리시즌에 운영하지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>정규 시즌 컵대회와 별도</h3><p>챔피언스리그·유로파리그·슈퍼컵 기록은 시즌 3 또는 향후 공식 시즌에서 확인해 주세요.</p></div>';
    if(tab==='halloffame')return header('프리시즌','공식 우승 기록은 생성되지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>명예의 전당</h3><p>프리시즌 기록은 공식 명예의 전당에 반영하지 않습니다.</p></div>';
@@ -3609,7 +3672,12 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  nav.addEventListener('click',e=>{if(!pre())return;const target=e.target.closest('button[data-tab]');if(!target)return;
    e.preventDefault();e.stopImmediatePropagation();pickTab(target.dataset.tab);
  },true);
+ document.addEventListener('change',e=>{if(!pre())return;
+   if(e.target.id==='v130-player'){v130Participant=e.target.value;render();}
+   if(e.target.id==='v130-opponent'){v130Opponent=e.target.value;render();}
+ });
  document.addEventListener('click',async e=>{
+   const scope=e.target.closest('[data-v130-scope]');if(scope&&pre()){v130Scope=scope.dataset.v130Scope;render();return;}
    const open=e.target.closest('[data-pre-open]');if(open&&pre()&&isAdmin()){$('v1291Open')?.click();return;}
    const refreshBtn=e.target.closest('[data-pre-refresh]');if(refreshBtn&&pre()){refresh();return;}
    const remove=e.target.closest('[data-pre-remove]');if(!remove||!pre()||!isAdmin()||writing)return;
