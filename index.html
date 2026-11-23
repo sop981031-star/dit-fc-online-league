@@ -3403,26 +3403,69 @@ button.v12941-player,button.v12941-player:hover,button.v12941-player:focus-visib
  const fallbackPositions=['GK','SW','RWB','RB','RCB','CB','LCB','LB','LWB','RDM','CDM','LDM','RM','RCM','CM','LCM','LM','RAM','CAM','LAM','RF','CF','LF','RW','RS','ST','LS','LW','SUB'];
  const getPositions=()=>positionTask||(positionTask=fetch(ROOT+'spposition.json').then(r=>{if(!r.ok)throw Error('포지션 메타데이터 조회 실패');return r.json();}).then(rows=>{positions=new Map((Array.isArray(rows)?rows:[]).map(x=>[Number(x.spposition??x.id),String(x.desc||x.name||'')]).filter(x=>x[1]));}).catch(()=>{}));
  const positionName=id=>positions.get(Number(id))||fallbackPositions[Number(id)]||('POS '+String(id??'—'));
- const positionX={0:50,1:50,2:86,3:85,4:64,5:50,6:36,7:15,8:14,9:65,10:50,11:35,12:86,13:63,14:50,15:37,16:14,17:66,18:50,19:34,20:72,21:50,22:28,23:87,24:62,25:50,26:38,27:13};
- const pitchBand=p=>p===0?5:p>=1&&p<=8?4:p>=9&&p<=11?3:p>=12&&p<=16?2:p>=17&&p<=19?1:0;
- const bandY=[15,34,50,63,76,89];
+ const positionCoords={
+   0:{x:50,y:89}, // GK
+   1:{x:50,y:81}, // SW
+   2:{x:84,y:73}, // RWB
+   3:{x:82,y:76}, // RB
+   4:{x:64,y:77}, // RCB
+   5:{x:50,y:78}, // CB
+   6:{x:36,y:77}, // LCB
+   7:{x:18,y:76}, // LB
+   8:{x:16,y:73}, // LWB
+   9:{x:63,y:62}, // RDM
+   10:{x:50,y:64}, // CDM
+   11:{x:37,y:62}, // LDM
+   12:{x:84,y:53}, // RM
+   13:{x:63,y:54}, // RCM
+   14:{x:50,y:52}, // CM
+   15:{x:37,y:54}, // LCM
+   16:{x:16,y:53}, // LM
+   17:{x:66,y:40}, // RAM
+   18:{x:50,y:38}, // CAM
+   19:{x:34,y:40}, // LAM
+   20:{x:68,y:24}, // RF
+   21:{x:50,y:24}, // CF
+   22:{x:32,y:24}, // LF
+   23:{x:86,y:17}, // RW
+   24:{x:62,y:17}, // RS
+   25:{x:50,y:15}, // ST
+   26:{x:38,y:17}, // LS
+   27:{x:14,y:17}, // LW
+   28:{x:50,y:95} // SUB / fallback
+ };
+ const positionBand=p=>p===0?5:p>=1&&p<=8?4:p>=9&&p<=11?3:p>=12&&p<=16?2:p>=17&&p<=19?1:0;
+ const bandBaseY={0:17,1:39,2:53,3:63,4:76,5:89};
  function arrange(squad){
    const valid=squad.filter(p=>Number.isSafeInteger(Number(p.sp_id)));
-   const groups=new Map();valid.forEach((p,i)=>{const raw=Number(p.sp_position),band=pitchBand(raw);if(!groups.has(band))groups.set(band,[]);groups.get(band).push({p,raw,i,x:positionX[raw]??50});});
+   const groups=new Map();
+   valid.forEach((p,i)=>{
+     const raw=Number(p.sp_position);
+     const band=positionBand(raw);
+     const coord=positionCoords[raw]||{x:50,y:bandBaseY[band]??50};
+     if(!groups.has(band))groups.set(band,[]);
+     groups.get(band).push({p,raw,i,x:coord.x,y:coord.y});
+   });
    const results=new Map();
    for(const [band,items] of groups){
      items.sort((a,b)=>a.x-b.x||a.i-b.i);
-     // Keep the official left/center/right distinctions, but avoid horizontal card overlap.
-     const count=items.length, edge=9, minGap=count>4?14:count===4?22:20;
-     const center=Math.round(items.reduce((sum,v)=>sum+v.x,0)/count);
-     const span=Math.min(82,(count-1)*minGap);
-     let xs=items.map(v=>v.x);
-     for(let i=1;i<count;i++)xs[i]=Math.max(xs[i],xs[i-1]+minGap);
-     const left=Math.max(edge,Math.min(100-edge-(xs[count-1]-xs[0]),center-(xs[count-1]-xs[0])/2));
-     xs=xs.map(x=>Math.max(edge,Math.min(100-edge,left+x-xs[0])));
-     // For extremely crowded lines, evenly distribute within the pitch.
-     if(count>5 || xs.some((x,i)=>i>0&&x-xs[i-1]<minGap-0.01))xs=items.map((_,i)=>edge+(100-2*edge)*(i+0.5)/count);
-     items.forEach((item,i)=>results.set(item.p,{x:xs[i],y:bandY[band]}));
+     const edge=10;
+     const minGap=items.length>=5?13:items.length===4?17:15;
+     let placed=[];
+     for(const item of items){
+       let x=Math.max(edge,Math.min(100-edge,item.x));
+       if(placed.length && x-placed[placed.length-1]<minGap)x=placed[placed.length-1]+minGap;
+       placed.push(x);
+     }
+     const overflow=placed.length?placed[placed.length-1]-(100-edge):0;
+     if(overflow>0)placed=placed.map(x=>x-overflow);
+     if(placed.some((x,i)=>i>0&&x-placed[i-1]<minGap-0.01)){
+       const width=Math.min(76,Math.max(minGap*(items.length-1),34));
+       const center=items.reduce((s,v)=>s+v.x,0)/items.length;
+       const start=Math.max(edge,Math.min(100-edge-width,center-width/2));
+       placed=items.map((_,idx)=>start+(width*(items.length===1?0.5:idx/(items.length-1))));
+     }
+     items.forEach((item,i)=>results.set(item.p,{x:placed[i],y:item.y??(bandBaseY[band]??50)}));
    }
    return results;
  }
