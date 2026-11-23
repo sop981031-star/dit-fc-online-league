@@ -1051,6 +1051,32 @@ body.v140-ready .section.active#v140Portal,body.v140-ready .section.active#v140P
 .v130-match .branding-badge{width:34px;height:34px}
 .v1304-selection .branding-badge{width:23px;height:23px}
 @media(max-width:650px){.v130-match .branding-badge{width:25px;height:25px}.v130-match-foot .v1401-award{font-size:10px;max-width:100%}.v1401-person-ident{gap:7px}.v1401-home-team small{padding-left:0}.v1303-match-line .v1401-branded{justify-content:center}.v1303-rival-score .v1401-branded{justify-content:center}.v1401-mvp-mini{font-size:7px;padding:2px 3px;bottom:-10px}}
+
+/* V14.0.2 — permanent identity / season-independent player profile */
+#profileOverlay .profilebox{width:min(890px,100%);background:linear-gradient(150deg,#11263c,#091929);border-color:#3b5670}
+#profileOverlay .profilehead{margin-bottom:15px}
+#profileOverlay .v9-profile-hero{margin-bottom:16px;min-height:172px;border-radius:17px}
+#profileOverlay .v9-profile-copy h3{font-size:clamp(24px,4vw,34px)}
+#profileOverlay .v9-profile-meta{color:#bed0df}
+#profileOverlay .v6-rank-chip{background:#344b58;color:#e7cf9e;border:1px solid #907b52}
+.v1402-shell{margin-top:4px}.v1402-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 16px}
+.v1402-tab{min-height:44px;padding:11px 7px;border:1px solid #365571;border-radius:9px;background:#142d45;color:#b9cede;font-size:13px;font-weight:800}
+.v1402-tab[aria-selected="true"]{background:#d6ba82;color:#142334;border-color:#d6ba82}.v1402-tab:focus-visible{outline:2px solid white;outline-offset:2px}
+.v1402-panel[hidden]{display:none!important}.v1402-panel{min-height:120px}
+.v1402-tab-intro{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:1px solid #314b64;padding:2px 0 12px;margin-bottom:13px}
+.v1402-tab-intro strong{color:#ebd098;font-size:13px;letter-spacing:.08em}.v1402-tab-intro span{color:#9bb3c9;font-size:11px}
+.v1402-season-title{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #6f624a;background:#192b3c;border-radius:10px;padding:11px 15px;margin-bottom:13px}
+.v1402-season-title b{color:#f2d99e;font-size:13px}.v1402-season-title span{color:#c2d1de;font-size:11px}
+.v1402-panel .v6-profile-block,.v1402-panel .v1294-panel{margin:14px 0}.v1402-panel .v6-profile-metrics{margin:12px 0 18px}
+.v1402-friendly-summary{margin:0 0 16px;color:#acbfd3;font-size:12px}
+.v1402-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.v1402-stat{background:#112d46;border:1px solid #35546d;border-radius:10px;padding:14px 11px;min-width:0}.v1402-stat small{display:block;color:#9eb5cb;font-size:10px;margin-bottom:7px}.v1402-stat b{color:#f2d49c;font-size:clamp(15px,2.5vw,22px);font-variant-numeric:tabular-nums}
+.v1402-subtitle{font-size:13px;font-weight:850;color:#edcf97;margin:18px 0 9px}.v1402-matches{border:1px solid #35516a;border-radius:12px;overflow:hidden;background:#10263b}
+.v1402-match{display:grid;grid-template-columns:minmax(0,1fr) auto 30px;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid #29435a}.v1402-match:last-child{border-bottom:0}
+.v1402-match>b{font-size:13px;color:#eed09a;white-space:nowrap}.v1402-match .v1305-form{margin:0;justify-content:flex-end}.v1402-match .v1305-form span{min-width:24px;min-height:24px}
+.v1402-hint{color:#91abc2;font-size:10px;margin:10px 0 0;line-height:1.6}
+@media(max-width:640px){#profileOverlay .profilebox{padding:13px}#profileOverlay .v9-profile-hero{padding:15px;min-height:135px}.v1402-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.v1402-tab{font-size:12px}.v1402-tab-intro{align-items:start;flex-direction:column}.v1402-match{gap:6px;padding:9px 7px}.v1402-match .branding-badge{height:24px;width:24px}}
+
 </style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>시즌별 리그 기록과 커뮤니티</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>필요한 메뉴만 펼쳐서 사용</span></div>
@@ -1505,6 +1531,46 @@ function renderScorers(){let totals={};DATA.teams.forEach(name=>totals[name]=0);
 
 function tableForMatches(matches){let o={};DATA.teams.forEach(n=>o[n]={name:n,mp:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});matches.forEach(m=>{if(!done(m)||!o[m.a]||!o[m.b])return;let a=o[m.a],b=o[m.b];a.mp++;b.mp++;a.gf+=m.sa;a.ga+=m.sb;b.gf+=m.sb;b.ga+=m.sa;if(m.sa>m.sb){a.w++;a.pts+=3;b.l++}else if(m.sa<m.sb){b.w++;b.pts+=3;a.l++}else{a.d++;b.d++;a.pts++;b.pts++}});return Object.values(o).map(t=>({...t,gd:t.gf-t.ga})).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf||a.name.localeCompare(b.name,'ko'))}
 function renderLiveDashboard(){let all=table(),prev=tableForMatches(state.matches.filter(m=>done(m)&&m.round<=(Math.max(0,...state.matches.filter(done).map(m=>m.round))-1)));let prevRanks={};prev.forEach((x,i)=>prevRanks[x.name]=i+1);let completed=state.matches.filter(done);let rows=all.slice(0,5).map((x,i)=>{let recent=completed.filter(m=>m.a===x.name||m.b===x.name).sort((a,b)=>b.num-a.num).slice(0,5).reverse();let form=recent.map(m=>{let score=m.a===x.name?[m.sa,m.sb]:[m.sb,m.sa];return score[0]>score[1]?'W':score[0]<score[1]?'L':'D'}).map(v=>`<span style="display:inline-block;padding:3px 5px;border-radius:4px;margin-right:3px;background:${v==='W'?'#31532d':v==='D'?'#51482a':'#512d35'}">${v}</span>`).join('')||'<span style="color:var(--muted)">—</span>';let movement=prevRanks[x.name]?prevRanks[x.name]-(i+1):0;return `<div class="minirow"><span><b>${i+1}.</b> ${nameWithCrest(x.name)} <small style="color:var(--muted)">${movement>0?'▲ '+movement:movement<0?'▼ '+Math.abs(movement):'—'}</small></span><span><b style="color:var(--lime)">${x.pts}점</b>　${form}</span></div>`}).join('');let next=state.matches.filter(m=>!done(m)).slice(0,3).map(m=>`<div class="minirow"><span>R${m.round} · ${esc(m.a)} vs ${esc(m.b)}</span><b>${m.a===m.b?'':'예정'}</b></div>`).join('')||'<div class="minirow">정규리그 모든 경기 완료</div>';document.getElementById('liveDashboard').innerHTML=`<div class="dashboardgrid"><div class="dashcard"><h4>🏆 TOP 5 · ${state.matches.every(done)?'FINAL TABLE':'TITLE RACE'}</h4>${rows}</div><div class="dashcard"><h4>⚡ ${state.matches.every(done)?'LEAGUE COMPLETE':'NEXT MATCHES'}</h4>${next}<p class="note">최근 5경기 폼: W 승리 · D 무승부 · L 패배. 순위 변동은 직전 라운드까지의 결과와 비교합니다.</p></div></div>`}
+/* V14.0.2 — Organize the existing permanent player profile without changing season data. */
+function v1402ArrangeProfile(name){
+ const root=document.getElementById('profileContent');if(!root)return;
+ const hero=root.querySelector('.v9-profile-hero');
+ const metrics=root.querySelector('.v6-profile-metrics');
+ const overview=root.querySelector('.v114-overview');
+ const progress=root.querySelector('.v114-progress');
+ const blocks=[...root.children].filter(el=>el.classList.contains('v6-profile-block')||el.classList.contains('v113-profile'));
+ const squad=root.querySelector('#v1294Squad');
+ const rivalry=root.querySelector('#v1305ProfileRivalry');
+ const signature=blocks.find(el=>el.classList.contains('v113-profile'));
+ const official=blocks.filter(el=>!el.matches('#v1294Squad,#v1305ProfileRivalry')&&el!==signature);
+ const shell=document.createElement('div');shell.className='v1402-shell';
+ const nav=document.createElement('div');nav.className='v1402-tabs';nav.setAttribute('role','tablist');nav.setAttribute('aria-label','선수 프로필 항목');
+ const tabs=[['friendly','친선전'],['official','공식 리그'],['squad','선수단']];
+ const panels={};
+ for(const [key,label] of tabs){
+   const b=document.createElement('button');b.type='button';b.className='v1402-tab';b.dataset.v1402Tab=key;b.textContent=label;
+   b.id='v1402-tab-'+key;b.setAttribute('role','tab');b.setAttribute('aria-controls','v1402-panel-'+key);nav.append(b);
+   const p=document.createElement('section');p.className='v1402-panel';p.dataset.v1402Panel=key;p.id='v1402-panel-'+key;p.setAttribute('role','tabpanel');p.setAttribute('aria-labelledby',b.id);panels[key]=p;
+ }
+ const heading=document.createElement('div');heading.className='v1402-tab-intro';heading.innerHTML='<strong>FRIENDLY RECORD</strong><span>시즌과 무관한 친선 경기 기록</span>';panels.friendly.append(heading);
+ const summary=document.createElement('div');summary.id='v1402FriendlySummary';summary.className='v1402-friendly-summary';summary.setAttribute('aria-live','polite');summary.textContent='친선전 기록을 불러오는 중…';panels.friendly.append(summary);
+ if(rivalry)panels.friendly.append(rivalry);
+ const offhead=document.createElement('div');offhead.className='v1402-tab-intro';offhead.innerHTML='<strong>OFFICIAL LEAGUE</strong><span>공식 시즌 전적 · 친선전 미포함</span>';panels.official.append(offhead);
+ const seasonTitle=document.createElement('div');seasonTitle.className='v1402-season-title';seasonTitle.innerHTML='<b>SEASON 03</b><span>종료 · 공식 기록</span>';panels.official.append(seasonTitle);
+ for(const x of [metrics,overview,progress,...official])if(x)panels.official.append(x);
+ const squadhead=document.createElement('div');squadhead.className='v1402-tab-intro';squadhead.innerHTML='<strong>MY SQUAD</strong><span>주력 선수 · 현재 저장된 FC 온라인 선수단</span>';panels.squad.append(squadhead);
+ for(const x of [signature,squad])if(x)panels.squad.append(x);
+ shell.append(nav,...Object.values(panels));
+ if(hero)hero.insertAdjacentElement('afterend',shell);else root.prepend(shell);
+ const open=key=>{
+   for(const b of nav.querySelectorAll('button')){const active=b.dataset.v1402Tab===key;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;}
+   for(const p of Object.values(panels))p.hidden=p.dataset.v1402Panel!==key;
+ };
+ nav.addEventListener('click',e=>{const b=e.target.closest('[data-v1402-tab]');if(b)open(b.dataset.v1402Tab);});
+ nav.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;const bs=[...nav.querySelectorAll('button')],current=bs.indexOf(document.activeElement);let next=e.key==='Home'?0:e.key==='End'?bs.length-1:(current+(e.key==='ArrowRight'?1:-1)+bs.length)%bs.length;e.preventDefault();bs[next].focus();open(bs[next].dataset.v1402Tab);});
+ open('friendly');
+}
+
 function renderProfile(name){
   const standings=table();
   const row=standings.find(x=>x.name===name);
@@ -1550,7 +1616,7 @@ function renderProfile(name){
   const brand=teamBrand(name);
   document.getElementById('profileName').textContent=name;
   document.getElementById('profileContent').innerHTML=`
-    <div class="v9-profile-hero" style="--team-color:${esc(brand.color)}">${brand.emblem?`<img class="v9-profile-watermark" src="${esc(brand.emblem)}" alt="" aria-hidden="true" onerror="this.onerror=null;this.outerHTML='<span class=&quot;cup-photo-fallback&quot;>🏆</span>'">`:''}${crest(name,'large')}<div class="v9-profile-copy"><small>DIT FC ONLINE LEAGUE · PLAYER</small><h3>${esc(name)}</h3><p>${esc(brand.club)}</p><span class="v9-profile-meta">SEASON 03 · ${row.mp} MATCHES · ${row.pts} POINTS</span><span class="v6-rank-chip">${state.matches.every(done)?`FINAL LEAGUE #${rank}`:`LEAGUE #${rank}`}</span></div></div>
+    <div class="v9-profile-hero" style="--team-color:${esc(brand.color)}">${brand.emblem?`<img class="v9-profile-watermark" src="${esc(brand.emblem)}" alt="" aria-hidden="true" onerror="this.onerror=null;this.outerHTML='<span class=&quot;cup-photo-fallback&quot;>🏆</span>'">`:''}${crest(name,'large')}<div class="v9-profile-copy"><small>DIT FC ONLINE LEAGUE · PLAYER</small><h3>${esc(name)}</h3><p>${esc(brand.club)}</p><span class="v9-profile-meta">공식 리그 · 친선전 · 선수단</span><span class="v6-rank-chip">통합 선수 프로필</span></div></div>
     <div class="v6-profile-metrics">
       <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'시즌 3 정규리그 최종 순위':'시즌 3 정규리그 현재 순위'}</small><strong>${rank}위</strong></div>
       <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'최종 승점':'승점'}</small><strong>${row.pts} PTS</strong></div>
@@ -1570,6 +1636,7 @@ function renderProfile(name){
     <div class="v6-profile-block"><h3>${state.matches.every(done)?'시즌 마지막 5경기':'최근 5경기'} · FORM</h3><div class="v6-form">${form.length?form.map(x=>`<span class="${x}">${x}</span>`).join(''):'<span style="width:auto;color:#aabdd2">경기 기록 없음</span>'}</div><p class="v6-hint">W 승 · D 무 · L 패 / 최근 입력된 결과 순</p></div>
     <div class="v6-profile-block"><h3>시즌 3 컵대회 경기 기록</h3><div class="v6-history">${cups.join('')||'<p class="note">아직 기록된 컵 대회 경기가 없습니다.</p>'}</div></div>
     <div class="v6-profile-block"><h3>시즌 3 정규리그 경기 기록</h3><div class="v6-history">${history}</div></div>`;
+  v1402ArrangeProfile(name);
   document.getElementById('profileOverlay').style.display='flex';
   window.v1294LoadProfile?.(name);
   window.v1305ShowProfile?.(name);
@@ -4124,10 +4191,18 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      const matches=await v1305Read();
      if($('profileName')?.textContent!==name||!element.isConnected)return;
      const data=v1305ProfileData(name,matches);
-     element.innerHTML='<div class="v1305-heading"><h3>⚔️ 친선전 라이벌 분석</h3><span class="v1305-sub">공식 시즌 3 전적과 별도</span></div>'+
+     const snapshot=$('v1402FriendlySummary');
+     if(snapshot){
+       const recent=data.all.slice(0,30);let wins=0,draws=0,losses=0,goals=0,against=0;
+       recent.forEach(m=>{const left=m.player_a===name,own=num(left?m.score_a:m.score_b),opp=num(left?m.score_b:m.score_a);goals+=own;against+=opp;if(own>opp)wins++;else if(own<opp)losses++;else draws++;});
+       const metric=(label,value)=>'<div class="v1402-stat"><small>'+label+'</small><b>'+value+'</b></div>';
+       const current=recent.slice(0,5).map(m=>{const left=m.player_a===name,other=left?m.player_b:m.player_a,own=num(left?m.score_a:m.score_b),opp=num(left?m.score_b:m.score_a),r=own>opp?'W':own<opp?'L':'D';return '<div class="v1402-match"><span class="v1401-branded">'+crest(other)+safe(other)+'</span><b>'+own+' : '+opp+'</b><span class="v1305-form"><span class="'+r+'">'+r+'</span></span></div>';}).join('');
+       snapshot.innerHTML='<div class="v1402-stats">'+metric('최근 기록',recent.length+'경기')+metric('승 · 무 · 패',wins+' · '+draws+' · '+losses)+metric('평균 득점',recent.length?(goals/recent.length).toFixed(1):'—')+metric('평균 실점',recent.length?(against/recent.length).toFixed(1):'—')+'</div><div class="v1402-subtitle">최근 친선전</div><div class="v1402-matches">'+(current||'<p class="v1305-empty">아직 친선경기 기록이 없습니다.</p>')+'</div><p class="v1402-hint">최근 최대 30경기 · 보관된 상대별 최근 30경기 기준 · 공식 경기 제외</p>';
+     }
+     element.innerHTML='<div class="v1305-heading"><h3>라이벌 분석</h3><span class="v1305-sub">공식 시즌 기록과 별도</span></div>'+
       '<div class="v1305-sub">최근 5경기 결과</div>'+v1305Form(data.flow)+
       '<div class="v1305-sub">주요 라이벌 · 상대별 최근 30경기</div>'+v1305Rivals(name,matches,4);
-   }catch(err){if($('profileName')?.textContent===name&&element.isConnected)element.innerHTML='<h3>⚔️ 친선전 라이벌 분석</h3><p class="v1305-empty">친선 기록을 불러오지 못했습니다. 친선전 경기 탭에서 다시 확인해 주세요.</p>';}
+   }catch(err){if($('profileName')?.textContent===name&&element.isConnected){const summary=$('v1402FriendlySummary');if(summary)summary.textContent='친선전 기록을 불러오지 못했습니다.';element.innerHTML='<h3>라이벌 분석</h3><p class="v1305-empty">친선 기록을 불러오지 못했습니다. 친선전 경기 탭에서 다시 확인해 주세요.</p>';}}
  };
 
  // V13.1.0: read-only rivalry comparison; no fabricated scores or hidden write calls.
