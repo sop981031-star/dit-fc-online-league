@@ -3509,6 +3509,35 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
 @media(max-width:680px){.v12910-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v12910-two{grid-template-columns:1fr}.v12910-hero{padding:15px}.v12910-card{padding:12px}.v12910-score{font-size:18px}}
 
 
+
+/* V13.0.3 - participant-first preseason home, no backend changes */
+.v1303-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid #8d794e;border-radius:19px;padding:clamp(22px,4vw,38px);margin:0 0 18px;min-height:195px;background:radial-gradient(ellipse at 82% 10%,#1c668080,transparent 48%),linear-gradient(125deg,#0c1f35,#183953 62%,#121d30);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.v1303-hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.32;background:repeating-linear-gradient(115deg,transparent 0 32px,#ffffff0b 33px 34px,transparent 35px 80px)}
+.v1303-eyebrow{color:#edc57e;font-size:10px;font-weight:900;letter-spacing:.17em}
+.v1303-hero h2{font-size:clamp(28px,5vw,46px);font-weight:950;letter-spacing:-.04em;color:#fff;margin:8px 0 12px;line-height:1.05}
+.v1303-hero p{font-size:13px;color:#c5d5e5;margin:0;max-width:420px;line-height:1.6}
+.v1303-hero-icon{font-size:clamp(52px,10vw,105px);opacity:.8;filter:drop-shadow(0 0 15px #c8a66c45);flex-shrink:0}
+.v1303-btn{cursor:pointer;border:1px solid #93784d;border-radius:10px;background:#d0ac69;color:#10233a;padding:10px 13px;font-size:12px;font-weight:850;white-space:nowrap}
+.v1303-btn:hover{background:#f5cf87;color:#081a2a}
+.v1303-section{margin-bottom:16px}.v1303-titlebar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}
+.v1303-titlebar h3{font-size:16px;color:#f6dfa9;margin:0}.v1303-titlebar span{font-size:11px;color:#9eb8d2}
+.v1303-feature{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(230px,.7fr);gap:12px}
+.v1303-card{border:1px solid #2e4b66;background:linear-gradient(140deg,#112e48,#0b2036);border-radius:15px;padding:17px;min-width:0}
+.v1303-match-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:#9bb3cd}
+.v1303-match-line{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin:18px 0 13px;text-align:center}
+.v1303-match-line strong{font-size:clamp(14px,2.7vw,20px);color:#eff5fc;overflow-wrap:anywhere}.v1303-match-line b{font-size:clamp(26px,4.5vw,38px);color:#f6d28d;font-variant-numeric:tabular-nums;white-space:nowrap}
+.v1303-card-sub{font-size:12px;color:#aac1d7;line-height:1.6}
+.v1303-mini{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #29445e;padding:12px 0}.v1303-mini:last-child{border:0}
+.v1303-mini strong{font-size:13px;color:#e5eff8}.v1303-mini small{font-size:11px;color:#adbfce}
+.v1303-dual{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.v1303-rival-balance{display:flex;height:8px;border-radius:99px;overflow:hidden;margin:12px 0;background:#243d53}.v1303-rival-balance i{display:block;background:#d0b074}.v1303-rival-balance em{display:block;background:#71849c}.v1303-rival-balance b{display:block;background:#749ad0}
+.v1303-rival-score{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0;font-size:12px;color:#e3eaf4}.v1303-rival-score b{color:#f3d397;font-size:18px;white-space:nowrap}
+.v1303-flow{display:flex;gap:5px;margin:11px 0}.v1303-flow span{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;color:white;font-weight:900;font-size:12px;background:#6a819c}.v1303-flow .W{background:#2a8a70}.v1303-flow .D{background:#75849a}.v1303-flow .L{background:#b35f69}
+.v1303-momentum{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:12px 0;border-top:1px solid #28465e}.v1303-momentum:first-of-type{border-top:0}.v1303-momentum b{color:#eaf3ff;font-size:13px}.v1303-momentum small{color:#9db5cd;font-size:11px}
+.v1303-empty{padding:18px;text-align:center;color:#aac0d8;font-size:12px;line-height:1.6}
+@media(max-width:720px){.v1303-feature,.v1303-dual{grid-template-columns:1fr}.v1303-hero{min-height:150px;padding:20px}.v1303-hero-icon{font-size:55px}.v1303-card{padding:13px}}
+@media(max-width:440px){.v1303-hero-icon{display:none}.v1303-match-line b{font-size:25px}.v1303-match-line strong{font-size:13px}}
+
 /* V13.0.2 participant H2H */
 .v1302{background:linear-gradient(120deg,#142f4a,#091b2e);border:1px solid #987d4c;border-radius:15px;padding:18px;margin:0 0 16px}
 .v1302 h3{font-size:20px;color:#f4d89f;margin:4px 0 16px}.v1302 small,.v1302-note{color:#aec3da;font-size:11px;line-height:1.6}
@@ -3625,7 +3654,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  function matchCard(m,adminControls=false){
    const a=safe(m.player_a),b=safe(m.player_b),date=m.match_date?new Date(m.match_date).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}):'경기 일시 미확인';
    const badge=n=>safe(String(n||'').trim().slice(0,1)||'?');
-   return `<details class="v130-match"><summary aria-label="${a} 대 ${b} 경기 상세 보기"><div class="v130-match-head"><span>PRE-SEASON · FRIENDLY</span><span>${safe(date)}</span></div>`+
+   return `<details class="v130-match"><span data-v130-match-id="${safe(m.match_id)}" hidden></span><summary aria-label="${a} 대 ${b} 경기 상세 보기"><div class="v130-match-head"><span>PRE-SEASON · FRIENDLY</span><span>${safe(date)}</span></div>`+
     `<div class="v130-match-main"><div class="v130-team"><span class="v130-crest" aria-hidden="true">${badge(m.player_a)}</span><span class="v130-team-name">${a}</span></div>`+
     `<div class="v130-score">${num(m.score_a)} : ${num(m.score_b)}</div><div class="v130-team right"><span class="v130-team-name">${b}</span><span class="v130-crest" aria-hidden="true">${badge(m.player_b)}</span></div></div>`+
     `<div class="v130-match-foot">경기 상세 기록 <span class="v130-chevron">⌄</span></div></summary>`+
@@ -3694,10 +3723,44 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  }
  function leaders(rows,key,count=5,eligible=()=>true){return rows.filter(eligible).sort((a,b)=>num(b[key])-num(a[key])||b.goals-a.goals).slice(0,count);}
  function leaderTable(rows,kind){return table(['참가자 · 선수',kind],rows.map(p=>[p.owner+' · '+playerName(p.spid),kind==='평균 평점'?p.avg:p[kind==='득점'?'goals':kind==='도움'?'assists':'mvp']]));}
+ function v1303Pairs(matches){
+   const pairs=new Map();
+   for(const m of matches){const names=[m.player_a,m.player_b].sort((a,b)=>a.localeCompare(b,'ko'));
+     const key=names.join('\u0000'),pair=pairs.get(key)||{a:names[0],b:names[1],rows:[]};pair.rows.push(m);pairs.set(key,pair);
+   }
+   return [...pairs.values()].sort((a,b)=>b.rows.length-a.rows.length||a.a.localeCompare(b.a,'ko'));
+ }
+ function v1303Momentum(matches){
+   const byName=new Map();for(const m of matches){for(const n of [m.player_a,m.player_b]){
+     if(!byName.has(n))byName.set(n,[]);
+     const isA=m.player_a===n,x=num(isA?m.score_a:m.score_b),y=num(isA?m.score_b:m.score_a);
+     byName.get(n).push(x>y?'W':x<y?'L':'D');
+   }}
+   return [...byName].map(([name,all])=>({name,flow:all.slice(0,5),wins:all.slice(0,5).filter(x=>x==='W').length,played:Math.min(5,all.length)}))
+     .filter(x=>x.played>=3).sort((a,b)=>b.wins-a.wins||b.played-a.played||a.name.localeCompare(b.name,'ko')).slice(0,3);
+ }
+ function v1303Home(matches){
+   const pairs=v1303Pairs(matches),featured=matches[0],momentum=v1303Momentum(matches),rival=pairs[0];
+   const title=(name,more='')=>`<div class="v1303-titlebar"><h3>${name}</h3><span>${more}</span></div>`;
+   let html=`<section class="v1303-hero"><div><div class="v1303-eyebrow">DIT FC ONLINE LEAGUE · RIVALRY SERIES</div><h2>PRE-SEASON</h2><p>오늘의 승부가 내일의 라이벌을 만든다.<br>우리끼리 쌓아가는 경기와 전력 분석.</p><button type="button" class="v1303-btn" data-v1303-tab="fixtures" style="margin-top:18px">매치센터 둘러보기</button></div><div class="v1303-hero-icon" aria-hidden="true">⚽</div></section>`;
+   html+=`<section class="v1303-section">${title('최근 라이벌 매치','자동 수집 경기')}`;
+   if(featured){const date=featured.match_date?new Date(featured.match_date).toLocaleDateString('ko-KR'):'최근 경기';
+     html+=`<div class="v1303-feature"><article class="v1303-card"><div class="v1303-match-head"><span>FULL TIME · FRIENDLY</span><span>${safe(date)}</span></div><div class="v1303-match-line"><strong>${safe(featured.player_a)}</strong><b>${num(featured.score_a)} : ${num(featured.score_b)}</b><strong>${safe(featured.player_b)}</strong></div><div class="v1303-card-sub">${safe(featured.player_a)} · ${safe(featured.player_b)}의 경기 기록을 살펴보세요.</div><button class="v1303-btn" type="button" data-v1303-match="${safe(featured.match_id)}" style="margin-top:13px">경기 기록 보기</button></article><article class="v1303-card"><div class="v1303-card-sub" style="color:#f4d69b;font-weight:850">RECENT RESULTS</div>${matches.slice(1,4).map(m=>`<div class="v1303-mini"><strong>${safe(m.player_a)} vs ${safe(m.player_b)}</strong><small>${num(m.score_a)} : ${num(m.score_b)}</small></div>`).join('')||'<div class="v1303-empty">아직 다른 경기가 없어요.</div>'}<button type="button" data-v1303-tab="fixtures" class="v1303-btn" style="margin-top:12px">모든 경기</button></article></div>`;
+   }else html+='<div class="v1303-card v1303-empty">프리시즌의 첫 경기가 등록되면 이곳에 최신 맞대결이 표시돼요.</div>';
+   html+='</section><div class="v1303-dual">';
+   html+=`<section class="v1303-section">${title('주목할 라이벌','최근 맞대결')}`;
+   if(rival){const t=v1302Analyze(rival.a,rival.b),n=t.rows.length;
+      html+=`<div class="v1303-card"><div class="v1303-card-sub">HEAD TO HEAD · 최근 ${n}경기</div><div class="v1303-rival-score"><strong>${safe(rival.a)}</strong><b>${t.w}승 ${t.d}무 ${t.l}패</b><strong>${safe(rival.b)}</strong></div><div class="v1303-rival-balance"><i style="width:${t.w/n*100}%"></i><em style="width:${t.d/n*100}%"></em><b style="width:${t.l/n*100}%"></b></div><div class="v1303-card-sub">최근 맞대결이 가장 많은 참가자 조합${n<5?' · 표본 5경기 미만':''}</div><button type="button" class="v1303-btn" data-v1303-a="${safe(rival.a)}" data-v1303-b="${safe(rival.b)}" style="margin-top:14px">상성 자세히 보기</button></div>`;
+   }else html+='<div class="v1303-card v1303-empty">맞대결 데이터가 쌓이면 라이벌 관계가 표시돼요.</div>';
+   html+='</section>';
+   html+=`<section class="v1303-section">${title('최근 상승세','최근 최대 5경기 · 승리 수 기준')}`;
+   if(momentum.length){html+='<div class="v1303-card">';for(const m of momentum){html+=`<div class="v1303-momentum"><div><b>${safe(m.name)}</b><div class="v1303-flow">${m.flow.map(r=>`<span class="${r}">${r}</span>`).join('')}</div></div><small>${m.wins}승 / ${m.played}경기</small></div>`;}html+='</div>';
+   }else html+='<div class="v1303-card v1303-empty">참가자별 최근 3경기 이상 쌓이면 상승세를 비교할 수 있어요.</div>';
+   html+='</section></div>';
+   return html;
+ }
  function content(tab){const {teamRows,playerRows,matches}=aggregate();const total=matches.length,goals=matches.reduce((sum,m)=>sum+num(m.score_a)+num(m.score_b),0);
-   if(tab==='home')return header('프리시즌','참가자 간 친선경기 · 상대별 최근 30경기')+
-     `<div class="v12910-grid">${metric('등록 경기',total)}${metric('참가 감독',teamRows.length)}${metric('총 득점',goals)}</div>`+
-     `<div class="v12910-two"><div class="v12910-card"><h3>최근 경기</h3>${lines(matches.slice(0,5))}</div><div class="v12910-card"><h3>참가자 성적</h3>${standings(teamRows.slice(0,6))}</div></div>`;
+   if(tab==='home')return v1303Home(matches);
    if(tab==='standings')return header('프리시즌 성적')+`<div class="v12910-card" style="margin-top:15px"><h3>참가자별 전적</h3><p>경기 수가 서로 달라 승률 기준으로 표시합니다. 시즌 4 공식 순위와 무관합니다.</p>${standings(teamRows)}</div>`+
      `<div class="v12910-two" style="margin-top:14px"><div class="v12910-card"><h3>득점 TOP 10</h3>${leaderTable(leaders(playerRows,'goals',10),'득점')}</div><div class="v12910-card"><h3>도움 TOP 10</h3>${leaderTable(leaders(playerRows,'assists',10),'도움')}</div><div class="v12910-card"><h3>평균 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'avg',10,p=>p.ratingGames>=3),'평균 평점')}</div><div class="v12910-card"><h3>경기 최고 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'mvp',10),'MVP')}</div></div>`;
    if(tab==='fixtures')return header('MATCH CENTER')+matchCenter(matches);
@@ -3738,6 +3801,14 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    if(e.target.id==='v130-opponent'){v130Opponent=e.target.value;render();}
  });
  document.addEventListener('click',async e=>{
+   if(pre()){
+     const t=e.target.closest('[data-v1303-tab]');if(t){pickTab(t.dataset.v1303Tab);return;}
+     const pair=e.target.closest('[data-v1303-a][data-v1303-b]');if(pair){v130Participant=pair.dataset.v1303A;v130Opponent=pair.dataset.v1303B;v130Scope='all';pickTab('fixtures');return;}
+     const match=e.target.closest('[data-v1303-match]');if(match){
+       pickTab('fixtures');const node=[...document.querySelectorAll('#fixtures .v130-match')].find(d=>d.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===match.dataset.v1303Match);
+       if(node){node.open=true;node.scrollIntoView({block:'center',behavior:'smooth'});}return;
+     }
+   }
    const rival=e.target.closest('[data-v1302-a]');if(rival&&pre()){v130Participant=rival.dataset.v1302A;v130Opponent=rival.dataset.v1302B;v130Scope='all';render();return;}
    const scope=e.target.closest('[data-v130-scope]');if(scope&&pre()){v130Scope=scope.dataset.v130Scope;render();return;}
    const open=e.target.closest('[data-pre-open]');if(open&&pre()&&isAdmin()){$('v1291Open')?.click();return;}
