@@ -3568,7 +3568,11 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  function header(title,detail=''){
    return `<div class="v12910-hero"><div><small>DIT FC ONLINE LEAGUE · PRE-SEASON</small><h2>${safe(title)}</h2>${detail?`<p>${safe(detail)}</p>`:''}</div><span class="v12910-tag">시즌 4 별도 운영</span></div>`;
  }
- const used=()=>records.filter(r=>r&&r.match_id&&r.player_a&&r.player_b&&Number.isInteger(Number(r.score_a))&&Number.isInteger(Number(r.score_b)));
+ const used=()=>{const count=new Map();return records.filter(r=>{
+   if(!(r&&!r.excluded_official&&r.match_id&&r.player_a&&r.player_b&&Number.isInteger(Number(r.score_a))&&Number.isInteger(Number(r.score_b))))return false;
+   const key=[r.player_a,r.player_b].sort().join('\u0000');const seen=count.get(key)||0;
+   if(seen>=30)return false;count.set(key,seen+1);return true;
+ })};
  function aggregate(){
    const teams=new Map(),players=new Map(),matches=used();
    const team=name=>{if(!teams.has(name))teams.set(name,{name,played:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});return teams.get(name);};
@@ -3641,7 +3645,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  function leaders(rows,key,count=5,eligible=()=>true){return rows.filter(eligible).sort((a,b)=>num(b[key])-num(a[key])||b.goals-a.goals).slice(0,count);}
  function leaderTable(rows,kind){return table(['참가자 · 선수',kind],rows.map(p=>[p.owner+' · '+playerName(p.spid),kind==='평균 평점'?p.avg:p[kind==='득점'?'goals':kind==='도움'?'assists':'mvp']]));}
  function content(tab){const {teamRows,playerRows,matches}=aggregate();const total=matches.length,goals=matches.reduce((sum,m)=>sum+num(m.score_a)+num(m.score_b),0);
-   if(tab==='home')return header('프리시즌','자유롭게 진행한 경기 중 운영진이 확정한 기록만 반영됩니다.')+
+   if(tab==='home')return header('프리시즌','참가자 간 친선경기 · 상대별 최근 30경기')+
      `<div class="v12910-grid">${metric('등록 경기',total)}${metric('참가 감독',teamRows.length)}${metric('총 득점',goals)}</div>`+
      `<div class="v12910-two"><div class="v12910-card"><h3>최근 경기</h3>${lines(matches.slice(0,5))}</div><div class="v12910-card"><h3>참가자 성적</h3>${standings(teamRows.slice(0,6))}</div></div>`;
    if(tab==='standings')return header('프리시즌 성적')+`<div class="v12910-card" style="margin-top:15px"><h3>참가자별 전적</h3><p>경기 수가 서로 달라 승률 기준으로 표시합니다. 시즌 4 공식 순위와 무관합니다.</p>${standings(teamRows)}</div>`+
@@ -3650,11 +3654,11 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    if(tab==='players')return header('프리시즌 참가자')+`<div class="v12910-two" style="margin-top:14px">${teamRows.length?teamRows.map(t=>`<div class="v12910-card"><h3>${safe(t.name)}</h3><div class="v12910-grid">${metric('경기',t.played)}${metric('승·무·패',t.w+'·'+t.d+'·'+t.l)}${metric('득점',t.gf)}</div><p>득실차 ${(t.gf-t.ga)>0?'+':''}${t.gf-t.ga} · 승률 ${Math.round(t.rate*100)}%</p></div>`).join(''):'<div class="v12910-card">등록된 참가자가 없습니다.</div>'}</div>`;
    if(tab==='tournament')return header('프리시즌','컵대회는 프리시즌에 운영하지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>정규 시즌 컵대회와 별도</h3><p>챔피언스리그·유로파리그·슈퍼컵 기록은 시즌 3 또는 향후 공식 시즌에서 확인해 주세요.</p></div>';
    if(tab==='halloffame')return header('프리시즌','공식 우승 기록은 생성되지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>명예의 전당</h3><p>프리시즌 기록은 공식 명예의 전당에 반영하지 않습니다.</p></div>';
-   return header('프리시즌 안내')+'<div class="v12910-card" style="margin-top:15px"><p>대진표 없이 자유롭게 진행합니다. 운영진이 선택한 스페셜 매치만 등록됩니다. 기록 수정은 삭제 후 재등록 방식입니다.</p></div>';
+   return header('프리시즌 안내')+'<div class="v12910-card" style="margin-top:15px"><p>참가자끼리 진행한 스페셜 매치를 자동 수집합니다. 상대별 최근 30경기가 통계에 반영됩니다.</p></div>';
  }
  function render(){if(!pre())return;const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane)pane.innerHTML=content(active);}
  async function refresh(){if(!pre()||typeof cloudClient==='undefined'||!cloudClient)return;const stamp=++request;
-   try{const {data,error}=await cloudClient.from('league_preseason_matches_v1298').select('match_id,match_date,player_a,player_b,score_a,score_b,match_stats').order('match_date',{ascending:false});if(error)throw error;
+   try{const {data,error}=await cloudClient.from('league_preseason_matches_v1298').select('match_id,match_date,player_a,player_b,score_a,score_b,match_stats,excluded_official').order('match_date',{ascending:false});if(error)throw error;
      if(stamp!==request||!pre())return;records=data||[];loaded=true;render();
    }catch(e){if(stamp!==request||!pre())return;render();const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane){const p=document.createElement('p');p.className='v12910-msg';p.textContent='프리시즌 조회 실패: '+e.message+' · SQL 설치 및 공개 읽기 권한을 확인해 주세요.';pane.prepend(p);}}
  }
