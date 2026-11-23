@@ -1160,7 +1160,38 @@ body.v140-ready .v128-season-selector{display:none!important}
 @media(max-width:390px){.v141-profile-tile b{font-size:11px}.v141-profile-tile .branding-badge{width:26px;height:26px}}
 @media(prefers-reduced-motion:reduce){.v140-match{transition:none!important}}
 </style>
-</head><body>
+<style>
+/* V14.3 — night stadium, image-first media center, independent hall */
+body{background:linear-gradient(180deg,rgba(3,10,20,.78),rgba(3,10,20,.92) 46%,#061324 100%),url('./assets/night-stadium.webp') center top / cover fixed no-repeat!important}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg,#05101b54,transparent 50%,#05101b54);z-index:-1}
+.v140-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.v140-nav button{min-width:0;white-space:normal;line-height:1.2}
+#v140Portal .v143-news-home{margin:0 0 29px;padding:clamp(14px,3vw,25px);border:1px solid #5b5870;border-radius:19px;background:linear-gradient(120deg,#101f32f0,#091727e8);box-shadow:0 16px 45px #0006}
+.v143-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.v143-heading h2{margin:4px 0;color:#f0d29a;font-size:clamp(21px,3vw,29px)}
+.v143-textbtn{background:none;border:0;color:#e2c58e;font-size:12px;font-weight:750;padding:10px;cursor:pointer}
+.v143-stage{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center;max-width:850px;margin:auto}
+.v143-arrow{width:44px;height:52px;font-size:28px;font-weight:400;border-radius:10px;color:#ebd4a5;background:#193049;border:1px solid #53677a;cursor:pointer}.v143-arrow:disabled{opacity:.35;cursor:default}
+.v143-slide{min-width:0}.v143-news-card{max-width:690px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.v143-cover{border:1px solid #435a74;background:#07111d;padding:0;border-radius:11px;overflow:hidden;display:block;width:100%;max-width:540px;cursor:zoom-in}
+.v143-cover img{display:block;width:100%;height:min(59vh,535px);object-fit:contain;background:#061421}
+.v143-news-info{width:100%;max-width:540px;display:flex;justify-content:space-between;gap:12px;align-items:center;color:#fff}
+.v143-news-info h3{font-size:16px;margin:4px 0;line-height:1.45;word-break:keep-all}.v143-news-info small{color:#bac9d8;font-size:11px}
+.v143-dots{display:flex;justify-content:center;gap:7px;margin-top:12px}.v143-dot{height:6px;width:7px;border-radius:4px;border:0;background:#52657a;padding:0}.v143-dot[aria-current="true"]{width:21px;background:#dcb87b}
+.v143-empty{padding:85px 12px;text-align:center;color:#a8bbce;border:1px dashed #53677a;border-radius:12px}
+.v143-archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}
+.v143-tile{background:#10263e;border:1px solid #3a5472;border-radius:14px;padding:0;overflow:hidden;text-align:left;color:#e9f2ff;cursor:pointer}
+.v143-tile img{width:100%;height:265px;object-fit:contain;background:#081524;display:block}.v143-tile div{padding:13px}.v143-tile strong{display:block;margin:5px 0 6px;line-height:1.4}.v143-tile small{color:#b1c2d4}
+.v143-modal[hidden]{display:none!important}.v143-modal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:12px;background:#010610e9}
+.v143-viewer,.v143-editor-dialog{width:min(960px,100%);max-height:96dvh;overflow:auto;border:1px solid #5c6c7d;border-radius:16px;background:#0c1c30;padding:16px}
+.v143-modal-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:12px}.v143-modal-head strong,.v143-modal-head h2{color:#e7c78b;margin:0;font-size:18px}.v143-modal-head button{padding:9px 13px}
+.v143-viewer-body{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:6px}.v143-viewer-body img{display:block;width:100%;height:min(76dvh,740px);object-fit:contain;min-width:0;background:#061422}.v143-viewer-body .v143-arrow{width:40px}
+.v143-view-count{text-align:center;color:#c5d5e5;font-size:12px;margin-top:10px}
+.v143-editor-dialog{max-width:700px}.v143-editor-dialog form{display:grid;gap:12px;margin:15px 0;padding:16px;border:1px solid #405876;border-radius:12px}.v143-editor-dialog label{display:grid;gap:7px;font-size:12px;color:#c5d4e3}.v143-editor-dialog input:not([type=checkbox]),.v143-editor-dialog select{min-height:39px;padding:9px;color:#fff;background:#0a1626;border:1px solid #4b607a;border-radius:8px;min-width:0}.v143-editor-dialog input[type=file]{width:100%}
+.v143-editor-dialog .v143-check{display:flex;align-items:center;gap:8px}.v143-helper{font-size:11px;color:#a3bacb;margin:0}.v143-edit-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #334e69;padding:12px 4px}.v143-edit-row strong{font-size:13px}.v143-edit-row small{display:block;color:#9db6c9;margin-top:4px}.v143-edit-row button{border-color:#805051;color:#f5c6c6}
+.v143-rights{border-top:1px solid #405876;margin-top:18px;padding-top:12px}.v143-rights[hidden]{display:none}.v143-rights summary{cursor:pointer}.v143-rights-actions{display:flex;gap:8px;margin-top:10px}
+.v143-manage-open{margin:12px 0}.v143-manage-open[hidden]{display:none}.v143-news-info .v143-tag{font-size:10px;color:#eacb92;letter-spacing:.05em}
+@media(max-width:600px){body{background-attachment:scroll!important;background-position:center top!important}#v140Portal .v143-news-home{padding:11px}.v143-stage{grid-template-columns:30px minmax(0,1fr) 30px;gap:4px}.v143-arrow,.v143-viewer-body .v143-arrow{width:30px;height:45px;font-size:24px;padding:0}.v143-cover img{height:min(60vh,470px)}.v143-news-info h3{font-size:13px}.v143-news-info small{font-size:10px}.v143-viewer-body{grid-template-columns:29px minmax(0,1fr) 29px}.v140-nav button{padding:10px 2px;font-size:10px;letter-spacing:-.5px}.v140-nav button span{display:none}.v143-archive-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v143-tile img{height:195px}.v143-tile div{padding:9px}.v143-editor-dialog{padding:10px}}
+</style></head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>OFFICIAL LEAGUE PORTAL</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>참가자 설정 · 운영 도구</span></div>
 <button type="button" class="v141-admin-entry" id="v141AdminEntry" hidden>운영 관리 <span aria-hidden="true">↗</span></button>
@@ -1190,6 +1221,7 @@ body.v140-ready .v128-season-selector{display:none!important}
  <button type="button" data-v140-main="league"><span aria-hidden="true">🏆</span> 리그</button>
  <button type="button" data-v140-main="friendly"><span aria-hidden="true">⚔</span> 친선전</button>
  <button type="button" data-v140-main="players"><span aria-hidden="true">♙</span> 선수</button>
+ <button type="button" data-v140-main="hall"><span aria-hidden="true">🏛</span> 명예의 전당</button>
 </nav>
 <div class="v140-sub" id="v140Sub" hidden aria-label="현재 메뉴 세부 화면"></div>
 <div id="v14034SeasonHub" class="v14034-season-hub" hidden aria-label="공식 리그 시즌 선택">
@@ -1210,12 +1242,31 @@ body.v140-ready .v128-season-selector{display:none!important}
 </section>
 <section id="v140Portal" class="section v140-custom active" aria-label="DIT FC 통합 홈">
  
+ <section id="v143NewsHome" class="v143-news-home" aria-label="DIT FC 카드뉴스">
+  <div class="v143-heading"><div><span class="v140-kicker">LATEST MEDIA</span><h2>뉴스</h2></div><button type="button" class="v143-textbtn" id="v143NewsAll">전체 뉴스 보기 ›</button></div>
+  <div class="v143-stage" id="v143NewsStage"><button class="v143-arrow" type="button" id="v143Prev" aria-label="이전 뉴스">‹</button><div class="v143-slide" id="v143Slide"><div class="v143-empty">등록된 카드뉴스가 없습니다.</div></div><button class="v143-arrow" type="button" id="v143Next" aria-label="다음 뉴스">›</button></div>
+  <div class="v143-dots" id="v143Dots" aria-label="뉴스 페이지 표시"></div>
+ </section>
  <div class="v140-heading"><h3>공식 리그</h3><small>SEASON STATUS</small></div>
  <div class="v140-card v140-status"><div><div class="v140-kicker">OFFICIAL SEASONS</div><strong>SEASON 03 · COMPLETED</strong><p id="v142HomeSeasonStatus">시즌 3 종료 · 시즌 4 상태 확인 중</p></div><div><span class="v140-pill">시즌 3 종료</span><button type="button" class="v140-action alt" data-v140-route="league:home">시즌 기록 보기</button></div></div>
  <div class="v140-heading"><h3>최근 친선전</h3><small>FRIENDLY MATCH</small></div>
  <div class="v140-cards"><div class="v140-card"><strong>최근 경기 결과</strong><p class="v140-msg" id="v140RecentStatus">기록을 불러오는 중…</p><div id="v140Recent" class="v140-match-list"></div><button type="button" class="v140-action alt" data-v140-route="friendly:fixtures">매치센터 열기</button></div><div class="v140-card"><strong>라이벌 분석</strong><p>직접 맞대결 · 최근 흐름 · 공격·수비 지표</p><button type="button" class="v140-action" data-v140-route="friendly:rivalry">RIVALRY CENTER</button><div class="v140-note" style="margin-top:16px">친선전 기록은 공식 리그 순위 및 수상 기록에 반영되지 않습니다.</div></div></div>
  <div class="v140-card v142-directory-link"><div><span class="v140-kicker">PLAYERS</span><h3>선수 프로필</h3><p>전체 참가자와 개인 기록 확인</p></div><button type="button" class="v140-action" data-v140-route="players">전체 선수 프로필 보기</button></div>
 </section>
+<section id="v143NewsArchive" class="section v140-custom" aria-label="뉴스 전체 보기">
+ <div class="v143-heading"><div><span class="v140-kicker">MEDIA ARCHIVE</span><h2>전체 뉴스</h2></div><button type="button" class="v140-action alt" id="v143ArchiveBack">홈으로</button></div>
+ <div class="v143-archive-grid" id="v143ArchiveGrid"></div>
+</section>
+<div id="v143Viewer" class="v143-modal" hidden role="dialog" aria-modal="true" aria-label="카드뉴스 확대">
+ <div class="v143-viewer"><div class="v143-modal-head"><strong id="v143ViewTitle">카드뉴스</strong><button type="button" id="v143ViewClose">닫기 ✕</button></div><div class="v143-viewer-body"><button type="button" class="v143-arrow" id="v143ViewPrev" aria-label="이전 페이지">‹</button><img id="v143ViewImage" alt="카드뉴스 확대 이미지"><button type="button" class="v143-arrow" id="v143ViewNext" aria-label="다음 페이지">›</button></div><div id="v143ViewCounter" class="v143-view-count"></div></div>
+</div>
+<div id="v143Editor" class="v143-modal" hidden role="dialog" aria-modal="true" aria-label="뉴스 관리">
+ <div class="v143-editor-dialog"><div class="v143-modal-head"><h2>뉴스 관리</h2><button type="button" id="v143EditorClose">닫기 ✕</button></div>
+  <form id="v143EditorForm"><label>제목 <input required id="v143Title" maxlength="100" placeholder="예: 시즌 4 소식"></label><label>카테고리 <select id="v143Category"><option>리그</option><option>친선전</option><option>선수</option><option>공지</option><option>기타</option></select></label><label>카드뉴스 이미지 <input id="v143Files" type="file" accept="image/png,image/jpeg,image/webp" multiple required></label><p class="v143-helper">한 게시물당 최대 8장 · 각 파일 4MB 이하. 이미지가 클 경우 별도 압축 후 업로드해 주세요.</p><label class="v143-check"><input type="checkbox" id="v143Pinned"> 홈 상단 고정</label><button type="submit" class="v140-action" id="v143Publish">게시하기</button><p id="v143EditorStatus" aria-live="polite"></p></form>
+  <h3>게시물 관리</h3><div id="v143ManageList"></div>
+  <details class="v143-rights"><summary>뉴스 에디터 권한 관리 (관리자)</summary><label>Supabase Auth 사용자 UID<input id="v143EditorUID" placeholder="사용자 UUID"></label><div class="v143-rights-actions"><button type="button" id="v143Grant">에디터 지정</button><button type="button" id="v143Revoke">권한 회수</button></div><p id="v143RightsStatus" aria-live="polite"></p></details>
+ </div>
+</div>
 <section id="v140People" class="section v140-custom" aria-label="통합 참가자 찾기"><div class="v141-simple-header"><span class="v140-kicker">PLAYER DIRECTORY</span><h2>선수</h2><p>참가자 프로필 · 구단 · 친선전 · 공식 리그</p></div><div class="v140-heading"><h3>참가자 목록</h3><small>프로필 검색</small></div><div class="v140-card"><label for="v140Search" class="v140-msg">이름 검색</label><input id="v140Search" class="field" autocomplete="off" placeholder="참가자 이름 검색" style="width:100%;margin:8px 0 15px"><div id="v140Roster" class="v140-roster"></div></div></section>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button><button class="tab" data-tab="halloffame">🏛 명예의 전당</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON HUB · MATCH CENTER</span></div>
 <section id="v1271ArchivedView" class="section v1271-archive-view" aria-label="보관 시즌 호환 영역 (미사용)">
@@ -2680,7 +2731,7 @@ window.addEventListener('focus',()=>{if(cloudClient&&cloudReady)clubRefresh();})
   if(c.complete)selectHome(active);
   updateProfile();
  }
- el('v125ToHall').onclick=()=>activate('halloffame');
+ el('v125ToHall').onclick=()=>window.v143Navigate?window.v143Navigate('hall'):activate('halloffame');
  el('v125ExpandHome').onclick=()=>showPoster(active);
  el('v125Prev').onclick=()=>selectHome(active-1);
  el('v125Next').onclick=()=>selectHome(active+1);
@@ -4562,7 +4613,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  const root=document.body,nav=document.getElementById('v140Nav'),sub=document.getElementById('v140Sub'),pick=document.getElementById('v1271SeasonPicker');
  const legacyNav=document.querySelector('nav.tabs');
  if(!nav||!sub||!pick||!legacyNav)return;
- const subsections={league:[['home','시즌 3 홈'],['standings','최종 순위'],['fixtures','공식 경기'],['tournament','컵대회'],['halloffame','명예의 전당']],friendly:[['home','친선 홈'],['fixtures','경기'],['rivalry','전력 분석'],['standings','친선 통계']]};
+ const subsections={league:[['home','시즌 3 홈'],['standings','최종 순위'],['fixtures','공식 경기'],['tournament','컵대회']],friendly:[['home','친선 홈'],['fixtures','경기'],['rivalry','전력 분석'],['standings','친선 통계']]};
  let current='home',leagueTab='home',friendlyTab='home',lastFriendlyTime=0;
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const selectLegacy=id=>{const btn=legacyNav.querySelector(`[data-tab="${id}"]`);if(btn)btn.click();else if(typeof window.activate==='function')window.activate(id);};
@@ -4585,10 +4636,12 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    }
  }
  function navigate(section,tab){
-   if(!['home','league','friendly','players'].includes(section))section='home';
+   if(!['home','league','friendly','players','hall','news'].includes(section))section='home';
    current=section;
    if(section==='home')custom('v140Portal');
    else if(section==='players'){custom('v140People');roster();}
+   else if(section==='hall'){if(pick.value!=='live')setSeason('live');selectLegacy('halloffame');}
+   else if(section==='news')custom('v143NewsArchive');
    else if(section==='league'){
      leagueTab=tab||leagueTab;
      // A preparation page, not a Season 4 league-state or fixture view.
@@ -4687,6 +4740,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    new MutationObserver(update).observe(originalAdmin,{attributes:true,attributeFilter:['hidden']});
    adminShortcut.addEventListener('click',()=>{if(!originalAdmin.hidden)originalAdmin.click();});
  }
+ window.v143Navigate=navigate;
  nav.addEventListener('click',e=>{const b=e.target.closest('[data-v140-main]');if(b)navigate(b.dataset.v140Main);});
  sub.addEventListener('click',e=>{const b=e.target.closest('[data-v140-child]');if(b)navigate(current,b.dataset.v140Child);});
  document.addEventListener('click',e=>{
@@ -4857,6 +4911,72 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    }
  }
  window.v142LoadCareer=show;
+})();
+</script>
+<script>
+(function v143MediaCenter(){
+'use strict';
+const $=id=>document.getElementById(id);const client=()=>typeof cloudClient!=='undefined'?cloudClient:null;
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=s=>{try{return new Date(s).toLocaleDateString('ko-KR')}catch{return ''}};
+let articles=[],idx=0,viewer=null,page=0,editor=false,admin=false,busy=false;
+const imgs=item=>Array.isArray(item?.media_news_images)?item.media_news_images.slice().sort((a,b)=>a.sort_order-b.sort_order):[];
+const imgURL=path=>{const db=client();return db?.storage.from('dit-news-media').getPublicUrl(path).data.publicUrl||''};
+async function fetchNews(){
+ const db=client();if(!db){$('v143Slide').innerHTML='<div class="v143-empty">Supabase 연결 설정을 확인해 주세요.</div>';return;}
+ const {data,error}=await db.from('media_news_posts').select('id,title,category,is_pinned,status,created_at,media_news_images(id,path,sort_order)').eq('status','published').order('created_at',{ascending:false}).limit(100);
+ if(error){console.warn('뉴스 조회 실패',error);$('v143Slide').textContent='뉴스를 불러오지 못했습니다. SQL 및 공개 정책을 확인해 주세요.';return;}
+ articles=(data||[]).filter(a=>imgs(a).length>0).sort((a,b)=>Number(b.is_pinned)-Number(a.is_pinned)||String(b.created_at).localeCompare(String(a.created_at)));
+ idx=Math.min(idx,Math.max(0,articles.length-1));renderHome();renderArchive();
+}
+function renderHome(){
+ const root=$('v143Slide'),dots=$('v143Dots');root.replaceChildren();dots.replaceChildren();
+ if(!articles.length){root.innerHTML='<div class="v143-empty">등록된 카드뉴스가 없습니다.</div>';}
+ else{const a=articles[idx],image=imgs(a)[0];
+  const card=document.createElement('article');card.className='v143-news-card';
+  const cover=document.createElement('button');cover.type='button';cover.className='v143-cover';cover.setAttribute('aria-label',a.title+' 확대 보기');cover.onclick=()=>openViewer(a.id);
+  const im=document.createElement('img');im.alt=a.title+' 카드뉴스 첫 이미지';im.loading='lazy';im.src=imgURL(image.path);cover.append(im);
+  const info=document.createElement('div');info.className='v143-news-info';
+  const t=document.createElement('div');t.innerHTML='<span class="v143-tag">'+safe(a.category)+'</span><h3>'+safe(a.title)+'</h3><small>'+safe(today(a.created_at))+' · '+imgs(a).length+'장</small>';info.append(t);card.append(cover,info);root.append(card);
+  for(let k=0;k<Math.min(articles.length,20);k++){const b=document.createElement('button');b.className='v143-dot';b.type='button';b.setAttribute('aria-label',(k+1)+'번째 뉴스');b.setAttribute('aria-current',String(k===idx));b.onclick=()=>{idx=k;renderHome()};dots.append(b)}
+ }
+ $('v143Prev').disabled=articles.length<2;$('v143Next').disabled=articles.length<2;
+}
+function renderArchive(){const grid=$('v143ArchiveGrid');grid.replaceChildren();if(!articles.length){grid.innerHTML='<div class="v143-empty">등록된 카드뉴스가 없습니다.</div>';return}
+ for(const a of articles){const b=document.createElement('button');b.type='button';b.className='v143-tile';const im=document.createElement('img');im.src=imgURL(imgs(a)[0].path);im.loading='lazy';im.alt=a.title;const caption=document.createElement('div');caption.innerHTML='<small>'+safe(a.category)+' · '+safe(today(a.created_at))+'</small><strong>'+safe(a.title)+'</strong><small>'+imgs(a).length+'장</small>';b.append(im,caption);b.onclick=()=>openViewer(a.id);grid.append(b)}
+}
+function openViewer(id){viewer=articles.find(a=>a.id===id);if(!viewer)return;page=0;renderViewer();$('v143Viewer').hidden=false;$('v143ViewClose').focus()}
+function renderViewer(){if(!viewer)return;const list=imgs(viewer);if(!list.length)return;page=(page+list.length)%list.length;$('v143ViewTitle').textContent=viewer.title;$('v143ViewImage').src=imgURL(list[page].path);$('v143ViewImage').alt=viewer.title+' '+(page+1)+'번째 페이지';$('v143ViewCounter').textContent=(page+1)+' / '+list.length;$('v143ViewPrev').disabled=list.length<2;$('v143ViewNext').disabled=list.length<2;}
+function closeViewer(){$('v143Viewer').hidden=true;viewer=null;$('v143ViewImage').removeAttribute('src')}
+async function permission(){const db=client();if(!db)return;const {data:{session}}=await db.auth.getSession();if(!session){editor=false;admin=false;return}
+ // Authoritative grant check is always repeated by Edge Function on writes.
+ const {data,error}=await db.functions.invoke('dit-news-center',{body:{action:'permissions'}});
+ editor=!error&&!!data?.can_edit;admin=!error&&!!data?.is_admin;
+}
+function showEdit(){const open=$('v143NewsManage');if(open)open.hidden=!editor;const rights=$('v143Editor').querySelector('.v143-rights');rights.hidden=!admin;}
+async function api(action,payload={}){const db=client();if(!db)throw Error('Supabase 연결이 필요합니다.');const {data,error}=await db.functions.invoke('dit-news-center',{body:{action,...payload}});if(error)throw error;if(!data?.ok)throw Error(data?.error||'작업 실패');return data;}
+function manageList(){const box=$('v143ManageList');box.replaceChildren();if(!articles.length){box.textContent='등록된 뉴스 없음';return}for(const a of articles){const row=document.createElement('div');row.className='v143-edit-row';const label=document.createElement('div');const title=document.createElement('strong');title.textContent=a.title;const sub=document.createElement('small');sub.textContent=today(a.created_at)+' · '+imgs(a).length+'장';label.append(title,sub);const b=document.createElement('button');b.textContent='삭제';b.type='button';b.onclick=async()=>{if(busy||!confirm('이 카드뉴스를 삭제할까요? 삭제 후 복원할 수 없습니다.'))return;busy=true;b.disabled=true;try{await api('delete',{id:a.id});await fetchNews();manageList()}catch(e){alert('삭제 실패: '+e.message)}finally{busy=false;b.disabled=false}};row.append(label,b);box.append(row)}}
+async function publish(e){e.preventDefault();if(busy)return;const files=[...$('v143Files').files],msg=$('v143EditorStatus');if(!files.length||files.length>8){msg.textContent='이미지 1~8장을 선택해 주세요.';return}if(files.some(f=>!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>4*1024*1024)){msg.textContent='JPG·PNG·WebP 이미지만 가능하며 각각 4MB 이하여야 합니다.';return}
+ busy=true;$('v143Publish').disabled=true;let id=null;try{
+  msg.textContent='게시물 생성 중…';const a=await api('create',{title:$('v143Title').value.trim(),category:$('v143Category').value,pinned:$('v143Pinned').checked});id=a.id;
+  for(let i=0;i<files.length;i++){msg.textContent='이미지 업로드 '+(i+1)+' / '+files.length;const f=files[i];const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(f)});await api('upload',{id,image_data:data,order:i});}
+  await api('publish',{id});msg.textContent='게시 완료';$('v143EditorForm').reset();await fetchNews();manageList();
+ }catch(e){if(id){try{await api('delete',{id})}catch(cleanup){console.warn('게시 실패 시 정리 실패',cleanup)}}msg.textContent='등록 실패: '+e.message+' · 다시 시도해 주세요.'}finally{busy=false;$('v143Publish').disabled=false}
+}
+function key(e){if(e.key==='Escape'){if(!$('v143Viewer').hidden)closeViewer();else if(!$('v143Editor').hidden)$('v143Editor').hidden=true;return}if(!$('v143Viewer').hidden){if(e.key==='ArrowLeft'){page--;renderViewer()}if(e.key==='ArrowRight'){page++;renderViewer()}}}
+$('v143Prev').onclick=()=>{idx=(idx+articles.length-1)%articles.length;renderHome()};$('v143Next').onclick=()=>{idx=(idx+1)%articles.length;renderHome()};
+$('v143NewsAll').onclick=()=>window.v143Navigate?.('news');$('v143ArchiveBack').onclick=()=>window.v143Navigate?.('home');
+$('v143ViewClose').onclick=closeViewer;$('v143ViewPrev').onclick=()=>{page--;renderViewer()};$('v143ViewNext').onclick=()=>{page++;renderViewer()};$('v143Viewer').addEventListener('click',e=>{if(e.target===$('v143Viewer'))closeViewer()});
+$('v143EditorClose').onclick=()=>{$('v143Editor').hidden=true};$('v143EditorForm').addEventListener('submit',publish);
+$('v143Editor').addEventListener('click',e=>{if(e.target===$('v143Editor'))$('v143Editor').hidden=true});
+$('v143Grant').onclick=async()=>{const uid=$('v143EditorUID').value.trim();if(!uid)return;try{await api('grant',{user_id:uid});$('v143RightsStatus').textContent='권한 부여 완료'}catch(e){$('v143RightsStatus').textContent=e.message}};
+$('v143Revoke').onclick=async()=>{const uid=$('v143EditorUID').value.trim();if(!uid)return;try{await api('revoke',{user_id:uid});$('v143RightsStatus').textContent='권한 회수 완료'}catch(e){$('v143RightsStatus').textContent=e.message}};
+function openEditor(){if(!editor)return;$('v143Editor').hidden=false;manageList();showEdit()}
+const entry=document.createElement('button');entry.type='button';entry.className='v143-textbtn v143-manage-open';entry.id='v143NewsManage';entry.textContent='뉴스 관리 · 이미지 업로드';entry.hidden=true;entry.onclick=openEditor;$('v143NewsHome').querySelector('.v143-heading').append(entry);
+document.addEventListener('keydown',key);
+// Re-evaluate editor privileges on auth transitions. Public news never requires login.
+if(client()){client().auth.onAuthStateChange(()=>{setTimeout(async()=>{await permission();showEdit()},100)});}
+window.v143ReloadNews=fetchNews;fetchNews();permission().then(showEdit);
 })();
 </script>
 </body></html>
