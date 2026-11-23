@@ -1499,11 +1499,13 @@ function renderProfile(name){
     <div class="v6-profile-block"><h3>🗓 잔여 경기 · 아직 만나지 않은 상대</h3><div class="v114-fixtures">${remainingMarkup}</div><p class="v6-hint">상대를 선택하면 해당 미완료 경기로 이동합니다. 경기 점수가 등록되면 목록에서 자동 제외됩니다.</p></div>`}
     ${signatureProfileHTML(name)}
     <div class="v6-profile-block v1294-panel" id="v1294Squad"><h3>⚽ FC 온라인 최근 스쿼드</h3><p class="note">연동된 최근 경기 선수단을 확인 중…</p></div>
+    <div class="v6-profile-block v1305-profile" id="v1305ProfileRivalry"><h3>⚔️ 프리시즌 라이벌 분석</h3><p class="note">친선전 상성 데이터를 불러오는 중…</p></div>
     <div class="v6-profile-block"><h3>${state.matches.every(done)?'시즌 마지막 5경기':'최근 5경기'} · FORM</h3><div class="v6-form">${form.length?form.map(x=>`<span class="${x}">${x}</span>`).join(''):'<span style="width:auto;color:#aabdd2">경기 기록 없음</span>'}</div><p class="v6-hint">W 승 · D 무 · L 패 / 최근 입력된 결과 순</p></div>
     <div class="v6-profile-block"><h3>시즌 3 컵대회 경기 기록</h3><div class="v6-history">${cups.join('')||'<p class="note">아직 기록된 컵 대회 경기가 없습니다.</p>'}</div></div>
     <div class="v6-profile-block"><h3>시즌 3 정규리그 경기 기록</h3><div class="v6-history">${history}</div></div>`;
   document.getElementById('profileOverlay').style.display='flex';
   window.v1294LoadProfile?.(name);
+  window.v1305ShowProfile?.(name);
 }
 function v118RenderRoster(){
  const target=document.getElementById('v118Roster');if(!target)return;
@@ -3888,6 +3890,71 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `${n<5?'<p class="v1302-note" style="color:#f2d395">표본이 5경기 미만이므로 상성 해석에 주의가 필요합니다.</p>':''}`+
      `<p class="v1302-note">상대별 최근 30경기 · 공식 리그 기록 제외 · 점유율/슈팅은 제공된 경기만 평균 계산</p></section>`;
  }
+ // V13.0.5: compact comparison cards based ONLY on verified preseason-friendly rows.
+ function v1305ProfileData(name,matches){
+   const all=matches.filter(m=>m.player_a===name||m.player_b===name);
+   const flow=all.slice(0,5).map(m=>{const own=m.player_a===name?num(m.score_a):num(m.score_b),opp=m.player_a===name?num(m.score_b):num(m.score_a);return own>opp?'W':own<opp?'L':'D'});
+   const rivals=new Map();
+   for(const m of all){
+     const isA=m.player_a===name,opp=isA?m.player_b:m.player_a,own=num(isA?m.score_a:m.score_b),against=num(isA?m.score_b:m.score_a);
+     if(!rivals.has(opp))rivals.set(opp,{name:opp,w:0,d:0,l:0,n:0,goals:0,against:0});
+     const r=rivals.get(opp);r.n++;r.goals+=own;r.against+=against;
+     if(own>against)r.w++;else if(own<against)r.l++;else r.d++;
+   }
+   return {flow,all,rivals:[...rivals.values()].sort((a,b)=>b.n-a.n||a.name.localeCompare(b.name,'ko'))};
+ }
+ function v1305Form(flow){return flow.length?`<div class="v1305-form" aria-label="최근 경기 ${flow.join(', ')}">${flow.map(x=>`<span class="${x}">${x}</span>`).join('')}</div>`:'<p class="v1305-empty">아직 친선경기 기록이 없습니다.</p>';}
+ function v1305Rivals(name,matches,limit=4){
+   const data=v1305ProfileData(name,matches);
+   const rows=data.rivals.slice(0,limit).map(r=>`<div class="v1305-rival-row"><span>${safe(r.name)} <small class="v1305-sub">· ${r.n}경기</small></span><b>${r.w}승 ${r.d}무 ${r.l}패</b><button type="button" class="v1305-go" data-v1305-a="${safe(name)}" data-v1305-b="${safe(r.name)}" aria-label="${safe(name)} 와 ${safe(r.name)} 상대 전적 보기">상성 보기</button></div>`).join('');
+   return rows||'<p class="v1305-empty">아직 맞대결 기록이 없습니다. 친선경기를 진행하면 이곳에 라이벌이 표시돼요.</p>';
+ }
+ function v1305PlayerCard(name,matches){
+   const data=v1305ProfileData(name,matches);
+   return `<article class="v1305-player-card"><div class="v1305-topline"><h3>${safe(name)}</h3><small class="v1305-sub">최근 경기 흐름</small></div>${v1305Form(data.flow)}<div class="v1305-sub">자주 만난 라이벌 · 최근 30경기 기준</div>${v1305Rivals(name,matches,3)}</article>`;
+ }
+ function v1305Players(matches){
+   const allNames=[...new Set(matches.flatMap(m=>[m.player_a,m.player_b]))].sort((a,b)=>a.localeCompare(b,'ko'));
+   return header('플레이어 라이벌 분석','참가자를 확인하고 상대 전적을 바로 비교해 보세요.')+
+    `<div class="v1305-player-grid">${allNames.length?allNames.map(n=>v1305PlayerCard(n,matches)).join(''):'<div class="v12910-card">참가자 간 경기 기록이 쌓이면 라이벌 분석을 볼 수 있어요.</div>'}</div>`;
+ }
+ // Season 3 profile is read-only; this is an independent FRIENDLY section below squad.
+ let v1305Cache=null,v1305CacheTime=0,v1305LoadPromise=null;
+ async function v1305Read(){
+   if(loaded)return used();
+   if(v1305Cache&&Date.now()-v1305CacheTime<60000)return v1305Cache;
+   if(v1305LoadPromise)return v1305LoadPromise;
+   if(typeof cloudClient==='undefined'||!cloudClient)throw Error('Supabase 연결이 없습니다.');
+   v1305LoadPromise=(async()=>{
+     const result=[],page=500;
+     for(let offset=0;offset<10000;offset+=page){
+       const {data,error}=await cloudClient.from('league_preseason_matches_v1298')
+        .select('match_id,match_date,player_a,player_b,score_a,score_b,excluded_official')
+        .order('match_date',{ascending:false,nullsFirst:false}).order('match_id',{ascending:false}).range(offset,offset+page-1);
+       if(error)throw error;result.push(...(data||[]));if((data||[]).length<page)break;
+       if(offset+page>=10000)throw Error('친선 데이터 조회 한도를 초과했습니다.');
+     }
+     const perPair=new Map();const trimmed=result.filter(m=>{
+       if(m.excluded_official||!m.player_a||!m.player_b||!m.match_id||!Number.isInteger(Number(m.score_a))||!Number.isInteger(Number(m.score_b)))return false;
+       const key=[m.player_a,m.player_b].sort().join('\u0000');const c=perPair.get(key)||0;
+       if(c>=30)return false;perPair.set(key,c+1);return true;
+     });
+     v1305Cache=trimmed;v1305CacheTime=Date.now();return trimmed;
+   })();
+   try{return await v1305LoadPromise;}finally{v1305LoadPromise=null;}
+ }
+ window.v1305ShowProfile=async name=>{
+   const element=$('v1305ProfileRivalry');if(!element)return;
+   element.innerHTML='<div class="v1305-heading"><h3>⚔️ 프리시즌 라이벌 분석</h3></div><p class="v1305-sub">친선전 기록을 불러오는 중…</p>';
+   try{
+     const matches=await v1305Read();
+     if($('profileName')?.textContent!==name||!element.isConnected)return;
+     const data=v1305ProfileData(name,matches);
+     element.innerHTML='<div class="v1305-heading"><h3>⚔️ 프리시즌 라이벌 분석</h3><span class="v1305-sub">공식 시즌 3 전적과 별도</span></div>'+
+      '<div class="v1305-sub">최근 5경기 결과</div>'+v1305Form(data.flow)+
+      '<div class="v1305-sub">주요 라이벌 · 상대별 최근 30경기</div>'+v1305Rivals(name,matches,4);
+   }catch(err){if($('profileName')?.textContent===name&&element.isConnected)element.innerHTML='<h3>⚔️ 프리시즌 라이벌 분석</h3><p class="v1305-empty">친선 기록을 불러오지 못했습니다. 프리시즌 경기 탭에서 다시 확인해 주세요.</p>';}
+ };
  function matchCenter(matches){const people=allCompetitors(),self=typeof v115Member!=='undefined'?v115Member?.player_name:null;
    const options=(selected)=>'<option value="">전체 참가자</option>'+people.map(name=>`<option value="${safe(name)}" ${selected===name?'selected':''}>${safe(name)}</option>`).join('');
    const visible=filterMatches(matches);
@@ -3946,7 +4013,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    if(tab==='standings')return header('프리시즌 성적')+`<div class="v12910-card" style="margin-top:15px"><h3>참가자별 전적</h3><p>경기 수가 서로 달라 승률 기준으로 표시합니다. 시즌 4 공식 순위와 무관합니다.</p>${standings(teamRows)}</div>`+
      `<div class="v12910-two" style="margin-top:14px"><div class="v12910-card"><h3>득점 TOP 10</h3>${leaderTable(leaders(playerRows,'goals',10),'득점')}</div><div class="v12910-card"><h3>도움 TOP 10</h3>${leaderTable(leaders(playerRows,'assists',10),'도움')}</div><div class="v12910-card"><h3>평균 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'avg',10,p=>p.ratingGames>=3),'평균 평점')}</div><div class="v12910-card"><h3>경기 최고 평점 TOP 10</h3>${leaderTable(leaders(playerRows,'mvp',10),'MVP')}</div></div>`;
    if(tab==='fixtures')return header('MATCH CENTER')+matchCenter(matches);
-   if(tab==='players')return header('프리시즌 참가자')+`<div class="v12910-two" style="margin-top:14px">${teamRows.length?teamRows.map(t=>`<div class="v12910-card"><h3>${safe(t.name)}</h3><div class="v12910-grid">${metric('경기',t.played)}${metric('승·무·패',t.w+'·'+t.d+'·'+t.l)}${metric('득점',t.gf)}</div><p>득실차 ${(t.gf-t.ga)>0?'+':''}${t.gf-t.ga} · 승률 ${Math.round(t.rate*100)}%</p></div>`).join(''):'<div class="v12910-card">등록된 참가자가 없습니다.</div>'}</div>`;
+   if(tab==='players')return v1305Players(matches);
    if(tab==='tournament')return header('프리시즌','컵대회는 프리시즌에 운영하지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>정규 시즌 컵대회와 별도</h3><p>챔피언스리그·유로파리그·슈퍼컵 기록은 시즌 3 또는 향후 공식 시즌에서 확인해 주세요.</p></div>';
    if(tab==='halloffame')return header('프리시즌','공식 우승 기록은 생성되지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>명예의 전당</h3><p>프리시즌 기록은 공식 명예의 전당에 반영하지 않습니다.</p></div>';
    return header('프리시즌 안내')+'<div class="v12910-card" style="margin-top:15px"><p>참가자끼리 진행한 스페셜 매치를 자동 수집합니다. 상대별 최근 30경기가 통계에 반영됩니다.</p></div>';
@@ -4002,6 +4069,14 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
        pickTab('fixtures');const node=[...document.querySelectorAll('#fixtures .v130-match')].find(d=>d.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===match.dataset.v1303Match);
        if(node){node.open=true;node.scrollIntoView({block:'center',behavior:'smooth'});}return;
      }
+   }
+   const profileRival=e.target.closest('[data-v1305-a][data-v1305-b]');if(profileRival){
+     const a=profileRival.dataset.v1305A,b=profileRival.dataset.v1305B;
+     // If opened from the archived Season 3 profile, switch to preseason without touching saved season records.
+     const profile=$('profileOverlay');if(profile)profile.style.display='none';
+     v130Participant=a;v130Opponent=b;v130Scope='all';
+     if(!pre()){pick.value='preseason';pick.dispatchEvent(new Event('change',{bubbles:true}));}
+     pickTab('fixtures');return;
    }
    const rival=e.target.closest('[data-v1302-a]');if(rival&&pre()){v130Participant=rival.dataset.v1302A;v130Opponent=rival.dataset.v1302B;v130Scope='all';render();return;}
    const scope=e.target.closest('[data-v130-scope]');if(scope&&pre()){v130Scope=scope.dataset.v130Scope;render();return;}
