@@ -1099,9 +1099,71 @@ body.v140-ready .v14034-season-hub[hidden]{display:none!important}
 /* Legacy submenus are not duplicated in the main navigation; retain code and administration flows. */
 body.v140-ready .v128-season-selector{display:none!important}
 @media(max-width:620px){.v14034-season-heading{align-items:flex-start}.v14034-season-switch{gap:7px}.v14034-season-switch button{padding:12px;min-height:112px}.v14034-prep-grid{grid-template-columns:1fr}.v14034-prep-head{padding:18px}.v14034-prep-head h2{font-size:25px}}
-</style></head><body>
+</style>
+<style>
+/* V14.1 unified polish: restrained visual hierarchy, no schema or API changes */
+.v141-overview{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border:1px solid #47607b;border-radius:16px;padding:21px 24px;margin:0 0 21px;background:linear-gradient(120deg,#142e47,#0b2034)}
+.v141-overview h2,.v141-simple-header h2{margin:6px 0;font-size:clamp(21px,3.4vw,31px);color:#f2f7ff;letter-spacing:-.035em}
+.v141-overview p,.v141-simple-header p{font-size:12px;color:#a9c0d6;margin:4px 0 0}
+.v141-quick{display:flex;flex-wrap:wrap;gap:8px}.v141-quick .v140-action{margin:0;min-height:42px;padding:10px 13px}
+.v141-simple-header{border-bottom:1px solid #31495f;padding:9px 0 17px;margin-bottom:15px}
+.v141-text-link{background:transparent;border:1px solid #435b72;color:#e5d1aa;font-size:11px;padding:8px 11px;border-radius:8px;min-height:36px}
+.v141-player-preview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:13px}
+.v141-profile-tile{display:flex;align-items:center;gap:10px;text-align:left;width:100%;min-width:0;border:1px solid #304d68;background:#0c2438;border-radius:10px;padding:11px 10px;color:#e9f2fc;min-height:59px}
+.v141-profile-tile:hover,.v141-profile-tile:focus-visible{border-color:#d8ba7c;outline-offset:2px}
+.v141-profile-tile .branding-badge{width:38px;height:38px;flex:0 0 auto}
+.v141-profile-tile span.v141-profile-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.v141-profile-tile b{font-size:12px;overflow-wrap:anywhere}.v141-profile-tile small{font-size:10px;color:#a7bdcf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.v140-person{padding:13px;border-radius:11px}.v140-person .v141-roster-meta{display:flex;flex-direction:column;gap:3px;min-width:0}.v140-person .v141-roster-meta strong{font-size:13px}.v140-person .v141-roster-meta small{font-size:10px;color:#a5bbcd;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.v140-person em{flex:0 0 auto}
+.v140-match{width:100%;font-family:inherit;text-align:left;cursor:pointer;min-height:75px;transition:border-color .12s ease}
+.v140-match:hover,.v140-match:focus-visible{border-color:#d1b47b;background:#102c46}
+.v140-match .v1401-home-team{flex-wrap:nowrap}.v140-match .v1401-home-team strong{font-size:12px;line-height:1.3}.v140-match .v1401-home-team small{display:none}
+.v140-match .branding-badge{width:30px;height:30px}
+#v140Portal .v140-status{gap:16px}.v140-heading h3{font-size:15px;letter-spacing:0}
+#v140Portal .v140-card{padding:17px}.v140-card strong{letter-spacing:0}
+/* Consistent icon + player name across season 3, friendlies and rivalry views */
+.v1401-branded,.team-ident{gap:7px;min-width:0;align-items:center}
+.v1401-branded .branding-badge,.team-ident .branding-badge{flex:none}
+#profileOverlay .v1402-tabs{position:sticky;top:-1px;z-index:3;background:#0b1c2b;padding:6px 0;margin-bottom:13px}
+#profileOverlay .v1402-tab{min-height:46px}
+#profileOverlay .v1402-stats{margin-top:11px}
+#profileOverlay .v1402-panel{overflow-wrap:anywhere}
+.v130-match>summary{scroll-margin-top:85px}
+.v130-match-foot{gap:9px;align-items:center;flex-wrap:wrap}
+.v1304-selection{overflow-wrap:anywhere}
+.v1304-side-head b{max-width:100%;overflow-wrap:anywhere}
+.v1304-player:focus-visible{outline:2px solid #fff!important;outline-offset:2px}
+.v141-admin-entry{display:block;width:calc(100% - 20px);margin:8px 10px 12px;text-align:left;border:1px solid #b19562;border-radius:10px;background:#183249;color:#edce94;font-size:12px;font-weight:850;padding:12px}
+.v141-admin-entry[hidden],.v141-admin-overlay[hidden],.v141-quick [hidden]{display:none!important}
+.v141-admin-entry span{float:right}
+.v141-admin-overlay{position:fixed;inset:0;z-index:900;background:#020a15dc;display:flex;align-items:center;justify-content:center;padding:16px}
+.v141-admin-dialog{width:min(710px,100%);max-height:90dvh;overflow:auto;background:linear-gradient(145deg,#11283e,#081a2c);border:1px solid #a18a5c;border-radius:17px;padding:22px;box-shadow:0 20px 70px #000b}
+.v141-admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.v141-admin-head h2{font-size:24px;color:#fff;margin:7px 0 0}
+.v141-admin-close{min-height:42px;background:#19334b;border-color:#3f5b70}
+.v141-admin-help{font-size:12px;color:#b8cbdc;line-height:1.65;margin:13px 0 19px}
+.v141-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v141-admin-grid button{min-height:66px;background:#122e46;border:1px solid #36536c;color:#eef3fa;font-size:12px;text-align:left;border-radius:10px;padding:13px}
+.v141-admin-grid button:hover,.v141-admin-grid button:focus-visible{border-color:#d0b579}
+.v141-admin-grid button small{display:block;font-size:10px;color:#a8bfd3;margin-top:4px;font-weight:500}
+@media(max-width:900px){.v141-player-preview{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+ .v141-overview{padding:15px;margin-bottom:12px}.v141-quick{width:100%}.v141-quick button{flex:1;white-space:nowrap}
+ .v141-player-preview{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:9px}
+ .v141-profile-tile{padding:8px;gap:7px}.v141-profile-tile .branding-badge{width:30px;height:30px}.v141-profile-tile small{font-size:9px}
+ .v140-match{padding:10px 7px;gap:4px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.v140-match b{font-size:clamp(15px,4.7vw,20px)}
+ .v140-match .branding-badge{width:24px;height:24px}.v140-match .v1401-home-team{gap:4px}.v140-match .v1401-home-team strong{font-size:clamp(10px,2.8vw,12px)}
+ .v140-person{gap:7px;padding:10px 8px}.v140-person em{font-size:9px}
+ #profileOverlay .profilebox{width:100%;max-height:96dvh}.v1304-boards{gap:10px}.v1304-field{max-width:100%}
+ .v141-admin-dialog{padding:14px}.v141-admin-grid{grid-template-columns:1fr}.v141-admin-grid button{min-height:56px}
+}
+@media(max-width:390px){.v141-profile-tile b{font-size:11px}.v141-profile-tile .branding-badge{width:26px;height:26px}}
+@media(prefers-reduced-motion:reduce){.v140-match{transition:none!important}}
+</style>
+</head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>OFFICIAL LEAGUE PORTAL</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
-<div class="v12823-menu-top"><strong>계정 및 운영</strong><span>필요한 메뉴만 펼쳐서 사용</span></div>
+<div class="v12823-menu-top"><strong>계정 및 운영</strong><span>참가자 설정 · 운영 도구</span></div>
+<button type="button" class="v141-admin-entry" id="v141AdminEntry" hidden>운영 관리 <span aria-hidden="true">↗</span></button>
 <section class="v12823-menu-block" aria-label="내 계정"><div class="v12823-menu-label">👤 내 계정</div>
 <button class="btn v115-login-btn" id="memberToggle" type="button">참가자 로그인</button><button class="btn v115-login-btn" hidden="" id="v115ChangeOpen" type="button">비밀번호 변경</button><button class="btn" id="adminToggle">관리자 로그인</button>
 </section>
@@ -1115,6 +1177,12 @@ body.v140-ready .v128-season-selector{display:none!important}
 <button class="btn" hidden id="v1290Open" type="button">🔗 넥슨 감독 연동</button><button class="btn" hidden id="v1291Open" type="button">🔎 넥슨 매치 검색</button><button class="btn" hidden="" id="v1272OpenDraft" type="button">🗓 시즌 4 준비</button><button aria-haspopup="dialog" aria-label="시즌 4 준비 상태 확인" class="btn v1274-draft-btn" hidden="" id="v1274DraftCheck" type="button">🗓 시즌 4 준비 현황</button><button aria-haspopup="dialog" class="btn" id="v124OpenSeason" type="button">🗂 기록 백업 · 조회</button>
 </div></details>
 </div></div></div></header>
+<div class="v141-admin-overlay" id="v141AdminOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="v141AdminTitle">
+ <div class="v141-admin-dialog"><div class="v141-admin-head"><div><span class="v140-kicker">OPERATIONS</span><h2 id="v141AdminTitle">운영 관리</h2></div><button type="button" class="v141-admin-close" id="v141AdminClose">닫기 ✕</button></div>
+ <p class="v141-admin-help">기존 관리자 기능을 한곳에서 실행합니다. 접근 권한은 기존 인증과 서버 정책을 따릅니다.</p>
+ <div class="v141-admin-grid" id="v141AdminGrid"></div>
+ </div>
+</div>
 <main class="wrap"><div class="hero"><div class="hero-main"><div class="eyebrow">OFFICIAL LEAGUE PORTAL · MULTI-SEASON</div><h2>DIT FC<br><em>ONLINE</em> LEAGUE</h2><div class="hero-lines"><i></i><i></i><i></i></div><p>리그 순위 · 매치 센터 · 챔피언스리그 · 유로파리그</p><div class="season" style="display:inline-block">2026.10.24 — 11.08 &nbsp; / &nbsp; 참가자 10명</div></div><div class="hero-corner"><span>THE ROAD TO THE TITLE</span><strong>SEASON 03</strong></div></div>
 <div class="v8-spotlight" aria-label="리그 경기 하이라이트"><div class="v8-feature"><div class="v8-feature-top"><span>★ FEATURED MATCH · 최근 완료 경기</span><span class="v8-livetag" id="v8MatchState">RESULT</span></div><div id="v8FeaturedMatch" class="v8-match"><div class="empty">경기 기록을 불러오는 중</div></div><div class="v8-feature-bottom" id="v8MatchCaption">DIT SEASON 03 · MATCH CENTER</div></div><div class="v8-info-grid"><div class="v8-info"><small>LEAGUE LEADER</small><b id="v8LeaderName">—</b><p id="v8LeaderDetail">실시간 순위 반영</p></div><div class="v8-info"><small>GOLDEN BOOT RACE</small><b id="v8GoldenName">—</b><p id="v8GoldenDetail">누적 득점 1위</p></div></div></div><div class="v128-hidden-status" aria-hidden="true"><strong id="v124SeasonToolbarTitle">SEASON 03</strong><small id="v124SeasonToolbarCaption">시즌 3 최종 기록</small></div>
 <nav class="v140-nav" id="v140Nav" aria-label="DIT FC 주요 메뉴">
@@ -1141,14 +1209,14 @@ body.v140-ready .v128-season-selector{display:none!important}
  <p class="v14034-helper">시즌 4의 참가 명단과 대진표는 확정 전까지 공식 리그 기록과 분리됩니다. 이 페이지에서는 데이터를 수정하지 않습니다.</p>
 </section>
 <section id="v140Portal" class="section v140-custom active" aria-label="DIT FC 통합 홈">
- <div class="v140-hero"><span class="v140-kicker">DIT FC ONLINE LEAGUE · OFFICIAL PORTAL</span><h2>DIT FC ONLINE LEAGUE</h2><p>리그 · 친선전 · 전력 분석</p><div class="v140-actions"><button type="button" class="v140-action" data-v140-route="friendly:fixtures">⚽ 최근 친선전 보기</button><button type="button" class="v140-action alt" data-v140-route="friendly:rivalry">⚔ 라이벌 비교</button></div></div>
- <div class="v140-heading"><h3>LEAGUE STATUS</h3><small>공식 시즌 현황</small></div>
+ <div class="v141-overview"><div><span class="v140-kicker">DIT FC ONLINE LEAGUE</span><h2>대시보드</h2><p>최근 경기 · 시즌 현황 · 선수</p></div><div class="v141-quick"><button type="button" class="v140-action" data-v140-route="friendly:fixtures">경기 보기</button><button type="button" class="v140-action alt" data-v140-route="friendly:rivalry">전력 비교</button><button type="button" class="v140-action alt" data-v141-my-profile hidden>내 프로필</button></div></div>
+ <div class="v140-heading"><h3>공식 리그</h3><small>SEASON STATUS</small></div>
  <div class="v140-card v140-status"><div><div class="v140-kicker">SEASON ARCHIVE</div><strong>SEASON 03 · COMPLETED</strong><p>시즌 3 종료 · 시즌 4 준비 중</p></div><div><span class="v140-pill">시즌 3 종료</span><button type="button" class="v140-action alt" data-v140-route="league:home">시즌 기록 보기</button></div></div>
- <div class="v140-heading"><h3>FRIENDLY MATCH</h3><small>최근 참가자 맞대결</small></div>
- <div class="v140-cards"><div class="v140-card"><strong>최근 친선전 결과</strong><p class="v140-msg" id="v140RecentStatus">기록을 불러오는 중…</p><div id="v140Recent" class="v140-match-list"></div><button type="button" class="v140-action alt" data-v140-route="friendly:fixtures">매치센터 열기</button></div><div class="v140-card"><strong>라이벌 전력 분석</strong><p>두 참가자를 선택해 최근 맞대결과 공격·수비 지표를 비교할 수 있습니다.</p><button type="button" class="v140-action" data-v140-route="friendly:rivalry">RIVALRY CENTER</button><div class="v140-note" style="margin-top:16px">친선전 기록은 공식 리그 순위 및 수상 기록에 반영되지 않습니다.</div></div></div>
- <div class="v140-heading"><h3>PLAYER COMMUNITY</h3><small>시즌과 관계없이 만나는 참가자</small></div><div class="v140-card"><strong>선수 목록</strong><p>프로필 · 스쿼드 · 라이벌</p><button type="button" class="v140-action alt" data-v140-route="players">선수 목록 보기</button></div>
+ <div class="v140-heading"><h3>최근 친선전</h3><small>FRIENDLY MATCH</small></div>
+ <div class="v140-cards"><div class="v140-card"><strong>최근 경기 결과</strong><p class="v140-msg" id="v140RecentStatus">기록을 불러오는 중…</p><div id="v140Recent" class="v140-match-list"></div><button type="button" class="v140-action alt" data-v140-route="friendly:fixtures">매치센터 열기</button></div><div class="v140-card"><strong>라이벌 분석</strong><p>직접 맞대결 · 최근 흐름 · 공격·수비 지표</p><button type="button" class="v140-action" data-v140-route="friendly:rivalry">RIVALRY CENTER</button><div class="v140-note" style="margin-top:16px">친선전 기록은 공식 리그 순위 및 수상 기록에 반영되지 않습니다.</div></div></div>
+ <div class="v140-heading"><h3>선수</h3><button type="button" class="v141-text-link" data-v140-route="players">전체 선수 보기</button></div><div class="v140-card v141-player-preview" id="v141PlayerPreview" aria-label="참가자 바로가기"></div>
 </section>
-<section id="v140People" class="section v140-custom" aria-label="통합 참가자 찾기"><div class="v140-hero" style="min-height:170px"><span class="v140-kicker">PLAYER COMMUNITY</span><h2>선수</h2><p>참가자 · 프로필 · 라이벌</p></div><div class="v140-heading"><h3>참가자 목록</h3><small>프로필 검색</small></div><div class="v140-card"><label for="v140Search" class="v140-msg">이름 검색</label><input id="v140Search" class="field" autocomplete="off" placeholder="참가자 이름 검색" style="width:100%;margin:8px 0 15px"><div id="v140Roster" class="v140-roster"></div></div></section>
+<section id="v140People" class="section v140-custom" aria-label="통합 참가자 찾기"><div class="v141-simple-header"><span class="v140-kicker">PLAYER DIRECTORY</span><h2>선수</h2><p>참가자 프로필 · 구단 · 친선전 · 공식 리그</p></div><div class="v140-heading"><h3>참가자 목록</h3><small>프로필 검색</small></div><div class="v140-card"><label for="v140Search" class="v140-msg">이름 검색</label><input id="v140Search" class="field" autocomplete="off" placeholder="참가자 이름 검색" style="width:100%;margin:8px 0 15px"><div id="v140Roster" class="v140-roster"></div></div></section>
 <nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="home">⌂ 홈</button><button class="tab" data-tab="standings">🏅 순위</button><button class="tab" data-tab="fixtures">⚽ 경기</button><button class="tab" data-tab="tournament">🏆 컵대회</button><button class="tab" data-tab="players">♙ 선수</button><button class="tab" data-tab="halloffame">🏛 명예의 전당</button></nav><div class="v118-more-row"><button type="button" id="v118More" class="v118-text-link">더보기 · 리그 규정 ↗</button><span>SEASON HUB · MATCH CENTER</span></div>
 <section id="v1271ArchivedView" class="section v1271-archive-view" aria-label="보관 시즌 호환 영역 (미사용)">
  <div class="v1271-readonly"><span>ARCHIVED SEASON · READ ONLY</span><strong id="v1271ArchiveHeading">보관 시즌</strong><p id="v1271ArchiveStatus">읽기 전용 기록을 조회하고 있습니다.</p></div>
@@ -4540,7 +4608,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      }else selectLegacy(friendlyTab);
    }
    paint(current,section==='league'?leagueTab:section==='friendly'?friendlyTab:'');
-   if(section==='home')refreshRecent();
+   if(section==='home'){refreshRecent();renderPreview();}
    window.scrollTo?.({top:0,behavior:'instant'});
  }
  const players=()=>Array.isArray(window.DATA?.teams)?window.DATA.teams:(typeof DATA!=='undefined'&&Array.isArray(DATA.teams)?DATA.teams:[]);
@@ -4552,7 +4620,22 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    for(const n of names){const b=document.createElement('button');b.type='button';b.className='v140-person';b.dataset.v140Player=n;
      const ident=document.createElement('span');ident.className='v1401-person-ident';
      const badge=document.createElement('span');badge.innerHTML=crest(n);const span=document.createElement('span');span.textContent=n;ident.append(badge,span);
-     const e=document.createElement('em');e.textContent='프로필 보기';b.append(ident,e);box.append(b);}
+     const meta=document.createElement('span');meta.className='v141-roster-meta';const strong=document.createElement('strong');strong.textContent=n;const club=document.createElement('small');club.textContent=teamBrand(n)?.club||'구단 미설정';meta.append(strong,club);ident.replaceChildren(badge,meta);const e=document.createElement('em');e.textContent='프로필 보기';b.append(ident,e);box.append(b);}
+ }
+ function renderPreview(){
+   const box=document.getElementById('v141PlayerPreview');if(!box)return;
+   const names=players();box.replaceChildren();
+   if(!names.length){box.textContent='참가자 정보가 없습니다.';return;}
+   for(const name of names.slice(0,8)){
+     const btn=document.createElement('button');btn.type='button';btn.className='v141-profile-tile';btn.dataset.v140Player=name;
+     const badge=document.createElement('span');badge.innerHTML=crest(name);
+     const detail=document.createElement('span');detail.className='v141-profile-meta';
+     const title=document.createElement('b');title.textContent=name;
+     const label=document.createElement('small');label.textContent=teamBrand(name)?.club||'구단 미설정';
+     detail.append(title,label);btn.append(badge,detail);box.append(btn);
+   }
+   const myself=document.querySelector('[data-v141-my-profile]');
+   if(myself){const member=typeof v115Member!=='undefined'?v115Member?.player_name:null;myself.hidden=!member||!names.includes(member);}
  }
  async function refreshRecent(){
    const panel=document.getElementById('v140Recent'),status=document.getElementById('v140RecentStatus');
@@ -4566,7 +4649,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      if(error)throw error;
      const rows=(data||[]).filter(m=>!m.excluded_official&&m.player_a&&m.player_b&&m.score_a!==null&&m.score_b!==null).slice(0,4);
      panel.replaceChildren();
-     for(const m of rows){const div=document.createElement('div');div.className='v140-match';
+     for(const m of rows){const div=document.createElement('button');div.type='button';div.className='v140-match';div.dataset.v141MatchId=m.match_id;div.setAttribute('aria-label',m.player_a+' '+m.score_a+' 대 '+m.score_b+' '+m.player_b+' 경기 상세');
        const a=document.createElement('span');a.className='v1401-home-team';const aCrest=document.createElement('span');aCrest.innerHTML=crest(m.player_a);const aName=document.createElement('strong');aName.textContent=m.player_a;a.append(aCrest,aName);const d=document.createElement('small');
        if(m.match_date){const dt=new Date(m.match_date);d.textContent=Number.isFinite(dt.getTime())?dt.toLocaleDateString('ko-KR'):'친선전';}
        else d.textContent='친선전';a.append(d);
@@ -4615,6 +4698,17 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  sub.addEventListener('click',e=>{const b=e.target.closest('[data-v140-child]');if(b)navigate(current,b.dataset.v140Child);});
  document.addEventListener('click',e=>{
    const route=e.target.closest('[data-v140-route]');if(route){const [section,tab]=route.dataset.v140Route.split(':');navigate(section,tab);return;}
+   if(e.target.closest('[data-v141-my-profile]')){const member=typeof v115Member!=='undefined'?v115Member?.player_name:null;if(member&&players().includes(member)&&typeof renderProfile==='function')renderProfile(member);return;}
+   const match=e.target.closest('[data-v141-match-id]');if(match){
+     const matchId=match.dataset.v141MatchId;
+     navigate('friendly','fixtures');
+     const openMatch=attempt=>{
+       const cards=[...document.querySelectorAll('#fixtures .v130-match')];
+       const found=cards.find(card=>card.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===matchId);
+       if(found){found.open=true;found.scrollIntoView({block:'center',behavior:'smooth'});}
+       else if(attempt<5)setTimeout(()=>openMatch(attempt+1),150);
+     };setTimeout(()=>openMatch(0),40);return;
+   }
    const b=e.target.closest('[data-v140-player]');if(b&&typeof renderProfile==='function')renderProfile(b.dataset.v140Player);
  });
  document.getElementById('v140Search')?.addEventListener('input',roster);
@@ -4635,6 +4729,53 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  root.classList.add('v140-ready');
  // V14 first load intentionally opens the season-independent portal, not Season 3.
  navigate('home');
+})();
+</script>
+
+<script>
+(function v141AdminPolish(){
+ 'use strict';
+ const entry=document.getElementById('v141AdminEntry'),overlay=document.getElementById('v141AdminOverlay'),grid=document.getElementById('v141AdminGrid'),close=document.getElementById('v141AdminClose'),account=document.getElementById('v118AccountMenu');
+ if(!entry||!overlay||!grid||!close)return;
+ const items=[
+   ['계정 발급','memberManageOpen','참가자 계정 발급·관리'],
+   ['시즌 기간 관리','v120AdminOpen','일정 및 기간 설정'],
+   ['리그 종료·컵대회','v122OpsOpen','공식 대회 운영'],
+   ['시즌 4 준비','v1272OpenDraft','대진표·참가자 준비'],
+   ['시즌 4 준비 현황','v1274DraftCheck','준비 상태 확인'],
+   ['넥슨 감독 연동','v1290Open','감독 계정 연결'],
+   ['넥슨 매치 검색','v1291Open','경기 확인 및 연결'],
+   ['기록 백업·조회','v124OpenSeason','읽기·백업 기능']
+ ];
+ const isOperator=()=>typeof state!=='undefined'&&state?.admin===true;
+ function accessible(id){const node=document.getElementById(id);return !!node&&!node.hidden&&getComputedStyle(node).display!=='none';}
+ function render(){
+   const allowed=isOperator();entry.hidden=!allowed;
+   if(!allowed){overlay.hidden=true;return;}
+   grid.replaceChildren();
+   for(const [label,id,description] of items){
+     if(!accessible(id))continue;
+     const btn=document.createElement('button');btn.type='button';btn.dataset.v141AdminAction=id;
+     const title=document.createElement('strong');title.textContent=label;
+     const sub=document.createElement('small');sub.textContent=description;btn.append(title,sub);grid.append(btn);
+   }
+   if(!grid.children.length){const msg=document.createElement('p');msg.className='v141-admin-help';msg.textContent='현재 사용할 수 있는 운영 도구가 없습니다.';grid.append(msg);}
+ }
+ const shut=()=>{overlay.hidden=true;entry.focus();};
+ entry.addEventListener('click',()=>{render();if(entry.hidden)return;overlay.hidden=false;account.hidden=true;close.focus();});
+ close.addEventListener('click',shut);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)shut();});
+ grid.addEventListener('click',e=>{const target=e.target.closest('[data-v141-admin-action]');if(!target)return;
+   if(!isOperator()||!accessible(target.dataset.v141AdminAction)){render();return;}
+   const original=document.getElementById(target.dataset.v141AdminAction);overlay.hidden=true;original.click();
+ });
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)shut();});
+ // Existing UI changes authorization asynchronously. Reflect it without changing the actual permission model.
+ const status=document.getElementById('adminStatus');if(status)new MutationObserver(render).observe(status,{childList:true,subtree:true,characterData:true});
+ const originals=items.map(x=>document.getElementById(x[1])).filter(Boolean);
+ for(const node of originals)new MutationObserver(()=>{if(!overlay.hidden)render();}).observe(node,{attributes:true,attributeFilter:['hidden','style','class']});
+ document.getElementById('v118AccountTrigger')?.addEventListener('click',()=>setTimeout(render,0));
+ render();
 })();
 </script>
 </body></html>
