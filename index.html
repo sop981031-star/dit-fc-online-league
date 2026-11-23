@@ -3748,7 +3748,51 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    const dict=['GK','SW','RWB','RB','RCB','CB','LCB','LB','LWB','RDM','CDM','LDM','RM','RCM','CM','LCM','LM','RAM','CAM','LAM','RF','CF','LF','RW','RS','ST','LS','LW'];
    const n=Number(position);return dict[n]||'POS';
  }
- function v1304Group(position){const p=Number(position);return p===0?0:p<=8?1:p<=11?2:p<=16?3:p<=19?4:5;}
+ // V13.0.4.2: actual MATCH PITCH placement. x = progression from goal to opponent goal;
+ // y = the player's own left (0) -> own right (100), before team direction mirroring.
+ // FC Online's spposition IDs: GK, SW, RWB, RB, RCB, CB, LCB, LB, LWB,
+ // RDM, CDM, LDM, RM, RCM, CM, LCM, LM, RAM, CAM, LAM, RF, CF, LF,
+ // RW, RS, ST, LS, LW. 28 = substitute.
+ const V13042_SLOTS={
+   0:[9,50], 1:[19,50],
+   2:[33,85],3:[29,83],4:[29,63],5:[29,50],6:[29,37],7:[29,17],8:[33,15],
+   9:[45,66],10:[44,50],11:[45,34],
+   12:[55,85],13:[55,65],14:[56,50],15:[55,35],16:[55,15],
+   17:[69,67],18:[69,50],19:[69,33],
+   20:[78,68],21:[78,50],22:[78,32],
+   23:[84,86],24:[86,64],25:[88,50],26:[86,36],27:[84,14]
+ };
+ // Rather than sorting a whole line (which incorrectly put ST at a flank),
+ // preserve each position's individual left/centre/right lane.
+ function v13042Arrange(players){
+   const entries=players.map((player,index)=>{
+     const raw=Number(player.sp_position),slot=V13042_SLOTS[raw]||[55,50];
+     return {index,p:raw,x:slot[0],y:slot[1],lock:(raw===0||raw===25||raw===23||raw===27)};
+   });
+   // In unusual formations two nearby roles may overlap. Keep the named position
+   // lanes as anchors and nudge only the extra cards, not ST/LW/RW/GK.
+   const ordered=[...entries].sort((a,b)=>Number(b.lock)-Number(a.lock)||a.index-b.index);
+   const placed=[];
+   for(const e of ordered){
+     let {x,y}=e;
+     if(!e.lock){
+       // 65px x 74px cards on half pitches are roughly 12% x 20% of the field.
+       // Search small offsets, preferring unmodified official slot as first choice.
+       const shifts=[[0,0],[0,-8],[0,8],[-7,0],[7,0],[-7,-9],[-7,9],[7,-9],[7,9],[0,-16],[0,16],[-13,0],[13,0]];
+       let best=null;
+       for(const [dx,dy] of shifts){
+         const cx=Math.max(9,Math.min(91,x+dx)),cy=Math.max(11,Math.min(89,y+dy));
+         const coll=placed.reduce((n,r)=>n+(Math.abs(cx-r.x)<12&&Math.abs(cy-r.y)<20?1:0),0);
+         const score=coll*1000+Math.abs(dx)+Math.abs(dy)*.7;
+         if(!best||score<best.score)best={x:cx,y:cy,score};
+         if(coll===0&&dx===0&&dy===0)break;
+       }
+       x=best.x;y=best.y;
+     }
+     e.x=x;e.y=y;placed.push(e);
+   }
+   return new Map(entries.map(p=>[p.index,{x:p.x,y:p.y}]));
+ }
  function v1304Starting(players){
    const all=(Array.isArray(players)?players:[]).filter(p=>Number.isSafeInteger(Number(p?.sp_id))&&Number(p.sp_id)>0);
    // Position 28 marks substitute; prefer 0-27 and keep stable API order for starting XI.
@@ -3758,22 +3802,20 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  function v1304Pitch(m,side,owner){
    const values=m.match_stats?.[side]||{},split=v1304Starting(values.players),p=split.starting;
    if(!p.length)return `<div class="v1304-side ${side==='b'?'away':''}"><div class="v1304-side-head"><b>${safe(owner)}</b></div><div class="v1304-field"><div class="v1304-no-squad">선수 포지션 데이터가 없습니다.<br>하단 경기 통계는 확인할 수 있습니다.</div></div></div>`;
-   const groups=new Map();p.forEach((x,i)=>{const group=v1304Group(x.sp_position);if(!groups.has(group))groups.set(group,[]);groups.get(group).push({p:x,index:i});});
-   const levelX=[10,30,45,61,73,86];
-   const nodes=[];
-   for(const [group,roster] of groups){
-     // Original player position determines the line, and the lane is spaced to avoid overlap.
-     const ranks=roster.length===1?[50]:roster.map((_,i)=>12+76*i/(roster.length-1));
-     roster.forEach(({p:player,index},i)=>{
-       const sp=Number(player.sp_id),rating=Number(player.rating),display=playerName(sp),originalIdx=(Array.isArray(values.players)?values.players:[]).indexOf(player);
-       const isB=side==='b',dx=isB?100-levelX[group]:levelX[group],dy=ranks[i];
-       const mx=dy,my=100-levelX[group];
-       const rate=Number.isFinite(rating)&&rating>0?rating.toFixed(1):'—';
-       nodes.push(`<button type="button" class="v1304-player ${isB?'away':''}" style="--dx:${dx}%;--dy:${dy}%;--mx:${mx}%;--my:${my}%" data-v1304-player data-v1304-match="${safe(m.match_id)}" data-v1304-side="${side}" data-v1304-idx="${originalIdx}" aria-pressed="false" title="${safe(display)} · ${v1304Position(player.sp_position)} · 평점 ${rate}">`+
-        `<span class="v1304-pos">${v1304Position(player.sp_position)}</span><img alt="" loading="lazy" src="https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p${sp}.png" onerror="if(this.dataset.fallback)return this.hidden=true;this.dataset.fallback='1';this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${sp}.png'">`+
-        `<span class="v1304-name">${safe(display)}</span><span class="v1304-rating ${rate==='—'?'missing':''}">${rate}</span></button>`);
-     });
-   }
+   const coords=v13042Arrange(p);
+   const nodes=p.map((player,index)=>{
+     const sp=Number(player.sp_id),rating=Number(player.rating),display=playerName(sp),originalIdx=(Array.isArray(values.players)?values.players:[]).indexOf(player);
+     const isB=side==='b',slot=coords.get(index)||{x:55,y:50};
+     // Home attacks right: LW at the top, RW at the bottom.
+     // Away attacks left: flip both dimensions so LW is bottom and RW is top.
+     const dx=isB?100-slot.x:slot.x,dy=isB?100-slot.y:slot.y;
+     // Both independent mobile portraits attack upward: LW left, RW right.
+     const mx=slot.y,my=100-slot.x;
+     const rate=Number.isFinite(rating)&&rating>0?rating.toFixed(1):'—';
+     return `<button type="button" class="v1304-player ${isB?'away':''}" style="--dx:${dx}%;--dy:${dy}%;--mx:${mx}%;--my:${my}%" data-v1304-player data-v1304-match="${safe(m.match_id)}" data-v1304-side="${side}" data-v1304-idx="${originalIdx}" aria-pressed="false" title="${safe(display)} · ${v1304Position(player.sp_position)} · 평점 ${rate}">`+
+       `<span class="v1304-pos">${v1304Position(player.sp_position)}</span><img alt="" loading="lazy" src="https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p${sp}.png" onerror="if(this.dataset.fallback)return this.hidden=true;this.dataset.fallback='1';this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${sp}.png'">`+
+       `<span class="v1304-name">${safe(display)}</span><span class="v1304-rating ${rate==='—'?'missing':''}">${rate}</span></button>`;
+   });
    const reserveLine=split.reserves.length?`<details class="v1304-reserves"><summary>교체·후보 선수 (${split.reserves.length})</summary><div class="v1304-reserve-lines">${split.reserves.map(x=>`<span>${safe(playerName(x.sp_id))} · ${v1304Position(x.sp_position)} · 평점 ${x.rating==null?'—':safe(x.rating)}</span>`).join('')}</div></details>`:'';
    return `<div class="v1304-side ${side==='b'?'away':''}"><div class="v1304-side-head"><b>${safe(owner)}</b><small>STARTING XI</small></div><div class="v1304-field"><div class="v1304-lines" aria-hidden="true"></div><div class="v1304-area" aria-hidden="true"></div>${nodes.join('')}</div>${reserveLine}</div>`;
  }
@@ -3789,7 +3831,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `<div class="v1304-boards">${v1304Pitch(m,'a',m.player_a)}${v1304Pitch(m,'b',m.player_b)}</div>`+
      `<div class="v1304-selection" role="status" aria-live="polite">선수 카드를 누르면 골·도움·평점을 확인할 수 있어요.</div>`+
      `<div class="v1304-metrics">${metric('possession','점유율','%')}${metric('shoot_total','슈팅')}${metric('shoot_effective','유효슈팅')}${metric('pass_total','패스 시도')}${metric('pass_success','패스 성공')}</div>`+
-     `<div class="v1304-note">출전 선수 배치는 넥슨 기록의 포지션 정보를 기준으로 한 시각화입니다. 교체·후보 선수가 있으면 각 팀 하단에서 별도로 확인할 수 있습니다.</div></div>`;
+     `<div class="v1304-note">출전 선수 배치는 넥슨 포지션 코드에 맞춘 전술 슬롯 시각화입니다. 실제 경기 내 이동 좌표는 아닙니다. 교체·후보 선수가 있으면 각 팀 하단에서 별도로 확인할 수 있습니다.</div></div>`;
  }
  function matchCard(m,adminControls=false){
    const a=safe(m.player_a),b=safe(m.player_b),date=m.match_date?new Date(m.match_date).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}):'경기 일시 미확인';
