@@ -5033,4 +5033,154 @@ if(client()){client().auth.onAuthStateChange(()=>{setTimeout(async()=>{await per
 window.v143ReloadNews=fetchNews;fetchNews();permission().then(showEdit);
 })();
 </script>
+<style id="v144Styles">
+/* V14.4 season runtime — independent of the Season 3 league_state store */
+.v144-wrap{margin:18px 0;padding:18px;border:1px solid #54708b;border-radius:16px;background:linear-gradient(145deg,#0d243a,#122e46);color:#eff5fd}
+.v144-top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}.v144-top h3{color:#e8c891;margin:0;font-size:19px}.v144-note{color:#aec5d9;font-size:12px;line-height:1.7;margin:8px 0 14px}
+.v144-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.v144-btn{border:1px solid #6a829c;border-radius:9px;color:#f2dfb7;background:#1a3b57;padding:9px 13px;font-weight:750;cursor:pointer;font-size:12px}.v144-btn:hover{border-color:#e5c487}.v144-btn:disabled{opacity:.45;cursor:not-allowed}
+.v144-btn.primary{background:#d5b980;color:#10273e;border-color:#d5b980}.v144-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v144-kpi{background:#0b2033;border:1px solid #2b4c66;border-radius:10px;padding:12px}.v144-kpi span{display:block;font-size:11px;color:#a6bdcf}.v144-kpi strong{display:block;font-size:20px;color:#f4d49b;margin-top:5px}
+.v144-card{background:#0a2136;border:1px solid #345771;border-radius:12px;padding:14px;margin-top:12px}.v144-card h4{color:#dfc58e;margin:0 0 12px;font-size:15px}.v144-table{width:100%;border-collapse:collapse;min-width:480px;font-size:12px}.v144-table th,.v144-table td{padding:9px 6px;text-align:center;border-bottom:1px solid #2c4660}.v144-table th{color:#d5bd90}.v144-table td:first-child,.v144-table th:first-child{text-align:left}.v144-scroll{overflow-x:auto;max-width:100%}
+.v144-games{display:grid;gap:7px}.v144-game{display:grid;grid-template-columns:minmax(0,1fr) 68px minmax(0,1fr) auto;gap:8px;align-items:center;border-bottom:1px solid #29465e;padding:9px 0}.v144-game .v144-home{text-align:right}.v144-game .v144-away{text-align:left}.v144-game .v144-score{color:#e5c68d;font-weight:900;text-align:center;white-space:nowrap}.v144-game input{width:42px;text-align:center;background:#071b2c;color:#fff;border:1px solid #4b647e;border-radius:6px;padding:6px 2px;font-size:13px}.v144-game .v144-inputs{display:flex;gap:3px;align-items:center;justify-content:center}.v144-game .v144-inputs strong{color:#b9d0df}.v144-edit{display:flex;align-items:center;gap:4px}
+.v144-muted{color:#afc7d8;font-size:11px}.v144-badge{color:#e7c785;background:#3c3424;border:1px solid #837049;padding:5px 9px;border-radius:20px;font-size:11px}.v144-career{margin-top:10px;padding:12px;background:#112d44;border:1px solid #4a6680;border-radius:10px}
+body.v144-active #v14034Season4 .v14034-prep-grid,body.v144-active #v14034Season4 .v14034-helper{display:none}
+@media(max-width:630px){.v144-wrap{padding:12px}.v144-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v144-game{grid-template-columns:minmax(0,1fr) 95px minmax(0,1fr);gap:4px;font-size:11px}.v144-game .v144-edit{grid-column:1/-1;justify-content:center}.v144-game input{width:45px}.v144-table{min-width:380px}}
+</style>
+<script id="v144Script">
+(function v144SeasonManager(){
+ 'use strict';
+ const target=document.getElementById('v14034Season4');if(!target)return;
+ const el=(tag,cls,text)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=String(text);return x};
+ const panel=el('section','v144-wrap');panel.id='v144Panel';target.append(panel);
+ let season=null,matches=[],archives=[],admin=false,busy=false;
+ const publicClient=()=>typeof cloudClient!=='undefined'?cloudClient:null;
+ const me=()=>typeof state!=='undefined'&&!!state.admin&&typeof currentUser!=='undefined'&&!!currentUser;
+ const createButton=(text,fn,kind='')=>{const b=el('button','v144-btn '+kind,text);b.type='button';b.onclick=fn;return b};
+ const status=el('p','v144-note','시즌 4 운영 데이터를 확인합니다.');
+ const heading=el('div','v144-top');heading.append(el('h3','','SEASON MANAGEMENT 2.0'),el('span','v144-badge','SEASON 04'));
+ const area=el('div');panel.append(heading,status,area);
+ const label=s=>({upcoming:'준비 중',active:'정규 리그 진행',playoffs:'컵대회 진행',completed:'종료 · 기록 보관'}[s]||'미등록');
+ const numeric=v=>Number.isInteger(Number(v))&&Number(v)>=0&&Number(v)<=99?Number(v):null;
+ async function rpc(action,data={}){
+  const db=publicClient();if(!db||!me())throw Error('관리자 로그인이 필요합니다.');
+  const {data:result,error}=await db.rpc('v144_season_action',{p_action:action,p_season_id:4,p_data:data});
+  if(error)throw Error(error.message||'서버 요청 실패');return result;
+ }
+ async function act(action,data,confirmText){
+  if(busy||!me())return;
+  if(confirmText&&!confirm(confirmText))return;
+  busy=true;status.textContent='서버에서 관리자 권한 및 시즌 상태 확인 중…';
+  try{await rpc(action,data);await load();}catch(e){status.textContent='처리 실패: '+e.message;console.warn(e);}finally{busy=false;}
+ }
+ async function load(){
+  const db=publicClient();if(!db){status.textContent='Supabase 연결을 확인해 주세요.';return;}
+  const [a,b,c]=await Promise.all([
+   db.from('v144_seasons').select('season_id,season_name,participants,status,revision,created_at,started_at,completed_at').eq('season_id',4).maybeSingle(),
+   db.from('v144_matches').select('id,phase,slot,home,away,home_score,away_score').eq('season_id',4).order('id'),
+   db.from('v144_archives').select('season_id,snapshot,archived_at').eq('season_id',4)
+  ]);
+  if(a.error||b.error||c.error){status.textContent='V14.4 테이블 조회 실패 · 먼저 01_SEASON_MANAGEMENT.sql을 설치해 주세요. '+(a.error?.message||b.error?.message||c.error?.message);return;}
+  season=a.data||null;matches=b.data||[];archives=c.data||[];admin=me();render();
+ }
+ function standings(){
+  if(!season)return[];
+  const list=(season.participants||[]).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));const map=new Map(list.map(p=>[p.name,p]));
+  for(const m of matches.filter(m=>m.phase==='regular'&&m.home_score!==null&&m.away_score!==null)){
+   const a=map.get(m.home),b=map.get(m.away);if(!a||!b)continue;
+   a.p++;b.p++;a.gf+=m.home_score;a.ga+=m.away_score;b.gf+=m.away_score;b.ga+=m.home_score;
+   if(m.home_score>m.away_score){a.w++;a.pts+=3;b.l++;}else if(m.home_score<m.away_score){b.w++;b.pts+=3;a.l++;}else{a.d++;b.d++;a.pts++;b.pts++;}
+  }
+  return list.sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||a.name.localeCompare(b.name,'ko'));
+ }
+ function table(){const wrap=el('div','v144-card'),title=el('h4','','정규 리그 순위');wrap.append(title);
+  const scroll=el('div','v144-scroll'),t=el('table','v144-table'),head=el('tr');
+  for(const s of ['선수','경기','승','무','패','득실','승점'])head.append(el('th','',s));const th=el('thead');th.append(head);t.append(th);
+  const body=el('tbody');for(const p of standings()){const row=el('tr');for(const v of [p.name,p.p,p.w,p.d,p.l,(p.gf-p.ga>0?'+':'')+(p.gf-p.ga),p.pts])row.append(el('td','',v));body.append(row);}t.append(body);scroll.append(t);wrap.append(scroll);return wrap;
+ }
+ function matchCard(m){const row=el('div','v144-game'),left=el('span','v144-home',m.home),right=el('span','v144-away',m.away),score=el('div','v144-score');
+  const editing=admin&&season?.status!=='completed'&&(m.phase==='regular'?season.status==='active':season.status==='playoffs');
+  const tools=el('div','v144-edit');
+  if(editing){
+   const input1=el('input'),input2=el('input');for(const input of [input1,input2]){input.type='number';input.min=0;input.max=99;input.inputMode='numeric';}
+   input1.value=m.home_score??'';input2.value=m.away_score??'';score.className='v144-inputs';score.append(input1,el('strong','',':'),input2);
+   tools.append(createButton('저장',()=>{const x=numeric(input1.value),y=numeric(input2.value);if(input1.value===''||input2.value===''||x===null||y===null){alert('0~99의 스코어를 입력하세요.');return;}act('score',{phase:m.phase,slot:m.slot,home_score:x,away_score:y},`${m.home} ${x}:${y} ${m.away} 결과를 저장할까요?`); }));
+  }else{score.textContent=m.home_score===null?'VS':m.home_score+' : '+m.away_score;}
+  row.append(left,score,right,tools);return row;
+ }
+ function fixtures(){const wrap=el('div','v144-card');wrap.append(el('h4','','공식 경기 · MATCH CENTER'));
+  const regular=matches.filter(m=>m.phase==='regular'),cups=matches.filter(m=>m.phase!=='regular');
+  const count=regular.filter(m=>m.home_score!==null).length;
+  wrap.append(el('p','v144-note',`정규 리그 ${count} / ${regular.length}경기 완료 · 승점 3/1/0`));
+  const list=el('div','v144-games');for(const m of regular)list.append(matchCard(m));wrap.append(list);
+  if(cups.length){const cupNames={ucl:'CHAMPIONS LEAGUE',uel:'EUROPA LEAGUE',supercup:'SUPER CUP'};
+   for(const phase of ['ucl','uel','supercup']){const group=cups.filter(x=>x.phase===phase);if(!group.length)continue;const block=el('div','v144-card');block.append(el('h4','',cupNames[phase]));const cards=el('div','v144-games');group.forEach(x=>cards.append(matchCard(x)));block.append(cards);wrap.append(block);}
+  }
+  return wrap;
+ }
+ async function prepare(){
+  const db=publicClient();if(!db||!me())return;
+  status.textContent='시즌 4 준비 명단과 확정 대진을 조회 중…';
+  const {data,error}=await db.rpc('v1273_admin_fixture_plan',{p_season_id:4});
+  if(error){status.textContent='기존 시즌 4 대진표 조회 실패: '+error.message;return;}
+  const names=data?.participants||[],games=data?.matches||[];
+  if(names.length<8){status.textContent='컵대회를 위해 참가자 8명 이상이 필요합니다.';return;}
+  if(!games.length){status.textContent='대진표가 아직 없습니다. 기존 시즌 4 준비 관리에서 먼저 저장해 주세요.';return;}
+  await act('prepare',{season_name:'SEASON 4',participants:names,matches:games},`기존 준비 명단 ${names.length}명 · 대진 ${games.length}경기를 시즌 4 공식 운영 저장소로 복사할까요?\n시즌 3은 변경되지 않고, 개막은 별도 버튼에서 진행합니다.`);
+ }
+ function actions(){const bar=el('div','v144-actions');bar.append(createButton('새로고침',load));if(!admin)return bar;
+  if(!season){bar.append(createButton('기존 시즌 4 대진 가져오기',prepare,'primary'));return bar;}
+  if(season.status==='upcoming')bar.append(createButton('시즌 4 개막 확정',()=>act('start',{},'시즌 4를 개막할까요? 공식 경기 점수 등록이 가능해집니다. 시즌 3 데이터에는 영향을 주지 않습니다.'),'primary'));
+  if(season.status==='active')bar.append(createButton('정규 종료 · 컵대회 대진 확정',()=>act('advance',{},'정규 리그 경기가 모두 끝났는지 확인했나요? 최종 순위를 기준으로 챔스 1-4/2-3, 유로파 5-8/6-7 대진이 고정됩니다.'),'primary'));
+  if(season.status==='playoffs'){
+   bar.append(createButton('다음 컵대회 단계 생성',()=>act('advance',{},'완료된 컵대회 경기 결과를 기준으로 다음 대진을 생성할까요?')));
+   bar.append(createButton('시즌 종료 · 영구 보관',()=>act('complete',{},'모든 정규 리그·컵대회 결과를 최종 확정하고 읽기 전용 아카이브를 생성할까요? 이 작업 후 점수 수정은 불가능합니다.'),'primary'));
+  }
+  return bar;
+ }
+ function render(){area.replaceChildren();document.body.classList.toggle('v144-active',!!season);
+  status.textContent=season?`${season.season_name} · ${label(season.status)} · 참가자 ${season.participants.length}명`:'시즌 4 공식 운영 데이터가 아직 없습니다. 기존 준비 관리에서 참가자와 대진을 먼저 확정하세요.';
+  const portalStatus=document.getElementById('v142HomeSeasonStatus');if(portalStatus&&season)portalStatus.textContent='시즌 3 종료 · 시즌 4 '+label(season.status);
+  const title=target.querySelector('.v14034-prep-head .v14034-status-chip');if(title)title.textContent=label(season?.status);
+  const intro=target.querySelector('.v14034-prep-head p');if(intro)intro.textContent=season?`${label(season.status)} · 공식 리그 데이터는 시즌 3과 분리 보관됩니다.`:'시즌 준비 중 · 공식 경기와 순위는 개막 이후 표시됩니다.';
+  const seasonPick=document.querySelector('[data-v14034-season="season4"] strong');if(seasonPick)seasonPick.textContent=label(season?.status);
+  area.append(actions());if(!season)return;
+  const regular=matches.filter(m=>m.phase==='regular');const stats=el('div','v144-grid');
+  for(const [l,v] of [['참가자',season.participants.length],['정규 경기',regular.filter(m=>m.home_score!==null).length+' / '+regular.length],['운영 상태',label(season.status)]]){
+    const box=el('div','v144-kpi');box.append(el('span','',l),el('strong','',v));stats.append(box);
+  }area.append(stats);
+  if(season.status!=='upcoming')area.append(table());area.append(fixtures());
+  if(season.status==='completed')area.append(el('p','v144-note','시즌 종료 완료 · 기록이 읽기 전용으로 고정되었습니다.'));
+ }
+ // Historical profile integration; never rewrites V14.2's S3 career data.
+ const oldCareer=window.v142LoadCareer;
+ if(typeof oldCareer==='function')window.v142LoadCareer=async function(name){const prior=oldCareer(name);
+  const container=document.getElementById('v142Career');if(!container)return;
+  const db=publicClient();if(!db)return;
+  const {data,error}=await db.from('v144_archives').select('season_id,snapshot').order('season_id',{ascending:false}).limit(50);
+  if(error||!data?.length)return;
+  const other=el('div','v144-career');let has=false;
+  for(const row of data){const names=row.snapshot?.participants||row.snapshot?.teams||[];if(!names.includes(name))continue;has=true;
+   const ms=(row.snapshot?.matches||[]).filter(m=>m.phase==='regular'&&(m.a===name||m.b===name));
+   let w=0,d=0,l=0;for(const m of ms){if(m.sa===m.sb)d++;else if((m.a===name?m.sa:m.sb)>(m.a===name?m.sb:m.sa))w++;else l++;}
+   other.append(el('p','v144-note',`SEASON ${row.season_id} · 공식 리그 ${ms.length}경기 · ${w}승 ${d}무 ${l}패`));
+  }
+  if(!has)return;
+  // Await the preexisting career loader before appending to avoid a race/replacement.
+  try{await prior;}catch(e){console.warn('Legacy career unavailable',e)}
+  if(container.isConnected&&document.getElementById('profileName')?.textContent===name)container.append(other);
+ };
+ // Hall of Fame: existing historical S3 remains untouched; append links to newly archived official seasons.
+ const hall=document.getElementById('halloffame');if(hall){const archivePanel=el('div','v144-card');archivePanel.id='v144Hall';archivePanel.append(el('h4','','추가 시즌 · 공식 기록 보관'));hall.append(archivePanel);
+  const loadHall=async()=>{const db=publicClient();if(!db)return;const {data}=await db.from('v144_archives').select('season_id,snapshot').order('season_id',{ascending:false}).limit(25);archivePanel.querySelectorAll('p').forEach(p=>p.remove());
+   for(const entry of data||[]){const m=entry.snapshot?.matches||[];const win=phase=>{const f=m.find(x=>x.phase===phase&&x.slot==='final');return f?f.sa>f.sb?f.a:f.b:'미확정'};
+    archivePanel.append(el('p','v144-note',`SEASON ${entry.season_id} · 챔스 ${win('ucl')} · 유로파 ${win('uel')} · 슈퍼컵 ${win('supercup')}`));}
+   if(!data?.length)archivePanel.append(el('p','v144-note','추가 시즌 공식 기록은 시즌 종료 후 표시됩니다.'));
+  };window.v144ReloadHall=loadHall;loadHall();
+ }
+ const oldNav=window.v143Navigate;if(typeof oldNav==='function')window.v143Navigate=function(section,tab){oldNav(section,tab);if(section==='league'&&tab==='season4')load();if(section==='hall')window.v144ReloadHall?.();};
+ // Navigation's own click handler calls its captured local navigate; use delegated click as a fallback refresh.
+ document.addEventListener('click',e=>{if(e.target.closest('[data-v14034-season="season4"],[data-v140-main="home"],[data-v140-main="hall"]'))setTimeout(load,80);});
+ if(publicClient())publicClient().auth.onAuthStateChange(()=>setTimeout(load,150));
+ load();
+})();
+</script>
 </body></html>
