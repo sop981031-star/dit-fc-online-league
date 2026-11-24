@@ -1232,7 +1232,16 @@ body.v140-ready #v140Nav.v140-nav>button{min-width:0!important;max-width:100%;wh
  .v143-edit-row{flex-wrap:wrap;gap:8px}.v143-edit-row>div{flex:1 1 100%}.v1433-pin-toggle{flex:1 1 auto}
 }
 @media(max-width:350px){.v1433-standings th,.v1433-standings td{font-size:9px!important;padding-inline:1px!important}.v1433-standings .v1401-branded img,.v1433-standings .v1401-branded .branding-badge{width:16px!important;height:16px!important;flex-basis:16px!important}}
-</style></head><body>
+</style>
+<!-- V14.5 PWA app metadata; use same origin and existing Supabase configuration. -->
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0b1c2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DIT FC">
+<link rel="apple-touch-icon" href="./assets/dit-fc-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./assets/dit-fc-192.png">
+</head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>OFFICIAL LEAGUE PORTAL</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>참가자 설정 · 운영 도구</span></div>
 <button type="button" class="v141-admin-entry" id="v141AdminEntry" hidden>운영 관리 <span aria-hidden="true">↗</span></button>
@@ -5181,6 +5190,138 @@ body.v144-active #v14034Season4 .v14034-prep-grid,body.v144-active #v14034Season
  document.addEventListener('click',e=>{if(e.target.closest('[data-v14034-season="season4"],[data-v140-main="home"],[data-v140-main="hall"]'))setTimeout(load,80);});
  if(publicClient())publicClient().auth.onAuthStateChange(()=>setTimeout(load,150));
  load();
+})();
+</script>
+
+<style id="v145AppStyles">
+/* PWA navigation controls: scoped, no changes to season / match layouts */
+.v145-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 11px;min-height:35px}
+.v145-toolbar button{font:inherit;font-size:12px;font-weight:750;min-height:37px;padding:8px 12px;border:1px solid #44617b;border-radius:9px;color:#edd39c;background:#112b44}
+.v145-toolbar button:disabled{visibility:hidden;pointer-events:none}
+.v145-actions{display:flex;gap:7px;align-items:center}
+#v145Install[hidden],#v145IosHint[hidden]{display:none!important}
+#v145IosHint{font-size:11px;max-width:380px;border:1px solid #576b78;border-radius:9px;padding:10px 12px;background:#10283f;color:#c1d3e1;line-height:1.6}
+#v145Toast{position:fixed;z-index:1500;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);max-width:min(440px,92vw);padding:11px 15px;background:#19344d;color:#e9d3a0;border:1px solid #886f48;border-radius:9px;font-size:12px;display:none}
+@media(max-width:540px){.v145-toolbar{margin:0 0 10px}.v145-toolbar button{font-size:11px;min-height:40px}.v145-actions{gap:4px}}
+</style>
+
+<script id="v145AppRouting">
+(function v145AppRouting(){
+ 'use strict';
+ const valid=new Set(['home','league','friendly','players','hall','news']);
+ const friendlyTabs=new Set(['home','fixtures','rivalry','standings']);
+ const leagueTabs=new Set(['home','standings','fixtures','tournament','season4']);
+ const parent=document.querySelector('main.wrap')||document.querySelector('main')||document.body;
+ const bar=document.createElement('div');bar.className='v145-toolbar';bar.setAttribute('aria-label','앱 탐색');
+ bar.innerHTML='<button type="button" id="v145Back" aria-label="이전 화면으로 돌아가기">← 뒤로가기</button><span class="v145-actions"><button type="button" id="v145Install" hidden>앱 설치</button></span>';
+ const mainNav=document.getElementById('v140Nav');if(mainNav?.parentNode)mainNav.parentNode.insertBefore(bar,mainNav);else parent.prepend(bar);
+ const back=document.getElementById('v145Back'),install=document.getElementById('v145Install');
+ let restoring=false,lastBase={section:'home',tab:''},installPrompt=null,first=true;
+ const path=()=>location.hash.startsWith('#/')?location.hash.slice(2):'';
+ const encode=value=>encodeURIComponent(String(value));
+ const decode=value=>{try{return decodeURIComponent(value)}catch(_){return ''}};
+ function parse(){const bits=path().split('/').filter(Boolean);
+   let section=valid.has(bits[0])?bits[0]:'home',tab='';
+   if(section==='league')tab=leagueTabs.has(bits[1])?bits[1]:'home';
+   if(section==='friendly')tab=friendlyTabs.has(bits[1])?bits[1]:'home';
+   if(section==='players'&&bits[1]==='profile'&&bits[2])return {section,tab,kind:'profile',name:decode(bits.slice(2).join('/'))};
+   if(section==='friendly'&&bits[1]==='matches'&&bits[2])return {section,tab:'fixtures',kind:'match',matchId:decode(bits.slice(2).join('/'))};
+   return {section,tab,kind:'page'};
+ }
+ const make=(section,tab='')=>'#/'+section+((section==='league'||section==='friendly')?'/'+(tab||'home'):'');
+ function setHash(route,mode='push'){
+   if(restoring||!route)return;
+   if(location.hash===route){updateBack();return;}
+   if(mode==='replace')history.replaceState({ditRoute:true},'',route);
+   else history.pushState({ditRoute:true},'',route);
+   updateBack();
+ }
+ function updateBack(){back.disabled=!location.hash||location.hash==='#/home';}
+ function go(section,tab){
+   if(typeof window.v143Navigate!=='function')return;
+   if(section==='players')window.v143Navigate('players');
+   else if(section==='friendly')window.v143Navigate('friendly',tab||'home');
+   else if(section==='league')window.v143Navigate('league',tab||'home');
+   else window.v143Navigate(section);
+   lastBase={section,tab};
+ }
+ function openProfile(name,attempt=0){
+   if(!name)return;
+   if(typeof window.renderProfile==='function')window.renderProfile(name);
+   else if(attempt<8)setTimeout(()=>openProfile(name,attempt+1),150);
+ }
+ function openMatch(id,attempt=0){
+   if(!id)return;
+   const target=[...document.querySelectorAll('#fixtures details.v130-match')].find(d=>d.querySelector('[data-v130-match-id]')?.dataset.v130MatchId===id);
+   if(target){target.open=true;target.scrollIntoView({block:'center',behavior:'instant'});return;}
+   if(attempt<12)setTimeout(()=>openMatch(id,attempt+1),250);
+ }
+ function restore(){
+   restoring=true;
+   const r=parse();
+   try{
+     const profile=document.getElementById('profileOverlay');if(profile)profile.style.display='none';
+     document.querySelectorAll('#fixtures details.v130-match[open]').forEach(d=>d.open=false);
+     go(r.section,r.tab);
+     if(r.kind==='profile')setTimeout(()=>openProfile(r.name),180);
+     if(r.kind==='match')setTimeout(()=>openMatch(r.matchId),220);
+   }finally{setTimeout(()=>{restoring=false;updateBack()},0)}
+ }
+ function pageRoute(section,tab){return make(valid.has(section)?section:'home',tab||'home')}
+ // Functions invoked externally (the v14.4 season manager, Hall of Fame, news and shortcuts).
+ const oldNavigate=window.v143Navigate;
+ if(typeof oldNavigate==='function')window.v143Navigate=function(section,tab){
+   const value=oldNavigate(section,tab);
+   if(!restoring){lastBase={section,tab:tab||'home'};setHash(pageRoute(section,tab));}
+   return value;
+ };
+ // Local menu handlers in V14.0 close over their own navigate(), so observe clicks after they run.
+ document.addEventListener('click',event=>{
+   if(restoring)return;
+   const el=event.target;
+   const main=el.closest('[data-v140-main]');if(main){const section=main.dataset.v140Main;setTimeout(()=>{lastBase={section,tab:'home'};setHash(pageRoute(section,'home'))},0);return;}
+   const sub=el.closest('[data-v140-child]');if(sub){const section=document.querySelector('#v140Nav [aria-current="page"]')?.dataset.v140Main||lastBase.section;const tab=sub.dataset.v140Child;setTimeout(()=>{lastBase={section,tab};setHash(pageRoute(section,tab))},0);return;}
+   const season=el.closest('[data-v14034-season]');if(season){const tab=season.dataset.v14034Season==='season4'?'season4':'home';setTimeout(()=>{lastBase={section:'league',tab};setHash(make('league',tab))},0);return;}
+   const route=el.closest('[data-v140-route]');if(route){const [section,tab]=route.dataset.v140Route.split(':');setTimeout(()=>{lastBase={section,tab};setHash(pageRoute(section,tab))},0);return;}
+   const match=el.closest('[data-v141-match-id]');if(match){const id=match.dataset.v141MatchId;setTimeout(()=>setHash('#/friendly/matches/'+encode(id)),20);return;}
+   const profile=el.closest('[data-v140-player],[data-profile]');if(profile){const name=profile.dataset.v140Player||profile.dataset.profile;if(name)setTimeout(()=>setHash('#/players/profile/'+encode(name)),0);return;}
+   if(el.closest('[data-v141-my-profile]')){setTimeout(()=>{const name=document.getElementById('profileName')?.textContent?.trim();if(name)setHash('#/players/profile/'+encode(name))},50);return;}
+   if(el.closest('#closeProfile')&&parse().kind==='profile'){setTimeout(()=>{history.back()},0);return;}
+ },false);
+ // Other profile-opening paths and friendly match-detail toggles, including the legacy roster.
+ const overlay=document.getElementById('profileOverlay');
+ if(overlay){new MutationObserver(()=>{
+   if(restoring)return;
+   if(overlay.style.display==='flex'){
+     const name=document.getElementById('profileName')?.textContent?.trim();
+     if(name&&parse().kind!=='profile')setHash('#/players/profile/'+encode(name));
+   }
+ }).observe(overlay,{attributes:true,attributeFilter:['style']});}
+ document.addEventListener('toggle',event=>{
+   if(restoring)return;
+   const details=event.target;if(!details.matches?.('#fixtures details.v130-match'))return;
+   if(details.open){const id=details.querySelector('[data-v130-match-id]')?.dataset.v130MatchId;
+     if(id)setHash('#/friendly/matches/'+encode(id));}
+   else if(parse().kind==='match')setHash('#/friendly/fixtures','replace');
+ },true);
+ window.addEventListener('popstate',restore);
+ window.addEventListener('hashchange',()=>{if(!restoring)restore()});
+ back.addEventListener('click',()=>{
+   const r=parse();
+   if(r.kind==='profile'||r.kind==='match'){
+     if(history.length>1){history.back();return;}
+     setHash(r.kind==='profile'?'#/players':'#/friendly/fixtures','replace');restore();return;
+   }
+   if(history.length>1)history.back();else {setHash('#/home','replace');restore();}
+ });
+ // Optional install CTA. Browsers without beforeinstallprompt can still use their Share/Add-to-Home-Screen menu.
+ window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;install.hidden=false});
+ install.addEventListener('click',async()=>{if(!installPrompt)return;const prompt=installPrompt;installPrompt=null;install.hidden=true;await prompt.prompt();});
+ window.addEventListener('appinstalled',()=>{install.hidden=true;installPrompt=null});
+ // Do not cache authentication or Supabase responses; service worker contains only an offline fallback.
+ if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(e=>console.warn('PWA service worker:',e)));
+ if(!location.hash||!location.hash.startsWith('#/'))setHash('#/home','replace');
+ setTimeout(restore,250);
 })();
 </script>
 </body></html>
