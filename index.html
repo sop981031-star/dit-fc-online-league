@@ -1241,6 +1241,7 @@ body.v140-ready #v140Nav.v140-nav>button{min-width:0!important;max-width:100%;wh
 <meta name="apple-mobile-web-app-title" content="DIT FC">
 <link rel="apple-touch-icon" href="./assets/dit-fc-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./assets/dit-fc-192.png">
+  <meta name="dit-fc-release" content="14.6.0-smart-friendly-sync">
 </head><body>
 <header><div class="head"><div class="brand"><div class="logo">DIT</div><div><h1>DIT FC ONLINE LEAGUE</h1><small>OFFICIAL LEAGUE PORTAL</small></div></div><div class="headright"><div class="v128-season-selector"><label for="v1271SeasonPicker" class="v128-label">시즌</label><select id="v1271SeasonPicker" class="field" aria-label="조회 시즌"><option value="live">시즌 3</option></select></div><span class="status" id="adminStatus">일반 모드</span><div class="v118-account-shell"><button type="button" class="v118-account-trigger" id="v118AccountTrigger" aria-expanded="false" aria-controls="v118AccountMenu">☰ <span id="v118AccountLabel">내 계정</span> ▾</button><div class="v118-account-menu v12823-account-menu" id="v118AccountMenu" hidden role="group" aria-label="계정 및 운영 메뉴">
 <div class="v12823-menu-top"><strong>계정 및 운영</strong><span>참가자 설정 · 운영 도구</span></div>
@@ -1300,7 +1301,7 @@ body.v140-ready #v140Nav.v140-nav>button{min-width:0!important;max-width:100%;wh
  <div class="v140-heading"><h3>공식 리그</h3><small>SEASON STATUS</small></div>
  <div class="v140-card v140-status"><div><div class="v140-kicker">OFFICIAL SEASONS</div><strong>SEASON 03 · COMPLETED</strong><p id="v142HomeSeasonStatus">시즌 3 종료 · 시즌 4 상태 확인 중</p></div><div><span class="v140-pill">시즌 3 종료</span><button type="button" class="v140-action alt" data-v140-route="league:home">시즌 기록 보기</button></div></div>
  <div class="v140-heading"><h3>최근 친선전</h3><small>FRIENDLY MATCH</small></div>
- <div class="v140-cards"><div class="v140-card"><strong>최근 경기 결과</strong><p class="v140-msg" id="v140RecentStatus">기록을 불러오는 중…</p><div id="v140Recent" class="v140-match-list"></div><button type="button" class="v140-action alt" data-v140-route="friendly:fixtures">매치센터 열기</button></div><div class="v140-card"><strong>라이벌 분석</strong><p>직접 맞대결 · 최근 흐름 · 공격·수비 지표</p><button type="button" class="v140-action" data-v140-route="friendly:rivalry">RIVALRY CENTER</button><div class="v140-note" style="margin-top:16px">친선전 기록은 공식 리그 순위 및 수상 기록에 반영되지 않습니다.</div></div></div>
+ <div class="v140-cards"><div class="v140-card"><strong>최근 경기 결과</strong><p class="v140-msg" id="v140RecentStatus">기록을 불러오는 중…</p><div id="v140Recent" class="v140-match-list"></div><button type="button" class="v140-action alt" data-v140-route="friendly:fixtures">매치센터 열기</button></div><div class="v140-card"><strong>라이벌 분석</strong><p>직접 맞대결 · 최근 흐름 · 공격·수비 지표</p><button type="button" class="v140-action" data-v140-route="friendly:rivalry">RIVALRY CENTER</button><div class="v140-note" style="margin-top:16px">친선전 기록은 최근 30일만 보관하며 공식 리그에 반영되지 않습니다.</div></div></div>
  <div class="v140-card v142-directory-link"><div><span class="v140-kicker">PLAYERS</span><h3>선수 프로필</h3><p>전체 참가자와 개인 기록 확인</p></div><button type="button" class="v140-action" data-v140-route="players">전체 선수 프로필 보기</button></div>
 </section>
 <section id="v143NewsArchive" class="section v140-custom" aria-label="뉴스 전체 보기">
@@ -4118,7 +4119,9 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  function header(title,detail=''){
    return `<div class="v12910-hero"><div><small>DIT FC ONLINE LEAGUE · FRIENDLY MATCH</small><h2>${safe(title)}</h2>${detail?`<p>${safe(detail)}</p>`:''}</div><span class="v12910-tag">시즌 4 별도 운영</span></div>`;
  }
+ const v146WithinWindow=date=>date&&Number.isFinite(Date.parse(date))&&Date.parse(date)>=Date.now()-30*86400000;
  const used=()=>{const count=new Map();return records.filter(r=>{
+   if(!v146WithinWindow(r.match_date))return false;
    if(!(r&&!r.excluded_official&&r.match_id&&r.player_a&&r.player_b&&Number.isInteger(Number(r.score_a))&&Number.isInteger(Number(r.score_b))))return false;
    const key=[r.player_a,r.player_b].sort().join('\u0000');const seen=count.get(key)||0;
    if(seen>=30)return false;count.set(key,seen+1);return true;
@@ -4339,7 +4342,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      `<small>${safe(a)} 기준 최근 경기 (최신순)</small><div class="v1302-flow">${t.flow.map(x=>`<span class="${x}">${x}</span>`).join('')}</div>`+
      `${compare('평균 점유율(%)',t.pa,t.pb,t.pc)}${compare('평균 슈팅',t.sa,t.sb,t.sc)}`+
      `${n<5?'<p class="v1302-note" style="color:#f2d395">표본이 5경기 미만이므로 상성 해석에 주의가 필요합니다.</p>':''}`+
-     `<p class="v1302-note">상대별 최근 30경기 · 공식 리그 기록 제외 · 점유율/슈팅은 제공된 경기만 평균 계산</p></section>`;
+     `<p class="v1302-note">최근 30일 내 상대별 최대 30경기 · 공식 리그 기록 제외 · 점유율/슈팅은 제공된 경기만 평균 계산</p></section>`;
  }
  // V13.0.5: compact comparison cards based ONLY on verified preseason-friendly rows.
  function v1305ProfileData(name,matches){
@@ -4362,7 +4365,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
  }
  function v1305PlayerCard(name,matches){
    const data=v1305ProfileData(name,matches);
-   return `<article class="v1305-player-card"><div class="v1305-topline"><h3 class="v1401-branded">${crest(name)}${safe(name)}</h3><small class="v1305-sub">최근 경기 흐름</small></div>${v1305Form(data.flow)}<div class="v1305-sub">자주 만난 라이벌 · 최근 30경기 기준</div>${v1305Rivals(name,matches,3)}</article>`;
+   return `<article class="v1305-player-card"><div class="v1305-topline"><h3 class="v1401-branded">${crest(name)}${safe(name)}</h3><small class="v1305-sub">최근 경기 흐름</small></div>${v1305Form(data.flow)}<div class="v1305-sub">자주 만난 라이벌 · 최근 30일 기준</div>${v1305Rivals(name,matches,3)}</article>`;
  }
  function v1305Players(matches){
    const allNames=[...new Set(matches.flatMap(m=>[m.player_a,m.player_b]))].sort((a,b)=>a.localeCompare(b,'ko'));
@@ -4381,6 +4384,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
      for(let offset=0;offset<10000;offset+=page){
        const {data,error}=await cloudClient.from('league_preseason_matches_v1298')
         .select('match_id,match_date,player_a,player_b,score_a,score_b,excluded_official')
+        .gte('match_date',new Date(Date.now()-30*86400000).toISOString())
         .order('match_date',{ascending:false,nullsFirst:false}).order('match_id',{ascending:false}).range(offset,offset+page-1);
        if(error)throw error;result.push(...(data||[]));if((data||[]).length<page)break;
        if(offset+page>=10000)throw Error('친선 데이터 조회 한도를 초과했습니다.');
@@ -4407,7 +4411,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
        recent.forEach(m=>{const left=m.player_a===name,own=num(left?m.score_a:m.score_b),opp=num(left?m.score_b:m.score_a);goals+=own;against+=opp;if(own>opp)wins++;else if(own<opp)losses++;else draws++;});
        const metric=(label,value)=>'<div class="v1402-stat"><small>'+label+'</small><b>'+value+'</b></div>';
        const current=recent.slice(0,5).map(m=>{const left=m.player_a===name,other=left?m.player_b:m.player_a,own=num(left?m.score_a:m.score_b),opp=num(left?m.score_b:m.score_a),r=own>opp?'W':own<opp?'L':'D';return '<div class="v1402-match"><span class="v1401-branded">'+crest(other)+safe(other)+'</span><b>'+own+' : '+opp+'</b><span class="v1305-form"><span class="'+r+'">'+r+'</span></span></div>';}).join('');
-       snapshot.innerHTML='<div class="v1402-stats">'+metric('최근 기록',recent.length+'경기')+metric('승 · 무 · 패',wins+' · '+draws+' · '+losses)+metric('평균 득점',recent.length?(goals/recent.length).toFixed(1):'—')+metric('평균 실점',recent.length?(against/recent.length).toFixed(1):'—')+'</div><div class="v1402-subtitle">최근 친선전</div><div class="v1402-matches">'+(current||'<p class="v1305-empty">아직 친선경기 기록이 없습니다.</p>')+'</div><p class="v1402-hint">최근 최대 30경기 · 보관된 상대별 최근 30경기 기준 · 공식 경기 제외</p>';
+       snapshot.innerHTML='<div class="v1402-stats">'+metric('최근 기록',recent.length+'경기')+metric('승 · 무 · 패',wins+' · '+draws+' · '+losses)+metric('평균 득점',recent.length?(goals/recent.length).toFixed(1):'—')+metric('평균 실점',recent.length?(against/recent.length).toFixed(1):'—')+'</div><div class="v1402-subtitle">최근 친선전</div><div class="v1402-matches">'+(current||'<p class="v1305-empty">아직 친선경기 기록이 없습니다.</p>')+'</div><p class="v1402-hint">최근 30일 내 최대 30경기 · 공식 경기 제외</p>';
      }
      element.innerHTML='<div class="v1305-heading"><h3>라이벌 분석</h3><span class="v1305-sub">공식 시즌 기록과 별도</span></div>'+
       '<div class="v1305-sub">최근 5경기 결과</div>'+v1305Form(data.flow)+
@@ -4526,7 +4530,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    if(tab==='players')return v1305Players(matches);
    if(tab==='tournament')return header('친선전','컵대회는 친선전에 운영하지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>정규 시즌 컵대회와 별도</h3><p>챔피언스리그·유로파리그·슈퍼컵 기록은 시즌 3 또는 향후 공식 시즌에서 확인해 주세요.</p></div>';
    if(tab==='halloffame')return header('친선전','공식 우승 기록은 생성되지 않습니다.')+'<div class="v12910-card" style="margin-top:15px"><h3>명예의 전당</h3><p>친선전 기록은 공식 명예의 전당에 반영하지 않습니다.</p></div>';
-   return header('친선전 안내')+'<div class="v12910-card" style="margin-top:15px"><p>참가자끼리 진행한 스페셜 매치를 자동 수집합니다. 상대별 최근 30경기가 통계에 반영됩니다.</p></div>';
+   return header('친선전 안내')+'<div class="v12910-card" style="margin-top:15px"><p>참가자끼리 진행한 스페셜 매치를 자동 수집합니다. 최근 30일 내 상대별 최대 30경기가 통계에 반영됩니다.</p></div>';
  }
  function render(){if(!pre())return;const pane=document.querySelector(`#${active}>.v12910-pane`);if(pane)pane.innerHTML=content(active);}
  async function refresh(){if(!pre()||typeof cloudClient==='undefined'||!cloudClient)return;
@@ -4536,6 +4540,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    try{const next=[],limit=500;
      for(let offset=0;offset<10000;offset+=limit){
        const {data,error}=await cloudClient.from('league_preseason_matches_v1298').select('match_id,match_date,player_a,player_b,score_a,score_b,match_stats,excluded_official')
+         .gte('match_date',new Date(Date.now()-30*86400000).toISOString())
          .order('match_date',{ascending:false,nullsFirst:false}).order('match_id',{ascending:false}).range(offset,offset+limit-1);
        if(error)throw error;if(stamp!==request||!pre())return;
        next.push(...(data||[]));if((data||[]).length<limit)break;
@@ -4741,6 +4746,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    try{
      const {data,error}=await cloudClient.from('league_preseason_matches_v1298')
        .select('match_id,match_date,player_a,player_b,score_a,score_b,excluded_official')
+       .gte('match_date',new Date(Date.now()-30*86400000).toISOString())
        .order('match_date',{ascending:false,nullsFirst:false}).limit(50);
      if(error)throw error;
      const rows=(data||[]).filter(m=>!m.excluded_official&&m.player_a&&m.player_b&&m.score_a!==null&&m.score_b!==null).slice(0,4);
