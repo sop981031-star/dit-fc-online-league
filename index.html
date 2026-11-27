@@ -1581,7 +1581,7 @@ function clubUpdateAccess(){
  if(!btn||!sel)return;
  btn.hidden=!clubCanEdit();btn.textContent=state.admin?'⚽ 전체 구단 설정':'⚽ 내 구단 설정';
  const current=sel.value;
- const permitted=state.admin?DATA.teams:[clubEditableName()].filter(Boolean);
+ const permitted=state.admin?(window.v1461PlayerNames||DATA.teams):[clubEditableName()].filter(Boolean);
  sel.innerHTML=permitted.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
  if(permitted.includes(current))sel.value=current;
  else if(permitted.length)sel.value=permitted[0];
