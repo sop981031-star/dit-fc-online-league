@@ -1574,7 +1574,7 @@ const CLUB_PREF_TABLE='league_club_preferences';
 let clubOverrides={};
 let clubPrefsLoaded=false;
 function clubChosenId(name){return Object.prototype.hasOwnProperty.call(clubOverrides,name) ? clubOverrides[name] : ((state.playerClubs||{})[name]||'');}
-function clubEditableName(){return v115Member && DATA.teams.includes(v115Member.player_name) ? v115Member.player_name : '';}
+function clubEditableName(){return v115Member && (window.v1461PlayerNames||DATA.teams).includes(v115Member.player_name) ? v115Member.player_name : '';}
 function clubCanEdit(){return !!state.admin || !!clubEditableName();}
 function clubUpdateAccess(){
  const btn=document.getElementById('clubManageOpen'),sel=document.getElementById('clubPlayer');
@@ -1591,7 +1591,7 @@ async function clubRefresh(){
  if(!cloudClient)return;
  const {data,error}=await cloudClient.from(CLUB_PREF_TABLE).select('player_name,club_id');
  if(error){console.warn('구단 설정 조회 실패:',error.message);return;}
- clubOverrides=Object.fromEntries((data||[]).filter(x=>DATA.teams.includes(x.player_name)).map(x=>[x.player_name,x.club_id||'']));
+ clubOverrides=Object.fromEntries((data||[]).filter(x=>(window.v1461PlayerNames||DATA.teams).includes(x.player_name)).map(x=>[x.player_name,x.club_id||'']));
  clubPrefsLoaded=true;
  render();
  if(document.getElementById('clubOverlay').classList.contains('open'))clubPickerSync();
@@ -1614,7 +1614,7 @@ function setTeamKind(kind){
 }
 function clubPickerInit(){
  const player=document.getElementById('clubPlayer');
- player.innerHTML=DATA.teams.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ player.innerHTML=(window.v1461PlayerNames||DATA.teams).map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
  player.addEventListener('change',clubPickerSync);
  document.getElementById('clubLeague').addEventListener('change',clubPickerRender);
  document.getElementById('clubSearch').addEventListener('input',clubPickerRender);
@@ -1655,7 +1655,7 @@ async function clubPickerSave(clear){
  if(!cloudClient||!cloudReady||!clubPrefsLoaded){
   status.textContent='온라인 연결을 확인해 주세요. 기존 구단 설정은 변경하지 않았습니다.';return;
  }
- if(!DATA.teams.includes(name))return;
+ if(!(window.v1461PlayerNames||DATA.teams).includes(name))return;
  if(!clear&&!clubById(pendingClubId)){
   status.textContent='팀을 먼저 선택해 주세요.';return;
  }
@@ -1783,8 +1783,9 @@ function v1402ArrangeProfile(name){
 function renderProfile(name){
   const standings=table();
   const row=standings.find(x=>x.name===name);
-  if(!row)return;
-  const rank=standings.findIndex(x=>x.name===name)+1;
+  if(!row && !window.v1461PlayerNames?.includes(name))return;
+  const rank=row?standings.findIndex(x=>x.name===name)+1:0;
+  const season3Row=row||{mp:0,w:0,d:0,l:0,gf:0,ga:0,pts:0,gd:0};
   const matches=state.matches.filter(m=>done(m)&&(m.a===name||m.b===name)).sort((a,b)=>{
     const ta=Date.parse(a.resultUpdatedAt||'')||0,tb=Date.parse(b.resultUpdatedAt||'')||0;
     return tb-ta||b.num-a.num;
@@ -1798,7 +1799,7 @@ function renderProfile(name){
     const opponent=m.a===name?m.b:m.a;
     return `<button type="button" class="v114-fixture" data-remaining-match="${m.num}" data-remaining-player="${esc(name)}" aria-label="${esc(opponent)} 참가자와의 미완료 경기 MATCH ${m.num} 확인">${crest(opponent)}<span class="v114-fixture-main"><strong>${esc(opponent)}</strong><small>MATCH #${String(m.num).padStart(3,'0')} · 경기 미완료</small></span><span class="v114-fixture-arrow">경기 확인 ↗</span></button>`;
   }).join('')||'<div class="v114-complete">✓ 정규리그의 모든 경기를 완료하셨습니다.</div>';
-  const rate=row.mp?Math.round(row.w/row.mp*100):0;
+  const rate=season3Row.mp?Math.round(season3Row.w/season3Row.mp*100):0;
   const form=matches.slice(0,5).map(m=>{
     const own=m.a===name?m.sa:m.sb,op=m.a===name?m.sb:m.sa;
     return own>op?'W':own<op?'L':'D';
@@ -1827,14 +1828,14 @@ function renderProfile(name){
   document.getElementById('profileContent').innerHTML=`
     <div class="v9-profile-hero" style="--team-color:${esc(brand.color)}">${brand.emblem?`<img class="v9-profile-watermark" src="${esc(brand.emblem)}" alt="" aria-hidden="true" onerror="this.onerror=null;this.outerHTML='<span class=&quot;cup-photo-fallback&quot;>🏆</span>'">`:''}${crest(name,'large')}<div class="v9-profile-copy"><small>DIT FC ONLINE LEAGUE · PLAYER</small><h3>${esc(name)}</h3><p>${esc(brand.club)}</p><span class="v9-profile-meta">공식 리그 · 친선전 · 선수단</span><span class="v6-rank-chip">통합 선수 프로필</span></div></div>
     <div class="v6-profile-metrics">
-      <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'시즌 3 정규리그 최종 순위':'시즌 3 정규리그 현재 순위'}</small><strong>${rank}위</strong></div>
-      <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'최종 승점':'승점'}</small><strong>${row.pts} PTS</strong></div>
+      <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'시즌 3 정규리그 최종 순위':'시즌 3 정규리그 현재 순위'}</small><strong>${row?rank+"위":"—"}</strong></div>
+      <div class="v6-profile-metric highlight"><small>${state.matches.every(done)?'최종 승점':'승점'}</small><strong>${season3Row.pts} PTS</strong></div>
       <div class="v6-profile-metric"><small>승률</small><strong>${rate}%</strong></div>
-      <div class="v6-profile-metric"><small>전적 (승/무/패)</small><strong>${row.w}/${row.d}/${row.l}</strong></div>
-      <div class="v6-profile-metric"><small>팀 득점</small><strong>${row.gf}</strong></div>
-      <div class="v6-profile-metric"><small>팀 실점</small><strong>${row.ga}</strong></div>
-      <div class="v6-profile-metric"><small>골득실</small><strong>${row.gd>0?'+':''}${row.gd}</strong></div>
-      <div class="v6-profile-metric"><small>정규리그 경기 수</small><strong>${row.mp}</strong></div>
+      <div class="v6-profile-metric"><small>전적 (승/무/패)</small><strong>${season3Row.w}/${season3Row.d}/${season3Row.l}</strong></div>
+      <div class="v6-profile-metric"><small>팀 득점</small><strong>${season3Row.gf}</strong></div>
+      <div class="v6-profile-metric"><small>팀 실점</small><strong>${season3Row.ga}</strong></div>
+      <div class="v6-profile-metric"><small>골득실</small><strong>${season3Row.gd>0?'+':''}${season3Row.gd}</strong></div>
+      <div class="v6-profile-metric"><small>정규리그 경기 수</small><strong>${season3Row.mp}</strong></div>
     </div>
     ${state.matches.every(done)?`<div class="v114-overview" aria-label="정규리그 완료"><div><small>SEASON 03 · LEAGUE COMPLETE</small><strong>정규리그 9경기 완료</strong><div class="note" style="margin-top:5px">시즌 3 정규리그 최종 기록입니다.</div></div><div class="v114-count">✓</div></div>`:`<div class="v114-overview" aria-label="잔여 경기 요약"><div><small>REMAINING FIXTURES · 정규리그</small><strong>잔여 경기 ${remainingFixtures.length} / ${playerFixtures.length}</strong><div class="note" style="margin:5px 0 0">완료 ${completedFixtures}경기 · 남은 상대 ${remainingFixtures.length}명</div></div><div class="v114-count">${remainingFixtures.length}<span style="font-size:12px;color:#cfba96;margin-left:3px">경기</span></div></div>
     <div class="v114-progress" role="progressbar" aria-valuenow="${completedFixtures}" aria-valuemin="0" aria-valuemax="${playerFixtures.length}" aria-label="리그 경기 완료 진행률"><span style="width:${completedRatio}%"></span></div>
@@ -1846,6 +1847,18 @@ function renderProfile(name){
     <div class="v6-profile-block"><h3>시즌 3 컵대회 경기 기록</h3><div class="v6-history">${cups.join('')||'<p class="note">아직 기록된 컵 대회 경기가 없습니다.</p>'}</div></div>
     <div class="v6-profile-block"><h3>시즌 3 정규리그 경기 기록</h3><div class="v6-history">${history}</div></div>`;
   v1402ArrangeProfile(name);
+  if(!row){
+    const panel=document.querySelector('#v1402-panel-official');
+    if(panel){
+      for(const child of [...panel.children]){
+        if(child.classList?.contains('v1402-tab-intro')||child.id==='v142Career')continue;
+        child.hidden=true;
+      }
+      const note=document.createElement('p'); note.className='note v1461-new-member-note';
+      note.textContent='시즌 3 참가 이력이 없습니다. 시즌 4 기록은 해당 시즌 운영 화면에서 확인할 수 있습니다.';
+      panel.prepend(note);
+    }
+  }
   window.v142LoadCareer?.(name);
   document.getElementById('profileOverlay').style.display='flex';
   window.v1294LoadProfile?.(name);
@@ -1961,13 +1974,13 @@ function signatureSyncFromSquad(name,row,playerNames,posName,classes){
 }
 window.v12942SyncSignature=signatureSyncFromSquad;
 async function signatureRefresh(){if(!cloudClient)return;const {data,error}=await cloudClient.from(SIGNATURE_TABLE).select('player_name,spid,display_name,season,position,enhance');if(error){console.warn('signature fetch:',error.message);sigEl('signatureCatalogMessage').textContent='주력 선수 저장 테이블을 연결할 수 없습니다. v11.3 SQL 적용 여부를 확인해주세요.';return;}
- signatureRecords=Object.fromEntries((data||[]).filter(s=>DATA.teams.includes(s.player_name)).map(s=>[s.player_name,s]));const overlay=sigEl('profileOverlay');if(overlay&&overlay.style.display==='flex'){const n=sigEl('profileName').textContent;if(DATA.teams.includes(n))renderProfile(n);}
+ signatureRecords=Object.fromEntries((data||[]).filter(s=>(window.v1461PlayerNames||DATA.teams).includes(s.player_name)).map(s=>[s.player_name,s]));const overlay=sigEl('profileOverlay');if(overlay&&overlay.style.display==='flex'){const n=sigEl('profileName').textContent;if((window.v1461PlayerNames||DATA.teams).includes(n))renderProfile(n);}
 }
 async function signatureLoadCatalog(){if(signatureCatalog)return;try{const [a,b]=await Promise.all([fetch('https://open.api.nexon.com/static/fconline/meta/spid.json'),fetch('https://open.api.nexon.com/static/fconline/meta/seasonid.json')]);if(!a.ok||!b.ok)throw Error('FC 온라인 DB 응답 오류');const [ps,ss]=await Promise.all([a.json(),b.json()]);signatureCatalog=ps;signatureSeasons=Object.fromEntries(ss.map(s=>[String(s.seasonId),s.className]));sigEl('signatureCatalogMessage').textContent='FC 온라인 공식 선수 목록이 연결되었습니다.';}catch(e){sigEl('signatureCatalogMessage').textContent='선수 목록을 불러오지 못했습니다. 연결 상태를 확인해주세요.';console.warn(e);}}
 function signatureDrawPreview(){const box=sigEl('signaturePreview'),owner=sigEl('signatureOwner').value;if(!owner){box.textContent='리그 참가자를 먼저 선택해주세요.';return;}if(!signatureSelection){box.textContent='선수 검색 결과에서 시즌 카드를 선택해주세요.';return;}const p=signatureSelection;box.innerHTML=`<img src="${esc(signatureImage(p.id))}" alt="" onerror="this.onerror=null;this.src='https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p${Number(p.id)}.png';this.onerror=()=>this.style.display='none'"><strong>${esc(p.name)}</strong><small>${esc(signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE')}</small>`;}
 function signatureSearch(){const q=sigEl('signatureSearch').value.trim().toLowerCase(),box=sigEl('signatureOptions');if(!signatureCatalog||q.length<2){box.innerHTML='';return;}const matches=signatureCatalog.filter(p=>String(p.name).toLowerCase().includes(q)).slice(0,35);box.innerHTML=matches.map(p=>`<button type="button" class="v113-choice" data-sigid="${Number(p.id)}"><b>${esc(p.name)}</b><small>${esc(signatureSeasons[String(p.id).slice(0,3)]||'FC ONLINE')}</small></button>`).join('')||'<span class="note">검색 결과가 없습니다.</span>';}
 function signatureAuthorizedName(){
- return v115Member && DATA.teams.includes(v115Member.player_name) ? v115Member.player_name : '';
+ return v115Member && (window.v1461PlayerNames||DATA.teams).includes(v115Member.player_name) ? v115Member.player_name : '';
 }
 function signatureSyncAuth(){
  const name=signatureAuthorizedName(),owner=sigEl('signatureOwner'),save=sigEl('signatureSave'),hint=sigEl('signatureLoginHint');
@@ -2061,7 +2074,7 @@ async function v115List(){
   const data=await v115Invoke('member-manage',{action:'list'});
   const members=data?.members||[];
   box.innerHTML=members.length?members.map(m=>`<div class="v115-member"><div><strong>${esc(m.player_name)}</strong><small>아이디: ${esc(m.username)}</small></div><div class="v115-actions" style="margin-top:0"><button class="btn v115-reset" type="button" data-uid="${esc(m.username)}">123456으로 초기화</button><button class="btn v115-retire" type="button" data-retire="${esc(m.username)}" style="border-color:#995a5a;color:#ffc6c6">계정 폐기</button></div></div>`).join(''):'<p class="note">발급된 참가자 계정이 없습니다.</p>';
-  v115el('v115Player').innerHTML='<option value="">참가자를 선택해 주세요.</option>'+DATA.teams.map(n=>`<option value="${esc(n)}" ${members.some(m=>m.player_name===n)?'disabled':''}>${esc(n)}${members.some(m=>m.player_name===n)?' (발급됨)':''}</option>`).join('');
+  v115el('v115Player').innerHTML='<option value="">참가자를 선택해 주세요.</option>'+(window.v1461PlayerNames||DATA.teams).map(n=>`<option value="${esc(n)}" ${members.some(m=>m.player_name===n)?'disabled':''}>${esc(n)}${members.some(m=>m.player_name===n)?' (발급됨)':''}</option>`).join('');
  }catch(e){box.textContent='계정을 조회할 수 없습니다. Edge Function 및 SQL 설정을 확인해 주세요.';v115Status('v115ManageStatus',e.message);}
 }
 function v115ShowIssued(username,password){
@@ -2109,7 +2122,7 @@ function v115Init(){
  v115el('v115Refresh').onclick=v115List;
  v115el('v115Create').onclick=async()=>{
   if(!state.admin)return;const player_name=v115el('v115Player').value,username=v115el('v115NewUsername').value.trim().toLowerCase();
-  if(!DATA.teams.includes(player_name)||!/^[a-z0-9._-]{3,32}$/.test(username)){v115Status('v115ManageStatus','참가자와 올바른 아이디를 입력해 주세요.');return;}
+  if(!(window.v1461PlayerNames||DATA.teams).includes(player_name)||!/^[a-z0-9._-]{3,32}$/.test(username)){v115Status('v115ManageStatus','참가자와 올바른 아이디를 입력해 주세요.');return;}
   const btn=v115el('v115Create');btn.disabled=true;v115Status('v115ManageStatus','계정을 발급하고 있습니다…');
   try{const r=await v115Invoke('member-manage',{action:'create',player_name,username});v115ShowIssued(r.username,r.password);v115Status('v115ManageStatus','계정을 발급했습니다. 초기 비밀번호 123456을 전달해 주세요. 로그인 후 변경을 권장합니다.');v115el('v115NewUsername').value='';await v115List();}
   catch(err){v115Status('v115ManageStatus','계정 발급 실패: '+err.message);}finally{btn.disabled=false;}
@@ -4722,7 +4735,7 @@ body.v12910-preseason .section.active>.v12910-pane{display:block}
    if(section==='home'){refreshRecent();renderPreview();refreshSeasonStatus();}
    window.scrollTo?.({top:0,behavior:'instant'});
  }
- const players=()=>Array.isArray(window.DATA?.teams)?window.DATA.teams:(typeof DATA!=='undefined'&&Array.isArray(DATA.teams)?DATA.teams:[]);
+ const players=()=>window.v1461PlayerNames || (Array.isArray(window.DATA?.teams)?window.DATA.teams:(typeof DATA!=='undefined'&&Array.isArray(DATA.teams)?DATA.teams:[]));
  function roster(){const box=document.getElementById('v140Roster');if(!box)return;
    const q=document.getElementById('v140Search')?.value.trim().toLowerCase()||'';
    const names=players().filter(n=>n.toLowerCase().includes(q));
@@ -5328,6 +5341,65 @@ body.v144-active #v14034Season4 .v14034-prep-grid,body.v144-active #v14034Season
  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(e=>console.warn('PWA service worker:',e)));
  if(!location.hash||!location.hash.startsWith('#/'))setHash('#/home','replace');
  setTimeout(restore,250);
+})();
+</script>
+<style id="v1461-style">
+#v1461Manager{padding:14px;margin:13px 0;border:1px solid #8b7854;border-radius:12px;background:#132a3d;color:#e5e9ef}
+#v1461Manager h3{margin:0 0 8px;font-size:16px;color:#e3c78e}
+#v1461Manager p{font-size:12px;color:#aec4d8;margin:5px 0 10px}
+#v1461Manager .v1461-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#v1461Manager input{flex:1;min-width:130px;max-width:290px;padding:11px;background:#071b2d;color:#fff;border:1px solid #52657c;border-radius:7px;font-size:14px}
+#v1461Manager .v1461-note{font-size:12px;line-height:1.6;color:#bbcbdc}
+#v1461Manager .v1461-status{margin-top:7px;font-size:12px;white-space:pre-wrap;color:#e5c893}
+#v1461Manager button{min-height:38px}
+</style>
+<script id="v1461-player-directory">
+(function(){
+ 'use strict';
+ const getClient=()=>typeof cloudClient!=='undefined'?cloudClient:null;
+ const legacy=()=>typeof DATA!=='undefined'&&Array.isArray(DATA.teams)?DATA.teams.slice():[];
+ const clean=v=>String(v||'').trim().replace(/\s+/g,' ');
+ const names=()=>window.v1461PlayerNames||legacy();
+ window.v1461PlayerNames=legacy();
+ let loaded=false;
+ function paint(){
+   document.getElementById('v140Search')?.dispatchEvent(new Event('input',{bubbles:true}));
+   if(typeof v115List==='function'&&typeof state!=='undefined'&&state.admin&&document.getElementById('v115ManageOverlay')?.classList.contains('open'))v115List();
+   const club=document.getElementById('clubPlayer');
+   if(club){const was=club.value;club.replaceChildren(...names().map(n=>new Option(n,n)));if(names().includes(was))club.value=was;}
+ }
+ async function load(){
+   const c=getClient();if(!c)return;
+   const {data,error}=await c.from('v1461_players').select('player_name,active').order('created_at',{ascending:true});
+   if(error){console.warn('선수 명단 로드 실패:',error.message);const st=document.getElementById('v1461Status');if(st)st.textContent='선수 목록 조회 실패: SQL 설치 여부를 확인해 주세요.';return;}
+   window.v1461PlayerNames=[...new Set([...legacy(),...(data||[]).filter(x=>x.active).map(x=>x.player_name)])];
+   loaded=true;paint();
+   if(typeof clubRefresh==='function')clubRefresh();
+   if(typeof signatureRefresh==='function')signatureRefresh();
+   const st=document.getElementById('v1461Status');if(st)st.textContent='등록된 선수 '+window.v1461PlayerNames.length+'명 · 기존 시즌 3 명단은 변경되지 않았습니다.';
+ }
+ function install(){
+  const overlay=document.getElementById('v115ManageOverlay');if(!overlay||document.getElementById('v1461Manager'))return;
+  const panel=document.createElement('section');panel.id='v1461Manager';
+  panel.innerHTML='<h3>선수 명단 관리 · V14.6.1</h3><p>선수를 먼저 등록한 후 아래 기존 계정 발급을 사용하세요. 시즌 참가와 계정 발급은 별개입니다.</p><div class="v1461-row"><input id="v1461NewName" maxlength="40" placeholder="신규 참가자 실명" autocomplete="off" aria-label="신규 참가자 이름"><button class="btn primary" type="button" id="v1461Register">신규 선수 등록</button><button class="btn" type="button" id="v1461Reload">명단 새로고침</button></div><p class="v1461-note">기존 10명의 계정·기록은 수정하지 않습니다. 동일 이름 중복 등록 불가. 시즌 4 참가자 및 대진은 별도 운영 메뉴에서 등록하세요.</p><div role="status" class="v1461-status" id="v1461Status"></div>';
+  const before=overlay.querySelector('.v115-fields');(before||overlay.querySelector('.v115-actions'))?.parentElement.insertBefore(panel,before||overlay.querySelector('.v115-actions'));
+  panel.querySelector('#v1461Reload').onclick=load;
+  panel.querySelector('#v1461Register').onclick=async()=>{
+    if(typeof state==='undefined'||!state.admin){panel.querySelector('#v1461Status').textContent='관리자 로그인이 필요합니다.';return;}
+    const player_name=clean(panel.querySelector('#v1461NewName').value);const st=panel.querySelector('#v1461Status');
+    if(!/^[가-힣a-zA-Z0-9 _.-]{2,40}$/.test(player_name)){st.textContent='이름은 2~40자이며 한글·영문·숫자만 사용해 주세요.';return;}
+    if(names().includes(player_name)){st.textContent='이미 등록된 선수입니다.';return;}
+    if(!confirm(player_name+' 선수를 통합 명단에 등록할까요? 기존 시즌 기록은 변경되지 않습니다.'))return;
+    const btn=panel.querySelector('#v1461Register');btn.disabled=true;st.textContent='등록 중…';
+    try{const c=getClient();if(!c)throw Error('Supabase 연결 없음');const {error}=await c.rpc('v1461_register_player',{p_name:player_name});if(error)throw error;panel.querySelector('#v1461NewName').value='';await load();st.textContent=player_name+' 선수 등록 완료. 이제 아래에서 해당 선수 계정을 발급할 수 있습니다. 서버에서 거절되면 기존 member-manage 함수 호환성을 점검해 주세요.';}
+    catch(e){st.textContent='등록 실패: '+e.message;}finally{btn.disabled=false;}
+  };
+ }
+ install();
+ // Server data is primary; local S3 list is a fallback if the new registry hasn't been installed.
+ load();
+ document.getElementById('memberManageOpen')?.addEventListener('click',()=>setTimeout(load,50));
+ window.addEventListener('focus',()=>{if(loaded)load()});
 })();
 </script>
 </body></html>
